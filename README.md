@@ -1,6 +1,6 @@
 # scrobbl
 
-In 2019, I was a sophomore in college. Every month, my friend Vivian created a monthly playlist, tracking what she listened to that month.
+In 2019, I was a sophomore in college. Every month, my friend Vivian created a monthly playlist, tracking what she listened to that month. I thought that was a great idea.
 
 It's often the case that you hear a song from years ago, and it reminds you of that place and time. It's like a time machine.
 
