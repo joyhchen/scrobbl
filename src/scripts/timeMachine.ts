@@ -1,5 +1,7 @@
 import { soundEngine } from '../lib/audio';
 import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
+import { formatShotCount } from '../lib/format';
+import { isRecord } from '../lib/isRecord';
 import { IPodYouTubePlayer, type PlaybackState } from '../lib/youtube';
 import type {
   CameraPhoto,
@@ -25,6 +27,7 @@ const FILM_SIM_PRESETS: readonly FilmSimPreset[] = [
 ];
 
 const VALID_THEMES: ReadonlySet<string> = new Set<IPodColorTheme>(['aqua', 'coral', 'mint']);
+const VALID_DISC_TONES: ReadonlySet<string> = new Set<ClientDisc['discTone']>(['silver', 'gold']);
 
 const TOPBAR_STATUS_GLYPHS: Record<PlaybackState, string> = {
   playing: '▶',
@@ -43,8 +46,18 @@ function formatSeconds(totalSeconds: number): string {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+function youtubeWatchUrl(videoId: string): string {
+  return `https://www.youtube.com/watch?v=${videoId}`;
+}
+
+function youtubeSearchUrl(title: string, artistText: string): string {
+  return `https://www.youtube.com/results?search_query=${encodeURIComponent(
+    `${title} ${artistText}`.trim()
+  )}`;
+}
+
+function isDiscTone(value: unknown): value is ClientDisc['discTone'] {
+  return typeof value === 'string' && VALID_DISC_TONES.has(value);
 }
 
 function isIPodColorTheme(value: unknown): value is IPodColorTheme {
@@ -92,6 +105,7 @@ function isClientDisc(value: unknown): value is ClientDisc {
   return (
     isRecord(value) &&
     typeof value.id === 'string' &&
+    isDiscTone(value.discTone) &&
     isIPodColorTheme(value.ipodTheme) &&
     typeof value.showTimelineDial === 'boolean' &&
     Array.isArray(value.playlists) &&
@@ -298,10 +312,8 @@ function initTimeMachine(): void {
               ? 'Video unavailable on YouTube'
               : 'Could not play YouTube video';
         const href = track?.youtubeId
-          ? `https://www.youtube.com/watch?v=${track.youtubeId}`
-          : `https://www.youtube.com/results?search_query=${encodeURIComponent(
-              `${track?.title ?? ''} ${track?.artistText ?? ''}`.trim()
-            )}`;
+          ? youtubeWatchUrl(track.youtubeId)
+          : youtubeSearchUrl(track?.title ?? '', track?.artistText ?? '');
         showVideoFallback(reason, href);
       }
     },
@@ -346,17 +358,14 @@ function initTimeMachine(): void {
 
     if (!track.youtubeId) {
       ytPlayer.stop();
-      const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
-        `${track.title} ${track.artistText}`.trim()
-      )}`;
-      showVideoFallback('No YouTube video matched', searchUrl);
+      showVideoFallback('No YouTube video matched', youtubeSearchUrl(track.title, track.artistText));
       playbackState = 'error';
       updateDetailTopbarStatus();
       return;
     }
 
     const videoId = track.youtubeId;
-    fallbackLinkEl.href = `https://www.youtube.com/watch?v=${videoId}`;
+    fallbackLinkEl.href = youtubeWatchUrl(videoId);
     hideVideoFallback();
 
     if (immediate) {
@@ -828,7 +837,7 @@ function initTimeMachine(): void {
     ipodRig.dataset.theme = disc.ipodTheme;
 
     discReadoutEl.textContent = `DISC ${String(activeDiscIdx + 1).padStart(2, '0')}`;
-    discReadLedEl.dataset.tone = disc.id === 'best-100-chinese-songs' ? 'gold' : 'silver';
+    discReadLedEl.dataset.tone = disc.discTone;
 
     dialEl.dataset.hidden = disc.showTimelineDial ? 'false' : 'true';
     dialEl.setAttribute('aria-hidden', disc.showTimelineDial ? 'false' : 'true');
@@ -907,8 +916,7 @@ function initTimeMachine(): void {
     const count = pl?.photos.length ?? 0;
 
     fujiBadgeMonthEl.textContent = label.toUpperCase();
-    fujiBadgeCountEl.textContent =
-      count > 0 ? `${count} ${count === 1 ? 'SHOT' : 'SHOTS'}` : 'CAMERA ROLL';
+    fujiBadgeCountEl.textContent = count > 0 ? formatShotCount(count) : 'CAMERA ROLL';
     fujiCameraBtn.setAttribute('aria-label', `Open JOYFILM camera roll for ${label}`);
     fujiCameraBtn.title = `Open camera roll (${label})`;
   }
@@ -1017,7 +1025,7 @@ function initTimeMachine(): void {
 
     if (isGrid) {
       cameraGridTitleEl.textContent = label;
-      cameraGridCountEl.textContent = `${photos.length} ${photos.length === 1 ? 'SHOT' : 'SHOTS'}`;
+      cameraGridCountEl.textContent = formatShotCount(photos.length);
       renderCameraGrid(photos);
     }
   }
@@ -1074,13 +1082,18 @@ function initTimeMachine(): void {
     renderCameraModal();
   }
 
-  function toggleCameraHudOrBack(): void {
+  function exitCameraGrid(): void {
     soundEngine.playCameraButton('action');
+    cameraMode = 'single';
+    renderCameraModal();
+  }
+
+  function toggleCameraHudOrBack(): void {
     if (cameraMode === 'grid') {
-      cameraMode = 'single';
-      renderCameraModal();
+      exitCameraGrid();
       return;
     }
+    soundEngine.playCameraButton('action');
     cameraShowHud = !cameraShowHud;
     renderCameraModal();
   }
@@ -1298,10 +1311,10 @@ function initTimeMachine(): void {
   cameraDeckDispBtn.addEventListener('click', toggleCameraHudOrBack);
   cameraCmdDialBtn.addEventListener('click', () => stepCameraPhoto(1));
   cameraBtnPlay.addEventListener('click', () => {
-    soundEngine.playCameraButton('action');
     if (cameraMode === 'grid') {
-      cameraMode = 'single';
-      renderCameraModal();
+      exitCameraGrid();
+    } else {
+      soundEngine.playCameraButton('action');
     }
   });
   cameraBtnDisp.addEventListener('click', toggleCameraHudOrBack);
@@ -1313,9 +1326,7 @@ function initTimeMachine(): void {
   cameraDpadRight.addEventListener('click', () => stepCameraPhoto(1));
   cameraDpadOk.addEventListener('click', () => {
     if (cameraMode === 'grid') {
-      soundEngine.playCameraButton('action');
-      cameraMode = 'single';
-      renderCameraModal();
+      exitCameraGrid();
     } else {
       toggleCameraGrid();
     }
@@ -1348,9 +1359,7 @@ function initTimeMachine(): void {
       if (e.key === 'Escape') {
         e.preventDefault();
         if (cameraMode === 'grid') {
-          cameraMode = 'single';
-          soundEngine.playCameraButton('action');
-          renderCameraModal();
+          exitCameraGrid();
         } else {
           closeCameraModal(true);
         }

@@ -1,4 +1,5 @@
 import rawData from '../data/joy-chen-monthly-playlists.json';
+import { isRecord } from './isRecord';
 import type { MonthlyPlaylist, RawTrack, Track } from './types';
 
 const MONTH_LONG = [
@@ -35,10 +36,6 @@ interface RawPlaylist {
   month?: unknown;
   playlist?: unknown;
   tracks?: unknown;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function formatTrackDuration(ms?: number): string {

@@ -60,7 +60,7 @@ export type ClientPlaylist = Pick<
 
 export type ClientDisc = Pick<
   DiscPreset,
-  'id' | 'ipodTheme' | 'showTimelineDial'
+  'id' | 'discTone' | 'ipodTheme' | 'showTimelineDial'
 > & {
   playlists: ClientPlaylist[];
 };

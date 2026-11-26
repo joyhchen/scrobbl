@@ -1,4 +1,7 @@
 ---
+import { BASE_PATH } from '../lib/basePath';
+import { formatShotCount } from '../lib/format';
+
 interface Props {
   initialMonthLabel: string;
   initialPhotoCount: number;
@@ -6,11 +9,7 @@ interface Props {
 }
 
 const { initialMonthLabel, initialPhotoCount, initialVisible = true } = Astro.props;
-const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
-const badgeSub =
-  initialPhotoCount > 0
-    ? `${initialPhotoCount} ${initialPhotoCount === 1 ? 'SHOT' : 'SHOTS'}`
-    : 'CAMERA ROLL';
+const badgeSub = initialPhotoCount > 0 ? formatShotCount(initialPhotoCount) : 'CAMERA ROLL';
 ---
 
 <div
@@ -31,7 +30,7 @@ const badgeSub =
     <span class="fuji-body-rig" aria-hidden="true">
       <img
         class="fuji-front-img"
-        src={`${base}/images/joyfilm-front.webp`}
+        src={`${BASE_PATH}/images/joyfilm-front.webp`}
         alt=""
         width="720"
         height="442"

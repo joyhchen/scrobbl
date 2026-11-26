@@ -1,10 +1,11 @@
 ---
+import { BASE_PATH } from '../lib/basePath';
+
 interface Props {
   initialMonthLabel: string;
 }
 
 const { initialMonthLabel } = Astro.props;
-const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
 ---
 
 <div
@@ -61,7 +62,7 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
     <div class="fuji-rear-rig" id="fuji-rear-rig">
       <img
         class="fuji-rear-img"
-        src={`${base}/images/joyfilm-rear.webp`}
+        src={`${BASE_PATH}/images/joyfilm-rear.webp`}
         alt=""
         width="1098"
         height="658"

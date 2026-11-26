@@ -1,25 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import rawManifest from '../data/photos.json';
+import { BASE_PATH } from './basePath';
+import { isRecord } from './isRecord';
 import type { CameraPhoto, PhotosByMonth } from './types';
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif']);
 const MONTH_KEY_RE = /^\d{4}-\d{2}$/;
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 function withBaseUrl(src: string): string {
   if (/^(?:https?:)?\/\//i.test(src) || src.startsWith('data:')) {
     return src;
   }
-  const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
   const normalized = src.startsWith('/') ? src : `/${src}`;
-  if (base && (normalized === base || normalized.startsWith(`${base}/`))) {
+  if (BASE_PATH && (normalized === BASE_PATH || normalized.startsWith(`${BASE_PATH}/`))) {
     return normalized;
   }
-  return `${base}${normalized}`;
+  return `${BASE_PATH}${normalized}`;
 }
 
 function normalizePhotoEntry(entry: unknown): CameraPhoto | null {
