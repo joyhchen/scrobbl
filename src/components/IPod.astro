@@ -93,40 +93,68 @@ const initialPlaylist = playlists[initialIndex];
               </div>
             </div>
 
-            {/* Decorative archive scrubber; playback is intentionally disabled */}
             <div class="ipod-view ipod-detail-view" id="ipod-view-detail" data-state="right" aria-hidden="true">
-              <div class="ipod-detail-meta-bar">
-                <span id="ipod-detail-counter">1 of {initialPlaylist?.trackCount ?? 0}</span>
-                <span>Archive</span>
-              </div>
+              <div class="ipod-video-stage" id="ipod-video-stage">
+                <div class="ipod-yt-host" id="ipod-yt-host"></div>
 
-              <div class="ipod-detail-main">
-                <div class="ipod-detail-art" aria-hidden="true">
-                  <span class="ipod-detail-art-month" id="ipod-detail-art-month">
-                    {initialPlaylist?.monthShort ?? ''}
-                  </span>
-                  <span class="ipod-detail-art-year" id="ipod-detail-art-year">
-                    {initialPlaylist?.year ?? ''}
-                  </span>
-                </div>
-                <div class="ipod-detail-info">
-                  <div class="ipod-detail-title" id="ipod-detail-title">
+                <div class="ipod-video-fallback" id="ipod-video-fallback" data-visible="false" aria-live="polite">
+                  <div class="ipod-fallback-art" aria-hidden="true">
+                    <span class="ipod-detail-art-month" id="ipod-detail-art-month">
+                      {initialPlaylist?.monthShort ?? ''}
+                    </span>
+                    <span class="ipod-detail-art-year" id="ipod-detail-art-year">
+                      {initialPlaylist?.year ?? ''}
+                    </span>
+                  </div>
+                  <div class="ipod-fallback-title" id="ipod-detail-title">
                     {initialPlaylist?.tracks[0]?.title ?? ''}
                   </div>
-                  <div class="ipod-detail-artist" id="ipod-detail-artist">
-                    {initialPlaylist?.tracks[0]?.artistText ?? ''}
-                  </div>
-                  <div class="ipod-detail-playlist" id="ipod-detail-playlist">
+                  <div class="ipod-fallback-subtitle" id="ipod-detail-playlist">
                     {initialPlaylist?.label ?? ''}
+                  </div>
+                  <div class="ipod-fallback-status" id="ipod-fallback-status">
+                    Video unavailable to embed
+                  </div>
+                  <div class="ipod-fallback-actions">
+                    <a
+                      class="ipod-fallback-link"
+                      id="ipod-fallback-link"
+                      href="https://www.youtube.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Open on YouTube ↗
+                    </a>
+                    <button type="button" class="ipod-fallback-skip" id="ipod-fallback-skip">
+                      Next ›
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <div class="ipod-scrubber-wrap" aria-hidden="true">
-                <div class="ipod-scrubber-track"></div>
-                <div class="ipod-scrubber-times">
-                  <span>0:00</span>
-                  <span id="ipod-detail-duration">
+              <div class="ipod-video-hud">
+                <div class="ipod-video-meta">
+                  <span class="ipod-video-artist" id="ipod-detail-artist">
+                    {initialPlaylist?.tracks[0]?.artistText ?? ''}
+                  </span>
+                  <span class="ipod-video-counter" id="ipod-detail-counter">
+                    1 of {initialPlaylist?.trackCount ?? 0}
+                  </span>
+                </div>
+                <div class="ipod-scrubber-row">
+                  <span class="ipod-scrubber-time" id="ipod-detail-elapsed">0:00</span>
+                  <div
+                    class="ipod-scrubber-track"
+                    id="ipod-scrubber-track"
+                    role="slider"
+                    aria-label="Track progress"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="0"
+                  >
+                    <div class="ipod-scrubber-fill" id="ipod-scrubber-fill"></div>
+                  </div>
+                  <span class="ipod-scrubber-time" id="ipod-detail-duration">
                     {initialPlaylist?.tracks[0]?.durationText ? `-${initialPlaylist.tracks[0].durationText}` : '-0:00'}
                   </span>
                 </div>
@@ -185,8 +213,8 @@ const initialPlaylist = playlists[initialIndex];
             type="button"
             class="wheel-btn wheel-btn-play"
             id="wheel-btn-play"
-            aria-label="Inspect selected track"
-            title="View track"
+            aria-label="Play or pause track"
+            title="Play / Pause"
           >
             <svg width="20" height="11" viewBox="0 0 20 11" fill="currentColor" aria-hidden="true">
               <path d="M1 1L8.8 5.5L1 10V1Z" />

@@ -117,12 +117,18 @@ export function normalizeTrack(raw: RawTrack): Track | null {
         ? raw.duration_ms
         : undefined;
 
+  const youtubeId =
+    typeof raw.youtubeId === 'string' && /^[a-zA-Z0-9_-]{11}$/.test(raw.youtubeId.trim())
+      ? raw.youtubeId.trim()
+      : undefined;
+
   return {
     title,
     artists,
     artistText: artists.length > 0 ? artists.join(', ') : 'Unknown Artist',
     durationMs,
     durationText: formatTrackDuration(durationMs),
+    ...(youtubeId ? { youtubeId } : {}),
   };
 }
 

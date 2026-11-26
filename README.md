@@ -6,7 +6,7 @@ It's often the case that you hear a song from years ago, and it reminds you of t
 
 For 7 years, I've compiled these monthly playlists.
 
-For this year's holiday vibe-coding fun, I made an interactive iPod site to listen to them (except the listening doesn't work currently RIP)!
+This year's holiday vibe-coded fun is an interactive iPod timeline player.
 
 <img width="860" alt="scrobbl interactive demo" src="./assets/demo.gif" />
 
@@ -29,9 +29,14 @@ npm run preview
 * Playlists go in `src/data/`
 * Timeline files don't need to have contiguous playlists (i.e. Jan 2019 -> next playlist Feb 2020 is fine.)
 * The disc changer handles either 1) a single playlist, or 2) a list of playlists (timeline)
+* After adding new tracks, populate their `youtubeId` fields with:
+
+```sh
+npm run populate-youtube
+```
+
+Sadly, YouTube bans embedding most tracks.
 
 ## Todo
 
-* Fetch Jan 2025 - onwards playlists from Apple Music
-* Integrate MusicKit - make songs playable
-* Add images - cover art for playlist + songs can be a real photo from my camera roll
+* Add a camera button. When clicked, it opens a realistic camera with photos from my camera roll from the corresponding year and month.

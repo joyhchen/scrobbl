@@ -1,5 +1,6 @@
 import { soundEngine } from '../lib/audio';
 import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
+import { IPodYouTubePlayer, type PlaybackState } from '../lib/youtube';
 import type {
   ClientDisc,
   ClientPlaylist,
@@ -11,6 +12,14 @@ import type {
 type IPodView = 'playlists' | 'tracks' | 'detail';
 
 const VALID_THEMES: ReadonlySet<string> = new Set<IPodColorTheme>(['aqua', 'coral', 'mint']);
+
+function formatSeconds(totalSeconds: number): string {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '0:00';
+  const rounded = Math.floor(totalSeconds);
+  const minutes = Math.floor(rounded / 60);
+  const seconds = rounded % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -25,7 +34,8 @@ function isClientTrack(value: unknown): value is ClientTrack {
     isRecord(value) &&
     typeof value.title === 'string' &&
     typeof value.artistText === 'string' &&
-    typeof value.durationText === 'string'
+    typeof value.durationText === 'string' &&
+    (value.youtubeId === undefined || typeof value.youtubeId === 'string')
   );
 }
 
@@ -111,13 +121,26 @@ function initTimeMachine(): void {
   const trackCountEl = requireEl('ipod-track-count');
   const trackTotalTimeEl = requireEl('ipod-track-total-time');
 
+  const ytHostEl = requireEl('ipod-yt-host');
+  const fallbackEl = requireEl('ipod-video-fallback');
+  const fallbackStatusEl = requireEl('ipod-fallback-status');
+  const fallbackLinkRaw = requireEl('ipod-fallback-link');
+  if (!(fallbackLinkRaw instanceof HTMLAnchorElement)) {
+    throw new Error('Expected #ipod-fallback-link to be an <a>');
+  }
+  const fallbackLinkEl = fallbackLinkRaw;
+  const fallbackSkipBtn = requireButton('ipod-fallback-skip');
+
   const detailCounterEl = requireEl('ipod-detail-counter');
   const detailArtMonthEl = requireEl('ipod-detail-art-month');
   const detailArtYearEl = requireEl('ipod-detail-art-year');
   const detailTitleEl = requireEl('ipod-detail-title');
   const detailArtistEl = requireEl('ipod-detail-artist');
   const detailPlaylistEl = requireEl('ipod-detail-playlist');
+  const detailElapsedEl = requireEl('ipod-detail-elapsed');
   const detailDurationEl = requireEl('ipod-detail-duration');
+  const scrubberTrackEl = requireEl('ipod-scrubber-track');
+  const scrubberFillEl = requireEl('ipod-scrubber-fill');
 
   const clickWheel = requireEl('ipod-click-wheel');
   const btnMenu = requireButton('wheel-btn-menu');
@@ -136,6 +159,138 @@ function initTimeMachine(): void {
   let playlistCursor = 0;
   let trackCursor = 0;
   let currentView: IPodView = 'tracks';
+  let playbackState: PlaybackState = 'idle';
+  let skipLoadTimer: number | null = null;
+
+  function releaseIframeFocus(): void {
+    if (document.activeElement instanceof HTMLIFrameElement) {
+      document.activeElement.blur();
+    }
+    window.focus();
+  }
+
+  function updateDetailTopbarStatus(): void {
+    if (currentView !== 'detail') return;
+    if (playbackState === 'playing') {
+      topbarLeft.textContent = '▶';
+    } else if (playbackState === 'paused') {
+      topbarLeft.textContent = '❚❚';
+    } else if (playbackState === 'loading') {
+      topbarLeft.textContent = '…';
+    } else if (playbackState === 'error') {
+      topbarLeft.textContent = '!';
+    } else {
+      topbarLeft.textContent = '‹';
+    }
+  }
+
+  function showVideoFallback(reason: string, href: string): void {
+    fallbackStatusEl.textContent = reason;
+    fallbackLinkEl.href = href;
+    fallbackEl.dataset.visible = 'true';
+  }
+
+  function hideVideoFallback(): void {
+    fallbackEl.dataset.visible = 'false';
+  }
+
+  const ytPlayer = new IPodYouTubePlayer(ytHostEl, {
+    onStateChange: (state, errorCode) => {
+      playbackState = state;
+      updateDetailTopbarStatus();
+
+      if (state === 'playing' || state === 'paused' || state === 'loading') {
+        hideVideoFallback();
+      } else if (state === 'ended' && currentView === 'detail') {
+        const tracks = playlists[activePlaylistIdx]?.tracks ?? [];
+        if (trackCursor + 1 < tracks.length) {
+          trackCursor += 1;
+          renderListSelection(tracksListEl, trackCursor, tracksThumbEl);
+          playActiveTrack(true);
+        }
+      } else if (state === 'error' && currentView === 'detail') {
+        const track = playlists[activePlaylistIdx]?.tracks[trackCursor];
+        const reason =
+          errorCode === 101 || errorCode === 150
+            ? 'Embedding disabled by video owner'
+            : errorCode === 100
+              ? 'Video unavailable on YouTube'
+              : 'Could not play YouTube video';
+        const href = track?.youtubeId
+          ? `https://www.youtube.com/watch?v=${track.youtubeId}`
+          : `https://www.youtube.com/results?search_query=${encodeURIComponent(
+              `${track?.title ?? ''} ${track?.artistText ?? ''}`.trim()
+            )}`;
+        showVideoFallback(reason, href);
+      }
+    },
+    onProgress: (cur, dur) => {
+      detailElapsedEl.textContent = formatSeconds(cur);
+      if (dur > 0) {
+        const pct = Math.min(100, Math.max(0, (cur / dur) * 100));
+        scrubberFillEl.style.width = `${pct.toFixed(2)}%`;
+        scrubberTrackEl.setAttribute('aria-valuenow', String(Math.round(pct)));
+        detailDurationEl.textContent = `-${formatSeconds(Math.max(0, dur - cur))}`;
+      } else {
+        scrubberFillEl.style.width = '0%';
+        scrubberTrackEl.setAttribute('aria-valuenow', '0');
+      }
+    },
+  });
+
+  ytPlayer.preload();
+
+  function stopPlayback(): void {
+    if (skipLoadTimer !== null) {
+      window.clearTimeout(skipLoadTimer);
+      skipLoadTimer = null;
+    }
+    hideVideoFallback();
+    ytPlayer.stop();
+  }
+
+  function playActiveTrack(immediate = true): void {
+    if (skipLoadTimer !== null) {
+      window.clearTimeout(skipLoadTimer);
+      skipLoadTimer = null;
+    }
+
+    renderDetailView();
+    const pl = playlists[activePlaylistIdx];
+    const track = pl?.tracks[trackCursor];
+    if (!pl || !track) {
+      stopPlayback();
+      return;
+    }
+
+    if (!track.youtubeId) {
+      ytPlayer.stop();
+      const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
+        `${track.title} ${track.artistText}`.trim()
+      )}`;
+      showVideoFallback('No YouTube video matched', searchUrl);
+      playbackState = 'error';
+      updateDetailTopbarStatus();
+      return;
+    }
+
+    const videoId = track.youtubeId;
+    fallbackLinkEl.href = `https://www.youtube.com/watch?v=${videoId}`;
+    hideVideoFallback();
+
+    if (immediate) {
+      ytPlayer.play(videoId);
+    } else {
+      // Silence previous track immediately while user rapidly skips through tracks.
+      ytPlayer.pauseForSkip();
+      skipLoadTimer = window.setTimeout(() => {
+        skipLoadTimer = null;
+        if (currentView === 'detail') {
+          ytPlayer.play(videoId);
+        }
+      }, 140);
+    }
+  }
 
   // Satisfy browser Web Audio autoplay policy on the first user gesture.
   const unlockOnce = () => {
@@ -310,7 +465,7 @@ function initTimeMachine(): void {
 
   function bindHoldButton(
     el: HTMLButtonElement,
-    onStep: () => void,
+    onStep: (isRepeat: boolean) => void,
     pressAttr: string
   ): void {
     let holdTimeout: number | null = null;
@@ -332,24 +487,26 @@ function initTimeMachine(): void {
     el.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
       e.stopPropagation();
+      releaseIframeFocus();
       soundEngine.unlock();
       didRepeat = false;
       clickWheel.dataset.press = pressAttr;
       holdTimeout = window.setTimeout(() => {
         didRepeat = true;
-        onStep();
-        repeatInterval = window.setInterval(onStep, 105);
+        onStep(true);
+        repeatInterval = window.setInterval(() => onStep(true), 105);
       }, 310);
     });
 
     el.addEventListener('click', (e) => {
       e.stopPropagation();
+      releaseIframeFocus();
       soundEngine.unlock();
       if (didRepeat) {
         didRepeat = false;
         return;
       }
-      onStep();
+      onStep(false);
     });
 
     el.addEventListener('pointerup', clearTimers);
@@ -369,6 +526,7 @@ function initTimeMachine(): void {
     el.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
       e.stopPropagation();
+      releaseIframeFocus();
       soundEngine.unlock();
       if (pressAttr) clickWheel.dataset.press = pressAttr;
     });
@@ -379,6 +537,7 @@ function initTimeMachine(): void {
 
     el.addEventListener('click', (e) => {
       e.stopPropagation();
+      releaseIframeFocus();
       soundEngine.unlock();
       onClick();
     });
@@ -522,7 +681,13 @@ function initTimeMachine(): void {
     detailTitleEl.textContent = track.title;
     detailArtistEl.textContent = track.artistText;
     detailPlaylistEl.textContent = pl.label;
+    detailElapsedEl.textContent = '0:00';
     detailDurationEl.textContent = track.durationText ? `-${track.durationText}` : '-0:00';
+    scrubberFillEl.style.width = '0%';
+    scrubberTrackEl.setAttribute('aria-valuenow', '0');
+    if (currentView === 'detail') {
+      topbarTitle.textContent = track.title;
+    }
   }
 
   function updateIPodViewState(): void {
@@ -543,13 +708,14 @@ function initTimeMachine(): void {
 
     if (currentView === 'playlists') {
       topbarTitle.textContent = 'Playlists';
+      topbarLeft.textContent = '♪';
     } else if (currentView === 'tracks') {
       topbarTitle.textContent = pl?.label ?? 'Playlist';
+      topbarLeft.textContent = '‹';
     } else {
-      topbarTitle.textContent = 'Track Info';
+      topbarTitle.textContent = pl?.tracks[trackCursor]?.title ?? 'Now Playing';
+      updateDetailTopbarStatus();
     }
-
-    topbarLeft.textContent = currentView === 'playlists' ? '♪' : '‹';
   }
 
   let carouselAngleDeg = 0;
@@ -557,6 +723,9 @@ function initTimeMachine(): void {
   function loadDisc(discId: string): void {
     const nextIdx = discs.findIndex((d) => d.id === discId);
     if (nextIdx === -1 || nextIdx === activeDiscIdx) return;
+
+    releaseIframeFocus();
+    stopPlayback();
 
     const slotStep = (nextIdx - activeDiscIdx + 6) % 6;
     // Rotate smoothly along the shortest 6-slot carousel path (clockwise or counter-clockwise).
@@ -613,6 +782,8 @@ function initTimeMachine(): void {
   });
 
   function openPlaylist(idx: number): void {
+    releaseIframeFocus();
+    stopPlayback();
     activePlaylistIdx = idx;
     playlistCursor = idx;
     trackCursor = 0;
@@ -625,7 +796,8 @@ function initTimeMachine(): void {
     }
   }
 
-  function stepIPod(delta: StepDirection): void {
+  function stepIPod(delta: StepDirection, immediate = true): void {
+    releaseIframeFocus();
     if (currentView === 'playlists') {
       const next = Math.max(0, Math.min(playlists.length - 1, playlistCursor + delta));
       if (next === playlistCursor) return;
@@ -646,29 +818,49 @@ function initTimeMachine(): void {
     if (currentView === 'tracks') {
       renderListSelection(tracksListEl, trackCursor, tracksThumbEl);
     } else if (currentView === 'detail') {
-      renderDetailView();
       renderListSelection(tracksListEl, trackCursor, tracksThumbEl);
+      playActiveTrack(immediate);
     }
   }
 
   function pressSelect(): void {
+    releaseIframeFocus();
     soundEngine.playButtonPress('select');
     if (currentView === 'playlists') {
       openPlaylist(playlistCursor);
       return;
     }
-    if (currentView !== 'tracks') return;
+    if (currentView === 'detail') {
+      ytPlayer.togglePlayPause();
+      return;
+    }
 
     const pl = playlists[activePlaylistIdx];
     if (!pl || pl.tracks.length === 0) return;
     currentView = 'detail';
-    renderDetailView();
     updateIPodViewState();
+    playActiveTrack(true);
+  }
+
+  function pressPlayPause(): void {
+    releaseIframeFocus();
+    soundEngine.playButtonPress('select');
+    if (currentView === 'detail') {
+      if (playbackState === 'error') {
+        playActiveTrack(true);
+      } else {
+        ytPlayer.togglePlayPause();
+      }
+      return;
+    }
+    pressSelect();
   }
 
   function pressMenu(): void {
+    releaseIframeFocus();
     soundEngine.playButtonPress('menu');
     if (currentView === 'detail') {
+      stopPlayback();
       currentView = 'tracks';
       updateIPodViewState();
       keepRowInView(tracksListEl, trackCursor, tracksThumbEl);
@@ -740,7 +932,7 @@ function initTimeMachine(): void {
       while (Math.abs(accumRadians) >= STEP_RADIANS) {
         const dir: StepDirection = accumRadians > 0 ? 1 : -1;
         accumRadians -= dir * STEP_RADIANS;
-        stepIPod(dir);
+        stepIPod(dir, false);
       }
     });
 
@@ -755,13 +947,27 @@ function initTimeMachine(): void {
   bindHoverAutoScrollButton(dialUpBtn, -1);
   bindHoverAutoScrollButton(dialDownBtn, 1);
   bindWheelStepper(dialEl, 34, rotateDial);
-  bindWheelStepper(ipodBody, 26, stepIPod);
+  bindWheelStepper(ipodBody, 26, (step) => stepIPod(step, false));
 
   bindWheelButton(btnMenu, pressMenu, 'menu');
-  bindHoldButton(btnPrev, () => stepIPod(-1), 'prev');
-  bindHoldButton(btnNext, () => stepIPod(1), 'next');
-  bindWheelButton(btnPlay, pressSelect, 'play');
+  bindHoldButton(btnPrev, (isRepeat) => stepIPod(-1, !isRepeat), 'prev');
+  bindHoldButton(btnNext, (isRepeat) => stepIPod(1, !isRepeat), 'next');
+  bindWheelButton(btnPlay, pressPlayPause, 'play');
   bindWheelButton(btnCenter, pressSelect);
+
+  fallbackSkipBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    releaseIframeFocus();
+    stepIPod(1, true);
+  });
+
+  scrubberTrackEl.addEventListener('click', (e) => {
+    releaseIframeFocus();
+    const rect = scrubberTrackEl.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const fraction = (e.clientX - rect.left) / rect.width;
+    ytPlayer.seekToFraction(fraction);
+  });
 
   bindListRowClick(
     playlistsListEl,
@@ -794,10 +1000,19 @@ function initTimeMachine(): void {
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp') {
       e.preventDefault();
-      stepIPod(-1);
+      stepIPod(-1, true);
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
-      stepIPod(1);
+      stepIPod(1, true);
+    } else if (e.key === 'ArrowLeft' && currentView === 'detail') {
+      e.preventDefault();
+      stepIPod(-1, true);
+    } else if (e.key === 'ArrowRight' && currentView === 'detail') {
+      e.preventDefault();
+      stepIPod(1, true);
+    } else if (e.key === ' ' && currentView === 'detail') {
+      e.preventDefault();
+      pressPlayPause();
     } else if (e.key === 'Enter') {
       e.preventDefault();
       pressSelect();

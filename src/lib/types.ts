@@ -9,6 +9,7 @@ export interface RawTrack {
   artist?: unknown;
   durationMs?: unknown;
   duration_ms?: unknown;
+  youtubeId?: unknown;
 }
 
 export interface Track {
@@ -17,6 +18,7 @@ export interface Track {
   artistText: string;
   durationMs?: number;
   durationText: string;
+  youtubeId?: string;
 }
 
 export interface MonthlyPlaylist {
@@ -43,7 +45,7 @@ export interface DiscPreset {
   playlists: MonthlyPlaylist[];
 }
 
-export type ClientTrack = Pick<Track, 'title' | 'artistText' | 'durationText'>;
+export type ClientTrack = Pick<Track, 'title' | 'artistText' | 'durationText' | 'youtubeId'>;
 
 export type ClientPlaylist = Pick<
   MonthlyPlaylist,

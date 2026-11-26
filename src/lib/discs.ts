@@ -43,7 +43,7 @@ export function loadDiscs(): [DiscPreset, ...DiscPreset[]] {
     {
       id: 'time-machine',
       tapeLabel: 'time machine',
-      tapeSubLabel: '2019 — 2025',
+      tapeSubLabel: '2019 — 2026',
       tapeTiltDeg: -1.6,
       discTone: 'silver',
       ipodTheme: 'aqua',
