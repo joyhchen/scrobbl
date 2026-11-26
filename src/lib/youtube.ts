@@ -98,7 +98,6 @@ export class IPodYouTubePlayer {
   private activeVideoId: string | null = null;
   private pendingVideoId: string | null = null;
   private requestSeq = 0;
-  private state: PlaybackState = 'idle';
   private progressTimer: number | null = null;
 
   constructor(hostEl: HTMLElement, callbacks: YouTubePlayerCallbacks) {
@@ -110,12 +109,7 @@ export class IPodYouTubePlayer {
     void loadYouTubeIframeAPI().catch(() => {});
   }
 
-  public getState(): PlaybackState {
-    return this.state;
-  }
-
   private setState(next: PlaybackState, errorCode?: number): void {
-    this.state = next;
     this.callbacks.onStateChange(next, errorCode);
     if (next === 'playing' || next === 'loading') {
       this.startProgressLoop();
@@ -299,7 +293,6 @@ export class IPodYouTubePlayer {
         // Ignore pause error
       }
     }
-    this.state = 'loading';
     this.callbacks.onStateChange('loading');
     this.callbacks.onProgress(0, 0);
   }
@@ -324,7 +317,6 @@ export class IPodYouTubePlayer {
     this.ready = false;
     this.initializing = false;
     this.hostEl.replaceChildren();
-    this.state = 'idle';
     this.callbacks.onStateChange('idle');
     this.callbacks.onProgress(0, 0);
   }

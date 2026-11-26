@@ -2,8 +2,6 @@ import { loadPlaylists, normalizeTracks } from './playlists';
 import type { DiscPreset, MonthlyPlaylist, RawTrack } from './types';
 import chineseSongsData from '../data/chinese-100-playlist.json';
 
-export type { DiscPreset, IPodColorTheme } from './types';
-
 interface SinglePlaylistJson {
   title?: string;
   tracks?: RawTrack[];
@@ -18,12 +16,9 @@ function loadSinglePlaylistDisc(
   const title = raw.title?.trim() || fallbackTitle;
 
   return {
-    id,
     monthKey: id,
     year: tracks.length,
-    monthIndex: 0,
     monthShort: 'DISC',
-    monthLong: title,
     label: title,
     tracks,
     trackCount: tracks.length,

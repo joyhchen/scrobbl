@@ -14,7 +14,6 @@ export interface RawTrack {
 
 export interface Track {
   title: string;
-  artists: string[];
   artistText: string;
   durationMs?: number;
   durationText: string;
@@ -22,12 +21,9 @@ export interface Track {
 }
 
 export interface MonthlyPlaylist {
-  id: string;
   monthKey: string;
   year: number;
-  monthIndex: number; // 0-11
   monthShort: string;
-  monthLong: string;
   label: string;
   tracks: Track[];
   trackCount: number;

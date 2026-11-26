@@ -1,8 +1,6 @@
 import rawData from '../data/joy-chen-monthly-playlists.json';
 import type { MonthlyPlaylist, RawTrack, Track } from './types';
 
-export type { MonthlyPlaylist, RawTrack, Track } from './types';
-
 const MONTH_LONG = [
   'January',
   'February',
@@ -47,7 +45,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-export function formatTrackDuration(ms?: number): string {
+function formatTrackDuration(ms?: number): string {
   if (typeof ms !== 'number' || !Number.isFinite(ms) || ms <= 0) return '';
   const totalSeconds = Math.round(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
@@ -55,7 +53,7 @@ export function formatTrackDuration(ms?: number): string {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-export function formatPlaylistDuration(totalMs: number): string {
+function formatPlaylistDuration(totalMs: number): string {
   if (!Number.isFinite(totalMs) || totalMs <= 0) return '';
   const totalMinutes = Math.round(totalMs / 60000);
   const hours = Math.floor(totalMinutes / 60);
@@ -93,7 +91,7 @@ function parseMonthInfo(
   return { year, monthIndex, monthKey: `${year}-${padded}` };
 }
 
-export function normalizeTrack(raw: RawTrack): Track | null {
+function normalizeTrack(raw: RawTrack): Track | null {
   const titleVal =
     typeof raw.title === 'string' ? raw.title : typeof raw.name === 'string' ? raw.name : '';
   const title = titleVal.trim();
@@ -124,7 +122,6 @@ export function normalizeTrack(raw: RawTrack): Track | null {
 
   return {
     title,
-    artists,
     artistText: artists.length > 0 ? artists.join(', ') : 'Unknown Artist',
     durationMs,
     durationText: formatTrackDuration(durationMs),
@@ -147,7 +144,7 @@ export function normalizeTracks(rawTracks: unknown): {
   };
 }
 
-export function normalizePlaylistsPayload(input: unknown): MonthlyPlaylist[] {
+function normalizePlaylistsPayload(input: unknown): MonthlyPlaylist[] {
   const list: unknown[] = Array.isArray(input)
     ? input
     : isRecord(input) && Array.isArray(input.playlists)
@@ -184,12 +181,9 @@ export function normalizePlaylistsPayload(input: unknown): MonthlyPlaylist[] {
     const monthShort = MONTH_SHORT[parsed.monthIndex];
 
     normalized.push({
-      id: parsed.monthKey,
       monthKey: parsed.monthKey,
       year: parsed.year,
-      monthIndex: parsed.monthIndex,
       monthShort,
-      monthLong,
       label: rawLabel?.trim() || `${monthLong} ${parsed.year}`,
       tracks,
       trackCount: tracks.length,
