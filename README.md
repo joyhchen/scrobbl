@@ -1,6 +1,14 @@
 # scrobbl
 
-A minimalist, skeuomorphic monthly playlist time machine built as a static [Astro](https://astro.build) site.
+In 2019, I was a sophomore in college. Every month, my friend Vivian created a monthly playlist, tracking what she listened to that month.
+
+It's often the case that you hear a song from years ago, and it reminds you of that place and time. It's like a time machine.
+
+For 7 years, I've compiled these monthly playlists.
+
+For this year's holiday vibe-coding fun, I made an interactive iPod site to listen to them (except the listening doesn't work currently RIP)!
+
+<img width="554" height="266" alt="playlist" src="https://github.com/user-attachments/assets/fd87130c-0a6d-418f-9a66-d702f75c1086" />
 
 ## Running locally
 
@@ -18,4 +26,11 @@ npm run preview
 
 ## Updating playlists
 
-Replace or edit `src/data/joy-chen-monthly-playlists.json` (or `src/data/cassette-playlist.json`) and rebuild. Skipped months are handled automatically (months do not need to be contiguous), and the loader in `src/lib/playlists.ts` accepts either `{ "playlists": [...] }` or a top-level array of playlists.
+* Playlists go in `src/data/`
+* Timeline files don't need to have contiguous playlists (i.e. Jan 2019 -> next playlist Feb 2020 is fine.)
+* The cassette loader handles either 1) a single playlist, or 2) a list of playlists (timeline)
+
+## Todo
+
+* Fetch Jan 2025 - onwards playlists from Apple Music
+* Integrate MusicKit - make songs playable
