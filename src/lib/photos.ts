@@ -71,11 +71,12 @@ export function loadPhotosByMonth(): PhotosByMonth {
   const seenSrcs = new Map<string, Set<string>>();
 
   const addPhoto = (monthKey: string, photo: CameraPhoto) => {
-    if (!byMonth[monthKey]) {
+    let seen = seenSrcs.get(monthKey);
+    if (!seen) {
+      seen = new Set();
+      seenSrcs.set(monthKey, seen);
       byMonth[monthKey] = [];
-      seenSrcs.set(monthKey, new Set());
     }
-    const seen = seenSrcs.get(monthKey)!;
     if (seen.has(photo.src)) return;
     seen.add(photo.src);
     byMonth[monthKey].push(photo);
