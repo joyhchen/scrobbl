@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+import TimelineDial from '../components/TimelineDial.astro';
+import IPod from '../components/IPod.astro';
+import CassetteDeck from '../components/CassetteDeck.astro';
+import { loadCassettes } from '../lib/cassettes';
+import type { ClientCassette } from '../lib/types';
+
+const cassettes = loadCassettes();
+const initialCassette = cassettes[0];
+const initialPlaylists = initialCassette.playlists;
+
+const clientPayload: ClientCassette[] = cassettes.map((cassette) => ({
+  id: cassette.id,
+  ipodTheme: cassette.ipodTheme,
+  showTimelineDial: cassette.showTimelineDial,
+  playlists: cassette.playlists.map((pl) => ({
+    year: pl.year,
+    monthShort: pl.monthShort,
+    label: pl.label,
+    trackCount: pl.trackCount,
+    totalDurationText: pl.totalDurationText,
+    tracks: pl.tracks.map((t) => ({
+      title: t.title,
+      artistText: t.artistText,
+      durationText: t.durationText,
+    })),
+  })),
+}));
+
+// Escape `<` so embedded JSON cannot prematurely close the <script> tag.
+const safeJson = JSON.stringify(clientPayload).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>scrobbl</title>
+    <meta name="description" content="Monthly playlist time machine." />
+  </head>
+  <body>
+    <main class="studio-stage">
+      <button
+        type="button"
+        class="sound-toggle"
+        id="sound-toggle"
+        data-muted="false"
+        aria-pressed="false"
+        aria-label="Toggle dial and click-wheel sound effects"
+        title="Toggle click sounds"
+      >
+        <svg class="icon-sound" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+        <svg class="icon-muted" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
+
+      <TimelineDial playlists={initialPlaylists} initialActiveIndex={0} />
+      <IPod
+        playlists={initialPlaylists}
+        initialIndex={0}
+        initialTheme={initialCassette.ipodTheme}
+      />
+      <CassetteDeck cassettes={cassettes} initialCassetteId={initialCassette.id} />
+    </main>
+
+    <script id="cassettes-data" type="application/json" set:html={safeJson} />
+    <script>
+      import '../scripts/timeMachine';
+    </script>
+  </body>
+</html>

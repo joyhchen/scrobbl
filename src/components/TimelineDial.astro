@@ -1,0 +1,64 @@
+---
+import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
+import type { MonthlyPlaylist } from '../lib/types';
+
+interface Props {
+  playlists: MonthlyPlaylist[];
+  initialActiveIndex?: number;
+}
+
+const { playlists, initialActiveIndex = 0 } = Astro.props;
+const visibleCount = Math.min(VISIBLE_DIAL_MONTHS, playlists.length);
+const initialSlice = playlists.slice(0, visibleCount);
+---
+
+<aside class="timeline-dial" id="timeline-dial" aria-label="Playlist timeline dial">
+  <button
+    type="button"
+    class="dial-nav-btn"
+    id="dial-up-btn"
+    aria-label="Hover to scroll timeline up toward newer months"
+    title="Hover to scroll up"
+    disabled
+  >
+    <svg width="14" height="9" viewBox="0 0 14 9" fill="none" aria-hidden="true">
+      <path d="M1.5 7.5L7 2L12.5 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <div class="dial-viewport">
+    <div class="dial-rail" aria-hidden="true"></div>
+    <ul class="dial-slots" id="dial-slots" role="listbox" aria-label="Monthly playlists">
+      {initialSlice.map((pl, slotIdx) => (
+        <li
+          class="dial-slot"
+          data-active={slotIdx === initialActiveIndex ? 'true' : 'false'}
+        >
+          <button
+            type="button"
+            class="dial-month-btn"
+            style={getSlotStyle(slotIdx, visibleCount)}
+            data-playlist-index={slotIdx}
+            aria-selected={slotIdx === initialActiveIndex ? 'true' : 'false'}
+          >
+            <span class="dial-month-name">{pl.monthShort}</span>
+            <span class="dial-month-year">{pl.year}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <button
+    type="button"
+    class="dial-nav-btn"
+    id="dial-down-btn"
+    aria-label="Hover to scroll timeline down toward older months"
+    title="Hover to scroll down"
+    disabled={playlists.length <= VISIBLE_DIAL_MONTHS}
+  >
+    <svg width="14" height="9" viewBox="0 0 14 9" fill="none" aria-hidden="true">
+      <path d="M1.5 1.5L7 7L12.5 1.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+</aside>

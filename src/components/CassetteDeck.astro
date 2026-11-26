@@ -1,0 +1,65 @@
+---
+import type { CassettePreset } from '../lib/types';
+
+interface Props {
+  cassettes: CassettePreset[];
+  initialCassetteId?: string;
+}
+
+const { cassettes, initialCassetteId = cassettes[0]?.id } = Astro.props;
+---
+
+<aside class="cassette-deck" id="cassette-deck" aria-label="Cassette presets">
+  <div class="cassette-stack" role="radiogroup" aria-label="Choose a cassette">
+    {cassettes.map((cassette) => {
+      const isActive = cassette.id === initialCassetteId;
+      return (
+        <button
+          type="button"
+          class="cassette-card"
+          data-cassette-id={cassette.id}
+          data-shell={cassette.shellTone}
+          data-active={isActive ? 'true' : 'false'}
+          role="radio"
+          aria-checked={isActive ? 'true' : 'false'}
+          aria-label={`Load ${cassette.tapeLabel} cassette`}
+        >
+          <span class="cassette-shell">
+            <span class="cassette-screw s-tl" aria-hidden="true"></span>
+            <span class="cassette-screw s-tr" aria-hidden="true"></span>
+            <span class="cassette-screw s-bl" aria-hidden="true"></span>
+            <span class="cassette-screw s-br" aria-hidden="true"></span>
+
+            <span
+              class="cassette-paper-tape"
+              style={`--tape-tilt:${cassette.tapeTiltDeg}deg;`}
+            >
+              <span class="cassette-tape-title">{cassette.tapeLabel}</span>
+              {cassette.tapeSubLabel && (
+                <span class="cassette-tape-sub">{cassette.tapeSubLabel}</span>
+              )}
+            </span>
+
+            <span class="cassette-window" aria-hidden="true">
+              <span class="cassette-reel">
+                <span class="reel-hub"></span>
+              </span>
+              <span class="cassette-tape-bridge-strip"></span>
+              <span class="cassette-reel">
+                <span class="reel-hub"></span>
+              </span>
+            </span>
+
+            <span class="cassette-bottom-tray" aria-hidden="true">
+              <span class="tray-hole"></span>
+              <span class="tray-pin"></span>
+              <span class="tray-pin"></span>
+              <span class="tray-hole"></span>
+            </span>
+          </span>
+          <span class="cassette-led" aria-hidden="true"></span>
+        </button>
+      );
+    })}
+  </div>
+</aside>
