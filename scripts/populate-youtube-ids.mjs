@@ -203,7 +203,6 @@ function scoreCandidate(cand, track, index) {
   }
   score += bestArtistScore;
 
-  // Duration closeness check
   if (typeof track.durationMs === 'number' && track.durationMs > 0 && cand.durationMs) {
     const diffSec = Math.abs(track.durationMs - cand.durationMs) / 1000;
     if (diffSec <= 3) score += 20;

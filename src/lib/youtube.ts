@@ -277,9 +277,7 @@ export class IPodYouTubePlayer {
         this.player.seekTo(target, true);
         this.callbacks.onProgress(target, dur);
       }
-    } catch {
-      // Ignore seek error
-    }
+    } catch {}
   }
 
   public pauseForSkip(): void {
@@ -289,9 +287,7 @@ export class IPodYouTubePlayer {
     if (this.player && this.ready) {
       try {
         this.player.pauseVideo();
-      } catch {
-        // Ignore pause error
-      }
+      } catch {}
     }
     this.callbacks.onStateChange('loading');
     this.callbacks.onProgress(0, 0);
@@ -309,9 +305,7 @@ export class IPodYouTubePlayer {
           this.player.stopVideo();
         }
         this.player.destroy();
-      } catch {
-        // Ignore destroy error
-      }
+      } catch {}
       this.player = null;
     }
     this.ready = false;

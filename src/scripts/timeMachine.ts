@@ -26,6 +26,15 @@ const FILM_SIM_PRESETS: readonly FilmSimPreset[] = [
 
 const VALID_THEMES: ReadonlySet<string> = new Set<IPodColorTheme>(['aqua', 'coral', 'mint']);
 
+const TOPBAR_STATUS_GLYPHS: Record<PlaybackState, string> = {
+  playing: '▶',
+  paused: '❚❚',
+  loading: '…',
+  error: '!',
+  idle: '‹',
+  ended: '‹',
+};
+
 function formatSeconds(totalSeconds: number): string {
   if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '0:00';
   const rounded = Math.floor(totalSeconds);
@@ -253,17 +262,7 @@ function initTimeMachine(): void {
 
   function updateDetailTopbarStatus(): void {
     if (currentView !== 'detail') return;
-    if (playbackState === 'playing') {
-      topbarLeft.textContent = '▶';
-    } else if (playbackState === 'paused') {
-      topbarLeft.textContent = '❚❚';
-    } else if (playbackState === 'loading') {
-      topbarLeft.textContent = '…';
-    } else if (playbackState === 'error') {
-      topbarLeft.textContent = '!';
-    } else {
-      topbarLeft.textContent = '‹';
-    }
+    topbarLeft.textContent = TOPBAR_STATUS_GLYPHS[playbackState];
   }
 
   function showVideoFallback(reason: string, href: string): void {
@@ -1111,11 +1110,8 @@ function initTimeMachine(): void {
     if (next === trackCursor) return;
     trackCursor = next;
     soundEngine.playWheelClick();
-
-    if (currentView === 'tracks') {
-      renderListSelection(tracksListEl, trackCursor, tracksThumbEl);
-    } else if (currentView === 'detail') {
-      renderListSelection(tracksListEl, trackCursor, tracksThumbEl);
+    renderListSelection(tracksListEl, trackCursor, tracksThumbEl);
+    if (currentView === 'detail') {
       playActiveTrack(immediate);
     }
   }
