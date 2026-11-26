@@ -2,6 +2,7 @@ import { soundEngine } from '../lib/audio';
 import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
 import { IPodYouTubePlayer, type PlaybackState } from '../lib/youtube';
 import type {
+  CameraPhoto,
   ClientDisc,
   ClientPlaylist,
   ClientTrack,
@@ -10,6 +11,18 @@ import type {
 } from '../lib/types';
 
 type IPodView = 'playlists' | 'tracks' | 'detail';
+
+interface FilmSimPreset {
+  id: 'classic-chrome' | 'std' | 'acros' | 'velvia';
+  label: string;
+}
+
+const FILM_SIM_PRESETS: readonly FilmSimPreset[] = [
+  { id: 'classic-chrome', label: 'CLASSIC CHROME' },
+  { id: 'std', label: 'PROVIA / STD' },
+  { id: 'acros', label: 'ACROS' },
+  { id: 'velvia', label: 'VELVIA / VIVID' },
+];
 
 const VALID_THEMES: ReadonlySet<string> = new Set<IPodColorTheme>(['aqua', 'coral', 'mint']);
 
@@ -39,16 +52,30 @@ function isClientTrack(value: unknown): value is ClientTrack {
   );
 }
 
+function isCameraPhoto(value: unknown): value is CameraPhoto {
+  return (
+    isRecord(value) &&
+    typeof value.src === 'string' &&
+    (value.caption === undefined || typeof value.caption === 'string') &&
+    (value.date === undefined || typeof value.date === 'string') &&
+    (value.filmSim === undefined || typeof value.filmSim === 'string') &&
+    (value.meta === undefined || typeof value.meta === 'string')
+  );
+}
+
 function isClientPlaylist(value: unknown): value is ClientPlaylist {
   return (
     isRecord(value) &&
+    typeof value.monthKey === 'string' &&
     typeof value.year === 'number' &&
     typeof value.monthShort === 'string' &&
     typeof value.label === 'string' &&
     typeof value.trackCount === 'number' &&
     typeof value.totalDurationText === 'string' &&
     Array.isArray(value.tracks) &&
-    value.tracks.every(isClientTrack)
+    value.tracks.every(isClientTrack) &&
+    Array.isArray(value.photos) &&
+    value.photos.every(isCameraPhoto)
   );
 }
 
@@ -151,6 +178,54 @@ function initTimeMachine(): void {
 
   const soundToggle = requireButton('sound-toggle');
 
+  const fujiDeskSpotEl = requireEl('fuji-desk-spot');
+  const fujiCameraBtn = requireButton('fuji-camera-btn');
+  const fujiBadgeMonthEl = requireEl('fuji-desk-badge-month');
+  const fujiBadgeCountEl = requireEl('fuji-desk-badge-count');
+
+  const cameraModalEl = requireEl('camera-modal');
+  const cameraBackdropEl = requireEl('camera-modal-backdrop');
+  const cameraCloseBtn = requireButton('camera-close-btn');
+  const cameraStatusLedEl = requireEl('camera-status-led');
+  const cameraTitleEl = requireEl('camera-modal-title');
+  const cameraPrevMonthBtn = requireButton('camera-prev-month-btn');
+  const cameraNextMonthBtn = requireButton('camera-next-month-btn');
+  const cameraDeckDispBtn = requireButton('camera-deck-disp-btn');
+  const cameraCmdDialBtn = requireButton('camera-cmd-dial');
+
+  const cameraLcdEl = requireEl('camera-lcd');
+  const cameraViewSingleEl = requireEl('camera-view-single');
+  const cameraViewGridEl = requireEl('camera-view-grid');
+  const cameraViewEmptyEl = requireEl('camera-view-empty');
+  const cameraPhotoImgRaw = requireEl('camera-photo-img');
+  if (!(cameraPhotoImgRaw instanceof HTMLImageElement)) {
+    throw new Error('Expected #camera-photo-img to be an <img>');
+  }
+  const cameraPhotoImgEl = cameraPhotoImgRaw;
+  const cameraHudEl = requireEl('camera-hud');
+  const cameraFrameTextEl = requireEl('camera-frame-text');
+  const cameraHudSimEl = requireEl('camera-hud-sim');
+  const cameraHudDateEl = requireEl('camera-hud-date');
+  const cameraHudCaptionEl = requireEl('camera-hud-caption');
+  const cameraHudMetaEl = requireEl('camera-hud-meta');
+  const cameraGridTitleEl = requireEl('camera-grid-title');
+  const cameraGridCountEl = requireEl('camera-grid-count');
+  const cameraGridCellsEl = requireEl('camera-grid-cells');
+  const cameraEmptyMonthEl = requireEl('camera-empty-month');
+  const cameraEmptySimEl = requireEl('camera-empty-sim');
+  const cameraEmptyHintEl = requireEl('camera-empty-hint');
+  const cameraJumpPopulatedBtn = requireButton('camera-jump-populated-btn');
+
+  const cameraBtnPlay = requireButton('camera-btn-play');
+  const cameraBtnDisp = requireButton('camera-btn-disp');
+  const cameraBtnSim = requireButton('camera-btn-sim');
+  const cameraBtnGrid = requireButton('camera-btn-grid');
+  const cameraDpadUp = requireButton('camera-dpad-up');
+  const cameraDpadDown = requireButton('camera-dpad-down');
+  const cameraDpadLeft = requireButton('camera-dpad-left');
+  const cameraDpadRight = requireButton('camera-dpad-right');
+  const cameraDpadOk = requireButton('camera-dpad-ok');
+
   let activeDiscIdx = 0;
   let playlists: ClientPlaylist[] = discs[0].playlists;
   let maxDialStart = Math.max(0, playlists.length - VISIBLE_DIAL_MONTHS);
@@ -161,6 +236,13 @@ function initTimeMachine(): void {
   let currentView: IPodView = 'tracks';
   let playbackState: PlaybackState = 'idle';
   let skipLoadTimer: number | null = null;
+
+  let cameraOpen = false;
+  let cameraPhotoIdx = 0;
+  let cameraMode: 'single' | 'grid' = 'single';
+  let cameraShowHud = true;
+  let cameraFilmSimIdx = 0;
+  let cameraLedTimer: number | null = null;
 
   function releaseIframeFocus(): void {
     if (document.activeElement instanceof HTMLIFrameElement) {
@@ -752,6 +834,12 @@ function initTimeMachine(): void {
     dialEl.dataset.hidden = disc.showTimelineDial ? 'false' : 'true';
     dialEl.setAttribute('aria-hidden', disc.showTimelineDial ? 'false' : 'true');
 
+    fujiDeskSpotEl.dataset.hidden = disc.showTimelineDial ? 'false' : 'true';
+    fujiDeskSpotEl.setAttribute('aria-hidden', disc.showTimelineDial ? 'false' : 'true');
+    if (!disc.showTimelineDial && cameraOpen) {
+      closeCameraModal(false);
+    }
+
     const buttons = discDeckEl.querySelectorAll<HTMLButtonElement>('.disc-card');
     buttons.forEach((btn) => {
       const active = btn.dataset.discId === disc.id;
@@ -762,6 +850,7 @@ function initTimeMachine(): void {
     renderPlaylistsMenu();
     renderTracksList();
     updateIPodViewState();
+    syncCameraDeskBadge();
     if (disc.showTimelineDial) {
       renderDial();
     }
@@ -791,9 +880,217 @@ function initTimeMachine(): void {
     renderTracksList();
     renderListSelection(playlistsListEl, playlistCursor, playlistsThumbEl);
     updateIPodViewState();
+    syncCameraDeskBadge();
     if (discs[activeDiscIdx].showTimelineDial) {
       ensurePlaylistVisibleOnDial(idx);
     }
+    if (cameraOpen) {
+      cameraPhotoIdx = 0;
+      cameraMode = 'single';
+      renderCameraModal();
+    }
+  }
+
+  function pulseCameraLed(): void {
+    if (cameraLedTimer !== null) {
+      window.clearTimeout(cameraLedTimer);
+    }
+    cameraStatusLedEl.dataset.pulse = 'true';
+    cameraLedTimer = window.setTimeout(() => {
+      cameraLedTimer = null;
+      delete cameraStatusLedEl.dataset.pulse;
+    }, 180);
+  }
+
+  function syncCameraDeskBadge(): void {
+    const pl = playlists[activePlaylistIdx];
+    const label = pl?.label ?? 'Camera Roll';
+    const count = pl?.photos.length ?? 0;
+
+    fujiBadgeMonthEl.textContent = label.toUpperCase();
+    fujiBadgeCountEl.textContent =
+      count > 0 ? `${count} ${count === 1 ? 'SHOT' : 'SHOTS'}` : 'CAMERA ROLL';
+    fujiCameraBtn.setAttribute('aria-label', `Open JOYFILM camera roll for ${label}`);
+    fujiCameraBtn.title = `Open camera roll (${label})`;
+  }
+
+  function findNearestPopulatedMonthIdx(): number {
+    let bestIdx = -1;
+    let bestDist = Infinity;
+    playlists.forEach((pl, idx) => {
+      if (pl.photos.length === 0) return;
+      const dist = Math.abs(idx - activePlaylistIdx);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = idx;
+      }
+    });
+    return bestIdx;
+  }
+
+  function renderCameraGrid(photos: CameraPhoto[]): void {
+    const fragment = document.createDocumentFragment();
+    photos.forEach((photo, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'fuji-grid-thumb';
+      btn.dataset.photoIdx = String(idx);
+      btn.dataset.selected = idx === cameraPhotoIdx ? 'true' : 'false';
+      btn.setAttribute('role', 'option');
+      btn.setAttribute('aria-selected', idx === cameraPhotoIdx ? 'true' : 'false');
+      btn.setAttribute('aria-label', photo.caption || `Photo ${idx + 1} of ${photos.length}`);
+
+      const img = document.createElement('img');
+      img.src = photo.src;
+      img.alt = photo.caption || `Photo ${idx + 1}`;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+
+      const num = document.createElement('span');
+      num.className = 'fuji-grid-thumb-num';
+      num.textContent = String(idx + 1).padStart(2, '0');
+
+      btn.append(img, num);
+      fragment.append(btn);
+    });
+    cameraGridCellsEl.replaceChildren(fragment);
+  }
+
+  function renderCameraModal(): void {
+    const pl = playlists[activePlaylistIdx];
+    const label = pl?.label ?? 'Camera Roll';
+    const monthKey = pl?.monthKey ?? 'YYYY-MM';
+    const photos = pl?.photos ?? [];
+    const sim = FILM_SIM_PRESETS[cameraFilmSimIdx];
+
+    cameraTitleEl.textContent = label;
+    cameraPrevMonthBtn.disabled = activePlaylistIdx <= 0;
+    cameraNextMonthBtn.disabled = activePlaylistIdx >= playlists.length - 1;
+    cameraLcdEl.dataset.filmSim = sim.id;
+    cameraEmptySimEl.textContent = sim.label;
+
+    const hasPhotos = photos.length > 0;
+    const isGrid = hasPhotos && cameraMode === 'grid';
+
+    cameraViewSingleEl.dataset.visible = hasPhotos && !isGrid ? 'true' : 'false';
+    cameraViewSingleEl.setAttribute('aria-hidden', hasPhotos && !isGrid ? 'false' : 'true');
+
+    cameraViewGridEl.dataset.visible = isGrid ? 'true' : 'false';
+    cameraViewGridEl.setAttribute('aria-hidden', isGrid ? 'false' : 'true');
+
+    cameraViewEmptyEl.dataset.visible = !hasPhotos ? 'true' : 'false';
+    cameraViewEmptyEl.setAttribute('aria-hidden', !hasPhotos ? 'false' : 'true');
+
+    cameraBtnGrid.dataset.active = isGrid ? 'true' : 'false';
+    cameraBtnPlay.dataset.active = hasPhotos && !isGrid ? 'true' : 'false';
+
+    if (!hasPhotos) {
+      cameraEmptyMonthEl.textContent = label;
+      cameraEmptyHintEl.textContent = `No photos for ${label} yet.`;
+
+      const nearestIdx = findNearestPopulatedMonthIdx();
+      if (nearestIdx !== -1) {
+        const nearestPl = playlists[nearestIdx];
+        cameraJumpPopulatedBtn.hidden = false;
+        cameraJumpPopulatedBtn.textContent = `Jump to ${nearestPl.label} (${nearestPl.photos.length}) ›`;
+      } else {
+        cameraJumpPopulatedBtn.hidden = true;
+      }
+      return;
+    }
+
+    cameraPhotoIdx = Math.max(0, Math.min(photos.length - 1, cameraPhotoIdx));
+    const activePhoto = photos[cameraPhotoIdx];
+
+    if (cameraPhotoImgEl.getAttribute('src') !== activePhoto.src) {
+      cameraPhotoImgEl.src = activePhoto.src;
+    }
+    cameraPhotoImgEl.alt = activePhoto.caption || `${label} photo ${cameraPhotoIdx + 1}`;
+
+    cameraFrameTextEl.textContent = `${String(cameraPhotoIdx + 1).padStart(2, '0')} / ${String(
+      photos.length
+    ).padStart(2, '0')}`;
+    cameraHudSimEl.textContent = activePhoto.filmSim || sim.label;
+    cameraHudDateEl.textContent = activePhoto.date || monthKey.replace('-', '.');
+    cameraHudCaptionEl.textContent = activePhoto.caption || '';
+    cameraHudMetaEl.textContent = activePhoto.meta || '23mm  F2.0';
+    cameraHudEl.dataset.visible = cameraShowHud ? 'true' : 'false';
+
+    if (isGrid) {
+      cameraGridTitleEl.textContent = label;
+      cameraGridCountEl.textContent = `${photos.length} ${photos.length === 1 ? 'SHOT' : 'SHOTS'}`;
+      renderCameraGrid(photos);
+    }
+  }
+
+  function openCameraModal(): void {
+    if (!discs[activeDiscIdx].showTimelineDial) return;
+    releaseIframeFocus();
+    soundEngine.unlock();
+    soundEngine.playCameraShutter();
+    cameraOpen = true;
+    cameraPhotoIdx = 0;
+    cameraMode = 'single';
+    cameraModalEl.dataset.open = 'true';
+    cameraModalEl.setAttribute('aria-hidden', 'false');
+    renderCameraModal();
+    pulseCameraLed();
+    cameraCloseBtn.focus({ preventScroll: true });
+  }
+
+  function closeCameraModal(playSound = true): void {
+    if (!cameraOpen) return;
+    cameraOpen = false;
+    cameraModalEl.dataset.open = 'false';
+    cameraModalEl.setAttribute('aria-hidden', 'true');
+    if (playSound) {
+      soundEngine.playCameraButton('action');
+    }
+    fujiCameraBtn.focus({ preventScroll: true });
+  }
+
+  function stepCameraPhoto(delta: StepDirection): void {
+    const photos = playlists[activePlaylistIdx]?.photos ?? [];
+    if (photos.length <= 1) return;
+    cameraPhotoIdx = (cameraPhotoIdx + delta + photos.length) % photos.length;
+    soundEngine.playCameraButton('nav');
+    pulseCameraLed();
+    renderCameraModal();
+  }
+
+  function stepCameraMonth(delta: StepDirection): void {
+    const nextIdx = Math.max(0, Math.min(playlists.length - 1, activePlaylistIdx + delta));
+    if (nextIdx === activePlaylistIdx) return;
+    soundEngine.playCameraButton('action');
+    pulseCameraLed();
+    openPlaylist(nextIdx);
+  }
+
+  function toggleCameraGrid(): void {
+    const photos = playlists[activePlaylistIdx]?.photos ?? [];
+    if (photos.length === 0) return;
+    soundEngine.playCameraButton('action');
+    cameraMode = cameraMode === 'grid' ? 'single' : 'grid';
+    pulseCameraLed();
+    renderCameraModal();
+  }
+
+  function toggleCameraHudOrBack(): void {
+    soundEngine.playCameraButton('action');
+    if (cameraMode === 'grid') {
+      cameraMode = 'single';
+      renderCameraModal();
+      return;
+    }
+    cameraShowHud = !cameraShowHud;
+    renderCameraModal();
+  }
+
+  function cycleCameraFilmSim(): void {
+    soundEngine.playCameraButton('action');
+    cameraFilmSimIdx = (cameraFilmSimIdx + 1) % FILM_SIM_PRESETS.length;
+    pulseCameraLed();
+    renderCameraModal();
   }
 
   function stepIPod(delta: StepDirection, immediate = true): void {
@@ -997,7 +1294,95 @@ function initTimeMachine(): void {
   );
   tracksListEl.addEventListener('scroll', () => syncScrollbar(tracksListEl, tracksThumbEl));
 
+  fujiCameraBtn.addEventListener('click', openCameraModal);
+  cameraBackdropEl.addEventListener('click', () => closeCameraModal(true));
+  cameraCloseBtn.addEventListener('click', () => closeCameraModal(true));
+  cameraPrevMonthBtn.addEventListener('click', () => stepCameraMonth(-1));
+  cameraNextMonthBtn.addEventListener('click', () => stepCameraMonth(1));
+  cameraDeckDispBtn.addEventListener('click', toggleCameraHudOrBack);
+  cameraCmdDialBtn.addEventListener('click', () => stepCameraPhoto(1));
+  cameraBtnPlay.addEventListener('click', () => {
+    soundEngine.playCameraButton('action');
+    if (cameraMode === 'grid') {
+      cameraMode = 'single';
+      renderCameraModal();
+    }
+  });
+  cameraBtnDisp.addEventListener('click', toggleCameraHudOrBack);
+  cameraBtnSim.addEventListener('click', cycleCameraFilmSim);
+  cameraBtnGrid.addEventListener('click', toggleCameraGrid);
+  cameraDpadUp.addEventListener('click', () => stepCameraMonth(-1));
+  cameraDpadDown.addEventListener('click', () => stepCameraMonth(1));
+  cameraDpadLeft.addEventListener('click', () => stepCameraPhoto(-1));
+  cameraDpadRight.addEventListener('click', () => stepCameraPhoto(1));
+  cameraDpadOk.addEventListener('click', () => {
+    if (cameraMode === 'grid') {
+      soundEngine.playCameraButton('action');
+      cameraMode = 'single';
+      renderCameraModal();
+    } else {
+      toggleCameraGrid();
+    }
+  });
+  cameraJumpPopulatedBtn.addEventListener('click', () => {
+    const nearestIdx = findNearestPopulatedMonthIdx();
+    if (nearestIdx !== -1) {
+      soundEngine.playCameraButton('action');
+      openPlaylist(nearestIdx);
+    }
+  });
+  cameraGridCellsEl.addEventListener('click', (e) => {
+    if (!(e.target instanceof Element)) return;
+    const btn = e.target.closest('.fuji-grid-thumb');
+    if (!(btn instanceof HTMLButtonElement)) return;
+    const idx = Number(btn.dataset.photoIdx);
+    if (!Number.isFinite(idx)) return;
+    soundEngine.playCameraButton('action');
+    cameraPhotoIdx = idx;
+    cameraMode = 'single';
+    pulseCameraLed();
+    renderCameraModal();
+  });
+
+  bindWheelStepper(cameraCmdDialBtn, 24, (step) => stepCameraPhoto(step));
+  bindWheelStepper(cameraViewSingleEl, 36, (step) => stepCameraPhoto(step));
+
   window.addEventListener('keydown', (e) => {
+    if (cameraOpen) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (cameraMode === 'grid') {
+          cameraMode = 'single';
+          soundEngine.playCameraButton('action');
+          renderCameraModal();
+        } else {
+          closeCameraModal(true);
+        }
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        stepCameraPhoto(-1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        stepCameraPhoto(1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        stepCameraMonth(-1);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        stepCameraMonth(1);
+      } else if (e.key === 'Enter' || e.key.toLowerCase() === 'g') {
+        e.preventDefault();
+        toggleCameraGrid();
+      } else if (e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        toggleCameraHudOrBack();
+      } else if (e.key.toLowerCase() === 'q') {
+        e.preventDefault();
+        cycleCameraFilmSim();
+      }
+      return;
+    }
+
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       stepIPod(-1, true);
@@ -1028,10 +1413,8 @@ function initTimeMachine(): void {
       (e) => {
         const nx = (e.clientX / window.innerWidth) * 2 - 1;
         const ny = (e.clientY / window.innerHeight) * 2 - 1;
-        ipodRig.style.setProperty('--tilt-x', `${(-ny * 3.5 + 1.5).toFixed(2)}deg`);
-        ipodRig.style.setProperty('--tilt-y', `${(nx * 4.5 - 2.5).toFixed(2)}deg`);
-        ipodBody.style.setProperty('--sheen-x', `${(34 + nx * 24).toFixed(1)}%`);
-        ipodBody.style.setProperty('--sheen-y', `${(20 + ny * 18).toFixed(1)}%`);
+        ipodBody.style.setProperty('--sheen-x', `${(34 + nx * 18).toFixed(1)}%`);
+        ipodBody.style.setProperty('--sheen-y', `${(20 + ny * 14).toFixed(1)}%`);
       },
       { passive: true }
     );
@@ -1040,6 +1423,7 @@ function initTimeMachine(): void {
   updateIPodViewState();
   syncScrollbar(playlistsListEl, playlistsThumbEl);
   syncScrollbar(tracksListEl, tracksThumbEl);
+  syncCameraDeskBadge();
   renderDial();
 }
 

@@ -246,6 +246,65 @@ class SoundEngine {
       stopAfter: 0.024,
     });
   }
+
+  public playCameraShutter(): void {
+    const audio = this.ensureContext();
+    if (!audio) return;
+
+    const now = audio.ctx.currentTime;
+    // Crisp Fujifilm leaf-shutter double-snick + subtle metallic body resonance.
+    this.playNoiseBurst(audio.ctx, audio.noiseBuffer, {
+      startTime: now,
+      freq: 4600,
+      q: 4.8,
+      gain: 0.22,
+      decayDuration: 0.014,
+      stopAfter: 0.018,
+    });
+    this.playTone(audio.ctx, {
+      type: 'triangle',
+      startTime: now,
+      startFreq: 1620,
+      endFreq: 520,
+      freqDuration: 0.016,
+      peakGain: 0.09,
+      decayDuration: 0.018,
+      stopAfter: 0.022,
+    });
+    this.playNoiseBurst(audio.ctx, audio.noiseBuffer, {
+      startTime: now + 0.036,
+      freq: 3400,
+      q: 4.0,
+      gain: 0.15,
+      decayDuration: 0.016,
+      stopAfter: 0.02,
+    });
+  }
+
+  public playCameraButton(kind: 'nav' | 'action' = 'nav'): void {
+    const audio = this.ensureContext();
+    if (!audio) return;
+
+    const now = audio.ctx.currentTime;
+    this.playNoiseBurst(audio.ctx, audio.noiseBuffer, {
+      startTime: now,
+      freq: kind === 'action' ? 3200 : 3800,
+      q: 5.0,
+      gain: 0.14,
+      decayDuration: 0.01,
+      stopAfter: 0.014,
+    });
+    this.playTone(audio.ctx, {
+      type: 'sine',
+      startTime: now,
+      startFreq: kind === 'action' ? 1120 : 1480,
+      endFreq: kind === 'action' ? 480 : 640,
+      freqDuration: 0.012,
+      peakGain: 0.055,
+      decayDuration: 0.015,
+      stopAfter: 0.018,
+    });
+  }
 }
 
 export const soundEngine = new SoundEngine();

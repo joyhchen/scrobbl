@@ -8,7 +8,7 @@ For 7 years, I've compiled these monthly playlists.
 
 This year's holiday vibe-coded fun is an interactive iPod timeline player.
 
-<img width="860" alt="scrobbl interactive demo" src="./assets/demo.gif" />
+<img width="860" alt="scrobbl desk view with iPod, JOYFILM camera, and 6-disc changer" src="./assets/screenshot.png" />
 
 ## Running locally
 
@@ -37,6 +37,22 @@ npm run populate-youtube
 
 Sadly, YouTube bans embedding most tracks.
 
-## Todo
+## Adding camera roll photos
 
-* Add a camera button. When clicked, it opens a realistic camera with photos from my camera roll from the corresponding year and month.
+The JOYFILM camera next to the iPod displays photos for the active playlist's month (`YYYY-MM`). You can add photos in either (or both) ways:
+
+* **Local folder**: Drop images into `public/photos/YYYY-MM/` (e.g., `public/photos/2024-03/01.jpg`) — they are auto-discovered at build time.
+* **Manifest (`src/data/photos.json`)**: Add entries keyed by `YYYY-MM` with optional captions, dates, film simulation labels, or external URLs (e.g., Cloudflare R2):
+
+```json
+{
+  "2024-03": [
+    {
+      "src": "/photos/2024-03/01.jpg",
+      "date": "2024.03.18",
+      "caption": "golden hour walk",
+      "meta": "23mm F2.0"
+    }
+  ]
+}
+```

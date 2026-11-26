@@ -1,0 +1,237 @@
+---
+interface Props {
+  initialMonthLabel: string;
+}
+
+const { initialMonthLabel } = Astro.props;
+const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+---
+
+<div
+  class="camera-modal"
+  id="camera-modal"
+  data-open="false"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="camera-modal-title"
+  aria-hidden="true"
+>
+  <div class="camera-modal-backdrop" id="camera-modal-backdrop"></div>
+
+  <div class="camera-modal-frame">
+    <div class="camera-modal-topbar">
+      <div class="fuji-rear-month-strip">
+        <button
+          type="button"
+          class="fuji-month-step-btn"
+          id="camera-prev-month-btn"
+          aria-label="Newer month"
+          title="Newer month (↑)"
+        >
+          ‹
+        </button>
+        <span class="fuji-rear-month-title" id="camera-modal-title">
+          {initialMonthLabel}
+        </span>
+        <button
+          type="button"
+          class="fuji-month-step-btn"
+          id="camera-next-month-btn"
+          aria-label="Older month"
+          title="Older month (↓)"
+        >
+          ›
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="camera-modal-close"
+        id="camera-close-btn"
+        aria-label="Close camera"
+        title="Close camera (Esc)"
+      >
+        <span>ESC</span>
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <path d="M2 2L10 10M10 2L2 10" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="fuji-rear-rig" id="fuji-rear-rig">
+      <img
+        class="fuji-rear-img"
+        src={`${base}/images/joyfilm-rear.webp`}
+        alt=""
+        width="1098"
+        height="658"
+        decoding="async"
+        draggable="false"
+      />
+
+      <span class="fuji-rear-led" id="camera-status-led" aria-hidden="true"></span>
+
+      <!-- Live 3:2 LCD composited directly into the photorealistic camera screen bezel -->
+      <div class="fuji-lcd" id="camera-lcd" data-film-sim="classic-chrome">
+        <div class="fuji-lcd-glare" aria-hidden="true"></div>
+
+        <div class="fuji-lcd-single" id="camera-view-single" data-visible="true">
+          <img
+            class="fuji-photo-img"
+            id="camera-photo-img"
+            src=""
+            alt=""
+            decoding="async"
+          />
+
+          <div class="fuji-hud" id="camera-hud" data-visible="true">
+            <div class="fuji-hud-top">
+              <span class="fuji-hud-counter" id="camera-frame-counter">
+                <span class="fuji-hud-play-icon" aria-hidden="true">▶</span>
+                <span id="camera-frame-text">00 / 00</span>
+              </span>
+
+              <div class="fuji-hud-top-right">
+                <span class="fuji-hud-battery" aria-hidden="true">
+                  <span class="fuji-hud-battery-body">
+                    <span class="fuji-hud-battery-fill"></span>
+                  </span>
+                  <span class="fuji-hud-battery-tip"></span>
+                </span>
+                <span class="fuji-hud-sim" id="camera-hud-sim">CLASSIC CHROME</span>
+              </div>
+            </div>
+
+            <div class="fuji-hud-bottom">
+              <div class="fuji-hud-caption-block">
+                <span class="fuji-hud-date" id="camera-hud-date"></span>
+                <span class="fuji-hud-caption" id="camera-hud-caption"></span>
+              </div>
+              <span class="fuji-hud-meta" id="camera-hud-meta"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fuji-lcd-grid" id="camera-view-grid" data-visible="false" aria-hidden="true">
+          <div class="fuji-grid-header">
+            <span id="camera-grid-title">{initialMonthLabel}</span>
+            <span id="camera-grid-count">0 SHOTS</span>
+          </div>
+          <div class="fuji-grid-cells" id="camera-grid-cells" role="listbox" aria-label="Month photos"></div>
+        </div>
+
+        <div class="fuji-lcd-empty" id="camera-view-empty" data-visible="false" aria-hidden="true">
+          <div class="fuji-empty-top">
+            <span class="fuji-empty-month" id="camera-empty-month">{initialMonthLabel}</span>
+            <span class="fuji-hud-sim" id="camera-empty-sim">CLASSIC CHROME</span>
+          </div>
+          <div class="fuji-empty-center">
+            <div class="fuji-empty-badge">NO IMAGE</div>
+            <p class="fuji-empty-hint" id="camera-empty-hint">
+              No photos for {initialMonthLabel} yet.
+            </p>
+            <button
+              type="button"
+              class="fuji-empty-jump-btn"
+              id="camera-jump-populated-btn"
+              hidden
+            >
+              Jump to nearest roll ›
+            </button>
+          </div>
+          <div class="fuji-empty-footer">
+            <span>↑↓ CHANGE MONTH</span>
+            <span>ESC CLOSE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Precision interactive hitboxes aligned over the photorealistic hardware controls -->
+      <div class="fuji-rear-hitboxes">
+        <button
+          type="button"
+          class="fuji-hitbox is-round is-deck-disp"
+          id="camera-deck-disp-btn"
+          aria-label="Toggle playback info overlay"
+          title="DISP / BACK (D)"
+        ></button>
+
+        <button
+          type="button"
+          class="fuji-hitbox is-pill is-cmd-dial"
+          id="camera-cmd-dial"
+          aria-label="Next photo"
+          title="Scroll or click to advance photos"
+        ></button>
+
+        <button
+          type="button"
+          class="fuji-hitbox is-round is-play"
+          id="camera-btn-play"
+          aria-label="Single photo playback"
+          title="PLAY — Single photo view"
+        ></button>
+
+        <button
+          type="button"
+          class="fuji-hitbox is-dpad-arm is-dpad-up"
+          id="camera-dpad-up"
+          aria-label="Newer month"
+          title="Newer month (↑)"
+        ></button>
+        <button
+          type="button"
+          class="fuji-hitbox is-dpad-arm is-dpad-right"
+          id="camera-dpad-right"
+          aria-label="Next photo"
+          title="Next photo (→)"
+        ></button>
+        <button
+          type="button"
+          class="fuji-hitbox is-dpad-arm is-dpad-down"
+          id="camera-dpad-down"
+          aria-label="Older month"
+          title="Older month (↓)"
+        ></button>
+        <button
+          type="button"
+          class="fuji-hitbox is-dpad-arm is-dpad-left"
+          id="camera-dpad-left"
+          aria-label="Previous photo"
+          title="Previous photo (←)"
+        ></button>
+        <button
+          type="button"
+          class="fuji-hitbox is-round is-dpad-ok"
+          id="camera-dpad-ok"
+          aria-label="Toggle grid or open selected photo"
+          title="MENU / OK (Enter)"
+        ></button>
+
+        <button
+          type="button"
+          class="fuji-hitbox is-round is-disp"
+          id="camera-btn-disp"
+          aria-label="Toggle HUD display or go back"
+          title="DISP / BACK (D)"
+        ></button>
+
+        <button
+          type="button"
+          class="fuji-hitbox is-round is-sim"
+          id="camera-btn-sim"
+          aria-label="Cycle JOYFILM film simulation preview"
+          title="Cycle Film Simulation (Q)"
+        ></button>
+
+        <button
+          type="button"
+          class="fuji-hitbox is-round is-grid"
+          id="camera-btn-grid"
+          aria-label="Toggle 3 by 3 photo grid"
+          title="Contact sheet grid (G)"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>

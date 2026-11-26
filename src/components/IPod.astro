@@ -12,9 +12,8 @@ const initialPlaylist = playlists[initialIndex];
 ---
 
 <section class="ipod-stage" aria-label="iPod playlist viewer">
-  <div class="ipod-ground-shadow" aria-hidden="true"></div>
-
   <div class="ipod-3d-rig" id="ipod-3d-rig" data-theme={initialTheme}>
+    <div class="ipod-ground-shadow" aria-hidden="true"></div>
     <div class="ipod-chrome-back" aria-hidden="true"></div>
     <div class="ipod-bevel-mid" aria-hidden="true"></div>
 
@@ -234,4 +233,6 @@ const initialPlaylist = playlists[initialIndex];
       </div>
     </div>
   </div>
+
+  <slot />
 </section>

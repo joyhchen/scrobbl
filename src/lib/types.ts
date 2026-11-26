@@ -45,13 +45,24 @@ export interface DiscPreset {
   playlists: MonthlyPlaylist[];
 }
 
+export interface CameraPhoto {
+  src: string;
+  caption?: string;
+  date?: string;
+  filmSim?: string;
+  meta?: string;
+}
+
+export type PhotosByMonth = Record<string, CameraPhoto[]>;
+
 export type ClientTrack = Pick<Track, 'title' | 'artistText' | 'durationText' | 'youtubeId'>;
 
 export type ClientPlaylist = Pick<
   MonthlyPlaylist,
-  'year' | 'monthShort' | 'label' | 'trackCount' | 'totalDurationText'
+  'monthKey' | 'year' | 'monthShort' | 'label' | 'trackCount' | 'totalDurationText'
 > & {
   tracks: ClientTrack[];
+  photos: CameraPhoto[];
 };
 
 export type ClientDisc = Pick<

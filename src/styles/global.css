@@ -1,8 +1,8 @@
 :root {
-  --bg-obsidian: #0a0b0e;
-  --dial-muted: rgba(224, 230, 240, 0.28);
-  --dial-active: rgba(255, 255, 255, 0.88);
-  --dial-hover: #ffffff;
+  --bg-obsidian: #c49c6e;
+  --dial-muted: rgba(58, 37, 20, 0.44);
+  --dial-active: rgba(28, 17, 9, 0.94);
+  --dial-hover: #140b04;
   --font-display: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   --font-ui: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Lucida Grande', sans-serif;
   --font-mono: 'SF Mono', ui-monospace, 'Menlo', monospace;
@@ -22,7 +22,7 @@ body {
   height: 100%;
   overflow: hidden;
   background-color: var(--bg-obsidian);
-  color: #f3f5f8;
+  color: #24160c;
   font-family: var(--font-display);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -38,19 +38,23 @@ body {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 0 0 0 clamp(24px, 3.6vw, 56px);
-  background:
-    radial-gradient(ellipse 56% 52% at 50% 46%, rgba(44, 52, 68, 0.34) 0%, rgba(18, 21, 28, 0.22) 48%, rgba(8, 9, 12, 0.96) 100%),
-    radial-gradient(circle at 12% 50%, rgba(160, 180, 215, 0.06) 0%, transparent 42%),
-    linear-gradient(180deg, #0d0f13 0%, #090a0d 100%);
+  background-color: #c8a275;
+  background-image:
+    radial-gradient(ellipse 68% 64% at 38% 24%, rgba(255, 245, 224, 0.14) 0%, transparent 64%),
+    radial-gradient(ellipse 104% 104% at 48% 48%, transparent 62%, rgba(72, 42, 18, 0.22) 100%),
+    var(--desk-bg);
+  background-size: 100% 100%, 100% 100%, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat;
 }
 
-/* Subtle noise grain reduces gradient banding on dark backgrounds */
+/* Subtle micro-grain keeps surface lighting organic */
 .studio-stage::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.032;
+  opacity: 0.022;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   z-index: 1;
 }
@@ -64,7 +68,7 @@ body {
   width: 520px;
   height: 110px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(120, 145, 190, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(96, 58, 26, 0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -212,18 +216,18 @@ body {
   width: 54px;
   height: 30px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(58, 37, 20, 0.24);
   background: linear-gradient(
     180deg,
-    rgba(66, 72, 84, 0.62) 0%,
-    rgba(32, 36, 44, 0.8) 52%,
-    rgba(22, 25, 31, 0.9) 100%
+    rgba(255, 246, 230, 0.54) 0%,
+    rgba(218, 186, 146, 0.62) 52%,
+    rgba(192, 156, 114, 0.72) 100%
   );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.24),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.55),
-    0 6px 18px rgba(0, 0, 0, 0.55);
-  color: rgba(236, 241, 250, 0.72);
+    inset 0 1px 0 rgba(255, 250, 240, 0.68),
+    inset 0 -1px 2px rgba(82, 50, 24, 0.22),
+    0 4px 12px rgba(56, 32, 12, 0.24);
+  color: rgba(42, 26, 14, 0.8);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -239,29 +243,28 @@ body {
 
 .dial-nav-btn:hover:not(:disabled),
 .dial-nav-btn.is-hover-scrolling:not(:disabled) {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.38);
+  color: #160c05;
+  border-color: rgba(58, 37, 20, 0.45);
   background: linear-gradient(
     180deg,
-    rgba(96, 106, 124, 0.76) 0%,
-    rgba(46, 52, 64, 0.88) 55%,
-    rgba(30, 35, 44, 0.96) 100%
+    rgba(255, 250, 240, 0.78) 0%,
+    rgba(232, 204, 166, 0.84) 55%,
+    rgba(208, 174, 132, 0.9) 100%
   );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.38),
-    0 0 20px rgba(255, 255, 255, 0.14),
-    0 6px 18px rgba(0, 0, 0, 0.6);
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 6px 16px rgba(56, 32, 12, 0.3);
 }
 
 .dial-nav-btn:active:not(:disabled) {
   transform: translateY(1px) scale(0.95);
   box-shadow:
-    inset 0 2px 5px rgba(0, 0, 0, 0.7),
-    0 2px 6px rgba(0, 0, 0, 0.5);
+    inset 0 2px 4px rgba(58, 34, 14, 0.32),
+    0 2px 5px rgba(56, 32, 12, 0.22);
 }
 
 .dial-nav-btn:disabled {
-  opacity: 0.22;
+  opacity: 0.32;
   cursor: default;
 }
 
@@ -284,9 +287,9 @@ body {
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.12) 15%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(255, 255, 255, 0.12) 85%,
+    rgba(56, 35, 19, 0.2) 15%,
+    rgba(56, 35, 19, 0.34) 50%,
+    rgba(56, 35, 19, 0.2) 85%,
     transparent 100%
   );
   pointer-events: none;
@@ -350,7 +353,7 @@ body {
   width: 11px;
   height: 1.5px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(56, 35, 19, 0.28);
   transition:
     width 0.22s cubic-bezier(0.2, 0.9, 0.2, 1),
     background 0.22s ease,
@@ -364,15 +367,15 @@ body {
   bottom: 0;
   width: 5px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(56, 35, 19, 0.16);
   pointer-events: none;
 }
 
 .dial-slot:hover::before,
 .dial-slot[data-active='true']::before {
   width: 18px;
-  background: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  background: #1e120a;
+  box-shadow: 0 1px 0 rgba(255, 244, 224, 0.45);
 }
 
 .dial-month-btn {
@@ -415,11 +418,11 @@ body {
   color: var(--dial-active);
   opacity: 1;
   transform: translateX(calc(var(--dial-x, 0px) + 6px)) scale(calc(var(--dial-scale, 1) * 1.07));
-  text-shadow: 0 0 18px rgba(255, 255, 255, 0.22);
+  text-shadow: 0 1px 0 rgba(255, 245, 226, 0.36);
 }
 
 .dial-slot[data-active='true'] .dial-month-year {
-  opacity: 0.9;
+  opacity: 0.88;
 }
 
 .dial-slot:hover .dial-month-btn,
@@ -429,8 +432,8 @@ body {
   opacity: 1;
   transform: translateX(calc(var(--dial-x, 0px) + 12px)) scale(calc(var(--dial-scale, 1) * 1.2));
   text-shadow:
-    0 0 26px rgba(255, 255, 255, 0.45),
-    0 2px 10px rgba(0, 0, 0, 0.7);
+    0 1px 0 rgba(255, 245, 226, 0.48),
+    0 2px 10px rgba(64, 38, 16, 0.18);
 }
 
 .dial-slot:hover .dial-month-year,
@@ -445,32 +448,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 1300px;
 }
 
+/* Realistic top-down multiply shadow on the maple desk (thin ~10mm iPod resting flat) */
 .ipod-ground-shadow {
   position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 342px;
-  height: 62px;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.48) 46%,
-    transparent 74%
-  );
-  filter: blur(11px);
+  inset: -3.5px;
+  z-index: 0;
+  border-radius: 41.5px;
+  background: transparent;
+  mix-blend-mode: multiply;
+  box-shadow:
+    1px 2px 3px rgba(42, 22, 6, 0.52),
+    6px 9px 12px rgba(54, 29, 9, 0.38),
+    15px 21px 28px rgba(64, 36, 12, 0.22);
   pointer-events: none;
 }
 
-/* Default aqua theme tokens */
+/* Default aqua theme tokens (flat top-down view, resting flush on desk) */
 .ipod-3d-rig {
   position: relative;
-  transform: rotateX(var(--tilt-x, 1.5deg)) rotateY(var(--tilt-y, -3deg));
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   --ipod-face-1: #93dff8;
   --ipod-face-2: #5cc2ec;
   --ipod-face-3: #3ba3da;
@@ -518,41 +515,38 @@ body {
   --ipod-wheel-label: #76948a;
 }
 
+/* Subtle symmetrical top-down stainless rim peeking around the aluminum faceplate */
 .ipod-chrome-back {
   position: absolute;
-  inset: 0;
+  inset: -3.5px;
   z-index: 0;
-  border-radius: 40px;
-  transform: translate(8px, 12px);
+  border-radius: 41.5px;
   background: linear-gradient(
-    145deg,
-    #525864 0%,
-    #aeb6c4 18%,
-    #e8edf4 34%,
-    #676f7d 52%,
-    #2d323c 72%,
-    #8891a0 88%,
-    #1f232b 100%
+    140deg,
+    #d8dfe8 0%,
+    #f1f4f8 18%,
+    #9ba4b2 42%,
+    #525965 68%,
+    #7e8796 86%,
+    #2f343e 100%
   );
   box-shadow:
-    0 36px 76px rgba(0, 0, 0, 0.78),
-    0 14px 30px rgba(0, 0, 0, 0.62);
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 1px 2px rgba(42, 22, 6, 0.56);
   pointer-events: none;
 }
 
 .ipod-bevel-mid {
   position: absolute;
-  inset: -1px;
+  inset: -1.5px;
   z-index: 1;
-  border-radius: 39px;
-  transform: translate(3.5px, 5.5px);
+  border-radius: 39.5px;
   background: linear-gradient(
     140deg,
     var(--ipod-bevel-1) 0%,
-    var(--ipod-bevel-2) 28%,
-    var(--ipod-bevel-3) 62%,
-    var(--ipod-bevel-4) 90%,
-    var(--ipod-bevel-2) 100%
+    var(--ipod-bevel-2) 32%,
+    var(--ipod-bevel-3) 68%,
+    var(--ipod-bevel-4) 100%
   );
   pointer-events: none;
 }
@@ -1335,9 +1329,11 @@ body {
   box-shadow:
     inset 0 2px 4px rgba(255, 255, 255, 0.15),
     inset 0 -6px 14px rgba(0, 0, 0, 0.85),
-    -12px 24px 64px rgba(0, 0, 0, 0.78),
     0 0 0 8px rgba(14, 16, 22, 0.88),
-    0 0 0 9px rgba(255, 255, 255, 0.06);
+    0 0 0 9px rgba(255, 255, 255, 0.06),
+    2px 3px 5px rgba(42, 22, 6, 0.56),
+    10px 15px 22px rgba(52, 28, 9, 0.36),
+    22px 30px 44px rgba(60, 34, 12, 0.2);
 }
 
 /* Active 9-o'clock laser-read indicator facing the iPod */
@@ -1788,6 +1784,841 @@ body {
     0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* ============================================================
+   JOYFILM Desk Button (photorealistic rangefinder right of iPod)
+   ============================================================ */
+.fuji-desk-spot {
+  position: absolute;
+  left: calc(50% + 214px);
+  bottom: 22px;
+  z-index: 12;
+  transition:
+    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fuji-desk-spot[data-hidden='true'] {
+  opacity: 0;
+  transform: translate(18px, 14px) scale(0.92);
+  pointer-events: none;
+}
+
+.fuji-camera-btn {
+  position: relative;
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 10px 6px 6px;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
+}
+
+.fuji-desk-shadow {
+  position: absolute;
+  inset: 22px 4px 34px 10px;
+  border-radius: 12px;
+  transform: rotate(21deg) translate(13px, 18px);
+  background: rgba(52, 28, 8, 0.42);
+  mix-blend-mode: multiply;
+  filter: blur(11px);
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+}
+
+.fuji-body-rig {
+  position: relative;
+  display: block;
+  width: 192px;
+  transform: rotate(21deg);
+  transform-origin: center center;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
+  /* Tight contact occlusion + directional top-left -> bottom-right cast shadow proportional to camera depth */
+  filter:
+    drop-shadow(1px 2px 2px rgba(38, 19, 6, 0.62))
+    drop-shadow(8px 12px 9px rgba(48, 26, 9, 0.36))
+    drop-shadow(16px 22px 20px rgba(56, 30, 10, 0.2));
+}
+
+.fuji-front-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Subtle live LED glow positioned over the camera's front tally lamp */
+.fuji-front-led {
+  position: absolute;
+  left: 44.15%;
+  top: 25.1%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 38% 36%, #b6ffca 0%, #32db6f 70%, #15803b 100%);
+  box-shadow: 0 0 9px rgba(72, 236, 128, 0.95);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.fuji-camera-btn:hover .fuji-body-rig,
+.fuji-camera-btn:focus-visible .fuji-body-rig {
+  transform: translateY(-4px) rotate(19deg) scale(1.035);
+  filter:
+    drop-shadow(2px 4px 4px rgba(38, 19, 6, 0.52))
+    drop-shadow(12px 18px 14px rgba(48, 26, 9, 0.34))
+    drop-shadow(22px 30px 28px rgba(56, 30, 10, 0.18));
+}
+
+.fuji-camera-btn:hover .fuji-desk-shadow,
+.fuji-camera-btn:focus-visible .fuji-desk-shadow {
+  transform: rotate(19deg) translate(18px, 24px) scale(1.04);
+  opacity: 0.72;
+}
+
+.fuji-camera-btn:hover .fuji-front-led,
+.fuji-camera-btn:focus-visible .fuji-front-led {
+  opacity: 1;
+}
+
+.fuji-camera-btn:active .fuji-body-rig {
+  transform: translateY(-1px) rotate(20deg) scale(0.99);
+  transition-duration: 0.08s;
+}
+
+.fuji-camera-btn:focus-visible .fuji-body-rig {
+  outline: 2px solid rgba(110, 185, 255, 0.85);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+/* Hover-only film counter pill so the camera rests purely like a physical object on the maple desk */
+.fuji-desk-badge {
+  margin-top: 20px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #f4f7fc;
+  background: rgba(24, 16, 10, 0.84);
+  border: 1px solid rgba(255, 242, 224, 0.18);
+  box-shadow: 0 4px 12px rgba(42, 22, 6, 0.34);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-2px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.fuji-desk-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(164, 176, 194, 0.5);
+  transition: background 0.22s ease, box-shadow 0.22s ease;
+}
+
+.fuji-desk-badge-sep {
+  opacity: 0.45;
+}
+
+.fuji-camera-btn:hover .fuji-desk-badge,
+.fuji-camera-btn:focus-visible .fuji-desk-badge {
+  opacity: 1;
+  transform: translateY(0);
+  color: #f4f7fc;
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.fuji-camera-btn:hover .fuji-desk-badge-dot,
+.fuji-camera-btn:focus-visible .fuji-desk-badge-dot {
+  background: #4ee284;
+  box-shadow: 0 0 8px rgba(78, 226, 132, 0.9);
+}
+
+/* ============================================================
+   JOYFILM Rear-View Photo Viewer Modal (photorealistic hardware)
+   ============================================================ */
+.camera-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.camera-modal[data-open='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.camera-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 6, 9, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.camera-modal-frame {
+  position: relative;
+  z-index: 2;
+  width: min(92vw, 860px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(16px) scale(0.95);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.camera-modal[data-open='true'] .camera-modal-frame {
+  transform: translateY(0) scale(1);
+}
+
+.camera-modal-topbar {
+  width: 100%;
+  padding: 0 3.6%;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fuji-rear-month-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(18, 21, 28, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.fuji-rear-month-title {
+  min-width: 122px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f3f6fb;
+}
+
+.fuji-month-step-btn {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(242, 246, 252, 0.85);
+  font-size: 14px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease, opacity 0.14s ease;
+}
+
+.fuji-month-step-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.fuji-month-step-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.camera-modal-close {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(22, 25, 32, 0.84);
+  color: rgba(235, 240, 248, 0.82);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease, transform 0.1s ease;
+}
+
+.camera-modal-close:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.36);
+  background: rgba(40, 45, 56, 0.92);
+}
+
+.camera-modal-close:active {
+  transform: scale(0.96);
+}
+
+.fuji-rear-rig {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1098 / 658;
+  filter: drop-shadow(0 38px 78px rgba(0, 0, 0, 0.86));
+}
+
+.fuji-rear-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Live EVF status LED aligned directly over the hardware LED dot */
+.fuji-rear-led {
+  position: absolute;
+  left: 30.88%;
+  top: 12.15%;
+  width: 1.05%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(circle at 35% 35%, #b2ffc6 0%, #30d86c 70%, #15843c 100%);
+  box-shadow: 0 0 11px rgba(68, 232, 126, 0.9);
+  transition: background 0.14s ease, box-shadow 0.14s ease;
+}
+
+.fuji-rear-led[data-pulse='true'] {
+  background: radial-gradient(circle at 35% 35%, #ffe6a8 0%, #f5a623 72%, #b56c0c 100%);
+  box-shadow: 0 0 13px rgba(245, 166, 35, 0.95);
+}
+
+/* Live 3:2 LCD composited precisely inside the rear camera bezel */
+.fuji-lcd {
+  position: absolute;
+  left: 11.0%;
+  top: 31.8%;
+  width: 52.1%;
+  height: 57.1%;
+  z-index: 5;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #080a0e;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.85),
+    inset 0 0 16px rgba(0, 0, 0, 0.72);
+}
+
+.fuji-lcd-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(
+    124deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(255, 255, 255, 0.03) 30%,
+    transparent 30.6%
+  );
+}
+
+.fuji-lcd-single,
+.fuji-lcd-grid,
+.fuji-lcd-empty {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.16s ease;
+}
+
+.fuji-lcd-single[data-visible='false'],
+.fuji-lcd-grid[data-visible='false'],
+.fuji-lcd-empty[data-visible='false'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fuji-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #07090d;
+  transition: filter 0.2s ease, opacity 0.18s ease;
+}
+
+/* JOYFILM film simulation preview filters cycled by Q button */
+.fuji-lcd[data-film-sim='classic-chrome'] .fuji-photo-img,
+.fuji-lcd[data-film-sim='classic-chrome'] .fuji-grid-thumb img {
+  filter: contrast(1.06) saturate(0.86) sepia(0.08);
+}
+
+.fuji-lcd[data-film-sim='acros'] .fuji-photo-img,
+.fuji-lcd[data-film-sim='acros'] .fuji-grid-thumb img {
+  filter: grayscale(1) contrast(1.18) brightness(0.98);
+}
+
+.fuji-lcd[data-film-sim='velvia'] .fuji-photo-img,
+.fuji-lcd[data-film-sim='velvia'] .fuji-grid-thumb img {
+  filter: contrast(1.08) saturate(1.28);
+}
+
+.fuji-lcd[data-film-sim='std'] .fuji-photo-img,
+.fuji-lcd[data-film-sim='std'] .fuji-grid-thumb img {
+  filter: none;
+}
+
+/* Authentic camera playback HUD */
+.fuji-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.54) 0%, transparent 24%, transparent 72%, rgba(0, 0, 0, 0.68) 100%);
+  transition: opacity 0.18s ease;
+}
+
+.fuji-hud[data-visible='false'] {
+  opacity: 0;
+}
+
+.fuji-hud-top,
+.fuji-hud-bottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fuji-hud-bottom {
+  align-items: flex-end;
+}
+
+.fuji-hud-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: #f4f7fc;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+.fuji-hud-play-icon {
+  font-size: 10px;
+  color: #5ee68a;
+}
+
+.fuji-hud-top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.fuji-hud-battery {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fuji-hud-battery-body {
+  width: 20px;
+  height: 10px;
+  padding: 1.5px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 1.5px;
+  display: flex;
+}
+
+.fuji-hud-battery-fill {
+  width: 84%;
+  height: 100%;
+  background: #f5b942;
+}
+
+.fuji-hud-battery-tip {
+  width: 2px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 0 1px 1px 0;
+}
+
+.fuji-hud-sim {
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(10, 12, 16, 0.56);
+  border: 1px solid rgba(245, 200, 118, 0.35);
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 1vw, 9.5px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #f7cf86;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+.fuji-hud-caption-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fuji-hud-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #f7c978;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.fuji-hud-caption {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(248, 250, 255, 0.94);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+.fuji-hud-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(235, 242, 252, 0.84);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+}
+
+/* 3x3 Contact-Sheet Grid View */
+.fuji-lcd-grid {
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  background: #0d0f14;
+  padding: 10px;
+  gap: 8px;
+}
+
+.fuji-grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(235, 240, 248, 0.78);
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fuji-grid-cells {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: max-content;
+  gap: 7px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.fuji-grid-thumb {
+  appearance: none;
+  position: relative;
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  background: #141820;
+  cursor: pointer;
+  transition: border-color 0.14s ease, transform 0.12s ease;
+}
+
+.fuji-grid-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fuji-grid-thumb:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.fuji-grid-thumb[data-selected='true'] {
+  border-color: #f5c34b;
+  box-shadow: 0 0 0 1px rgba(245, 195, 75, 0.45);
+}
+
+.fuji-grid-thumb-num {
+  position: absolute;
+  right: 4px;
+  bottom: 3px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.68);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #f3f6fc;
+}
+
+/* Authentic NO IMAGE empty state */
+.fuji-lcd-empty {
+  z-index: 6;
+  padding: 12px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(34, 42, 56, 0.38) 0%, #090b0f 76%);
+}
+
+.fuji-empty-top,
+.fuji-empty-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 1vw, 10px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(215, 224, 240, 0.56);
+}
+
+.fuji-empty-month {
+  text-transform: uppercase;
+  color: rgba(242, 246, 252, 0.85);
+}
+
+.fuji-empty-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.fuji-empty-badge {
+  padding: 5px 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.4vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #f3f6fc;
+}
+
+.fuji-empty-hint {
+  max-width: 300px;
+  font-family: var(--font-ui);
+  font-size: clamp(10px, 1.25vw, 12px);
+  line-height: 1.45;
+  color: rgba(206, 216, 232, 0.72);
+}
+
+.fuji-empty-jump-btn {
+  appearance: none;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 200, 118, 0.42);
+  background: rgba(245, 200, 118, 0.14);
+  color: #fde3ae;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.fuji-empty-jump-btn:hover {
+  background: rgba(245, 200, 118, 0.24);
+  border-color: rgba(245, 200, 118, 0.7);
+}
+
+/* Precision interactive hitboxes over photorealistic hardware buttons */
+.fuji-rear-hitboxes {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.fuji-hitbox {
+  appearance: none;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid transparent;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.fuji-hitbox:focus {
+  outline: none;
+}
+
+.fuji-hitbox:focus-visible {
+  border-color: rgba(110, 185, 255, 0.9);
+  box-shadow: 0 0 12px rgba(110, 185, 255, 0.5);
+}
+
+.fuji-hitbox:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.14);
+}
+
+.fuji-hitbox:active {
+  background: rgba(0, 0, 0, 0.26);
+  border-color: rgba(245, 195, 75, 0.65);
+}
+
+.fuji-hitbox[data-active='true'] {
+  border-color: rgba(245, 195, 75, 0.65);
+  box-shadow: 0 0 10px rgba(245, 195, 75, 0.26);
+}
+
+.fuji-hitbox.is-round {
+  border-radius: 50%;
+}
+
+.fuji-hitbox.is-pill {
+  border-radius: 8px;
+}
+
+.fuji-hitbox.is-dpad-arm {
+  border-radius: 10px;
+}
+
+/* Exact coordinates calibrated to joyfilm-rear.webp (1098 x 658) */
+.fuji-hitbox.is-deck-disp {
+  left: 43.6%;
+  top: 17.5%;
+  width: 4.5%;
+  height: 7.5%;
+}
+
+.fuji-hitbox.is-cmd-dial {
+  left: 78.8%;
+  top: 17.6%;
+  width: 10.4%;
+  height: 5.8%;
+  cursor: ew-resize;
+}
+
+.fuji-hitbox.is-play {
+  left: 72.1%;
+  top: 53.0%;
+  width: 6.2%;
+  height: 10.4%;
+}
+
+.fuji-hitbox.is-dpad-up {
+  left: 80.5%;
+  top: 58.6%;
+  width: 6.8%;
+  height: 6.8%;
+}
+
+.fuji-hitbox.is-dpad-down {
+  left: 80.5%;
+  top: 78.4%;
+  width: 6.8%;
+  height: 6.8%;
+}
+
+.fuji-hitbox.is-dpad-left {
+  left: 74.6%;
+  top: 68.5%;
+  width: 4.8%;
+  height: 10.6%;
+}
+
+.fuji-hitbox.is-dpad-right {
+  left: 86.4%;
+  top: 68.5%;
+  width: 4.8%;
+  height: 10.6%;
+}
+
+.fuji-hitbox.is-dpad-ok {
+  left: 80.5%;
+  top: 68.5%;
+  width: 7.2%;
+  height: 12.0%;
+}
+
+.fuji-hitbox.is-disp {
+  left: 72.1%;
+  top: 85.8%;
+  width: 6.2%;
+  height: 10.4%;
+}
+
+.fuji-hitbox.is-sim {
+  left: 79.8%;
+  top: 85.8%;
+  width: 5.8%;
+  height: 9.8%;
+}
+
+.fuji-hitbox.is-grid {
+  left: 86.9%;
+  top: 85.8%;
+  width: 6.2%;
+  height: 10.4%;
+}
+
+@media (max-width: 1320px) {
+  .fuji-desk-spot {
+    left: calc(50% + 196px);
+    bottom: 14px;
+    transform: scale(0.92);
+    transform-origin: left bottom;
+  }
+}
+
 @media (max-width: 1180px) {
   .disc-changer {
     width: 300px;
@@ -1796,6 +2627,13 @@ body {
   .disc-changer-housing {
     transform: scale(0.84);
     transform-origin: left center;
+  }
+
+  .fuji-desk-spot {
+    left: calc(50% + 188px);
+    bottom: 10px;
+    transform: scale(0.84);
+    transform-origin: left bottom;
   }
 }
 
@@ -1812,6 +2650,22 @@ body {
     flex-direction: column;
     gap: 32px;
     padding: 48px 20px 56px;
+  }
+
+  .ipod-stage {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .fuji-desk-spot {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+  }
+
+  .fuji-desk-spot[data-hidden='true'] {
+    display: none;
   }
 
   .timeline-dial {

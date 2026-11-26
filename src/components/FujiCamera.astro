@@ -1,0 +1,51 @@
+---
+interface Props {
+  initialMonthLabel: string;
+  initialPhotoCount: number;
+  initialVisible?: boolean;
+}
+
+const { initialMonthLabel, initialPhotoCount, initialVisible = true } = Astro.props;
+const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+const badgeSub =
+  initialPhotoCount > 0
+    ? `${initialPhotoCount} ${initialPhotoCount === 1 ? 'SHOT' : 'SHOTS'}`
+    : 'CAMERA ROLL';
+---
+
+<div
+  class="fuji-desk-spot"
+  id="fuji-desk-spot"
+  data-hidden={initialVisible ? 'false' : 'true'}
+  aria-hidden={initialVisible ? 'false' : 'true'}
+>
+  <button
+    type="button"
+    class="fuji-camera-btn"
+    id="fuji-camera-btn"
+    aria-label={`Open JOYFILM camera roll for ${initialMonthLabel}`}
+    title={`Open camera roll (${initialMonthLabel})`}
+  >
+    <span class="fuji-desk-shadow" aria-hidden="true"></span>
+
+    <span class="fuji-body-rig" aria-hidden="true">
+      <img
+        class="fuji-front-img"
+        src={`${base}/images/joyfilm-front.webp`}
+        alt=""
+        width="720"
+        height="442"
+        decoding="async"
+        draggable="false"
+      />
+      <span class="fuji-front-led"></span>
+    </span>
+
+    <span class="fuji-desk-badge" id="fuji-desk-badge">
+      <span class="fuji-desk-badge-dot" aria-hidden="true"></span>
+      <span id="fuji-desk-badge-month">{initialMonthLabel.toUpperCase()}</span>
+      <span class="fuji-desk-badge-sep" aria-hidden="true">·</span>
+      <span id="fuji-desk-badge-count">{badgeSub}</span>
+    </span>
+  </button>
+</div>
