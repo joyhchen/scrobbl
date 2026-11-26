@@ -8,6 +8,8 @@ For 7 years, I've compiled these monthly playlists.
 
 For this year's holiday vibe-coding fun, I made an interactive iPod site to listen to them (except the listening doesn't work currently RIP)!
 
+pending image that doesnt suck
+
 <img width="554" height="266" alt="playlist" src="https://github.com/user-attachments/assets/fd87130c-0a6d-418f-9a66-d702f75c1086" />
 
 ## Running locally
