@@ -1,8 +1,8 @@
 :root {
   --bg-obsidian: #c49c6e;
-  --dial-muted: rgba(58, 37, 20, 0.44);
-  --dial-active: rgba(28, 17, 9, 0.94);
-  --dial-hover: #140b04;
+  --dial-muted: rgba(74, 42, 18, 0.48);
+  --dial-active: rgba(74, 40, 17, 0.92);
+  --dial-hover: #361b09;
   --font-display: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   --font-ui: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Lucida Grande', sans-serif;
   --font-mono: 'SF Mono', ui-monospace, 'Menlo', monospace;
@@ -216,7 +216,7 @@ body {
   width: 54px;
   height: 30px;
   border-radius: 999px;
-  border: 1px solid rgba(58, 37, 20, 0.24);
+  border: 1px solid rgba(74, 40, 17, 0.24);
   background: linear-gradient(
     180deg,
     rgba(255, 246, 230, 0.54) 0%,
@@ -227,7 +227,7 @@ body {
     inset 0 1px 0 rgba(255, 250, 240, 0.68),
     inset 0 -1px 2px rgba(82, 50, 24, 0.22),
     0 4px 12px rgba(56, 32, 12, 0.24);
-  color: rgba(42, 26, 14, 0.8);
+  color: rgba(74, 40, 17, 0.82);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -243,8 +243,8 @@ body {
 
 .dial-nav-btn:hover:not(:disabled),
 .dial-nav-btn.is-hover-scrolling:not(:disabled) {
-  color: #160c05;
-  border-color: rgba(58, 37, 20, 0.45);
+  color: #361b09;
+  border-color: rgba(74, 40, 17, 0.42);
   background: linear-gradient(
     180deg,
     rgba(255, 250, 240, 0.78) 0%,
@@ -287,9 +287,9 @@ body {
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(56, 35, 19, 0.2) 15%,
-    rgba(56, 35, 19, 0.34) 50%,
-    rgba(56, 35, 19, 0.2) 85%,
+    rgba(74, 42, 18, 0.2) 15%,
+    rgba(74, 42, 18, 0.34) 50%,
+    rgba(74, 42, 18, 0.2) 85%,
     transparent 100%
   );
   pointer-events: none;
@@ -353,7 +353,7 @@ body {
   width: 11px;
   height: 1.5px;
   border-radius: 2px;
-  background: rgba(56, 35, 19, 0.28);
+  background: rgba(74, 42, 18, 0.28);
   transition:
     width 0.22s cubic-bezier(0.2, 0.9, 0.2, 1),
     background 0.22s ease,
@@ -367,15 +367,15 @@ body {
   bottom: 0;
   width: 5px;
   height: 1px;
-  background: rgba(56, 35, 19, 0.16);
+  background: rgba(74, 42, 18, 0.16);
   pointer-events: none;
 }
 
 .dial-slot:hover::before,
 .dial-slot[data-active='true']::before {
   width: 18px;
-  background: #1e120a;
-  box-shadow: 0 1px 0 rgba(255, 244, 224, 0.45);
+  background: #4a2811;
+  box-shadow: 0 1px 0 rgba(255, 244, 224, 0.48);
 }
 
 .dial-month-btn {
@@ -418,7 +418,7 @@ body {
   color: var(--dial-active);
   opacity: 1;
   transform: translateX(calc(var(--dial-x, 0px) + 6px)) scale(calc(var(--dial-scale, 1) * 1.07));
-  text-shadow: 0 1px 0 rgba(255, 245, 226, 0.36);
+  text-shadow: 0 1px 0 rgba(255, 244, 224, 0.44);
 }
 
 .dial-slot[data-active='true'] .dial-month-year {
