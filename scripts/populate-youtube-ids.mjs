@@ -46,10 +46,8 @@ function normalizeText(str) {
 }
 
 function trackKey(track) {
-  const title = normalizeText(track.title || track.name || '');
-  const artists = Array.isArray(track.artists)
-    ? track.artists.map(normalizeText).join(',')
-    : normalizeText(track.artist || '');
+  const title = normalizeText(track.title);
+  const artists = track.artists.map(normalizeText).join(',');
   return `${title}||${artists}`;
 }
 
@@ -196,17 +194,10 @@ function scoreCandidate(cand, track, index) {
   // Rank bias favors YouTube Music's top results
   let score = Math.max(0, 12 - index * 2.5);
 
-  const trackTitle = track.title || track.name || '';
-  const trackArtists = Array.isArray(track.artists)
-    ? track.artists
-    : track.artist
-      ? [track.artist]
-      : [];
-
-  score += tokenOverlapScore(trackTitle, cand.title);
+  score += tokenOverlapScore(track.title, cand.title);
 
   let bestArtistScore = 0;
-  for (const artist of trackArtists) {
+  for (const artist of track.artists) {
     const s = tokenOverlapScore(artist, `${cand.meta} ${cand.title}`);
     if (s > bestArtistScore) bestArtistScore = s;
   }
@@ -222,7 +213,7 @@ function scoreCandidate(cand, track, index) {
   }
 
   // Penalize covers / karaoke / piano unless the original track title asks for them
-  const origLower = normalizeText(trackTitle);
+  const origLower = normalizeText(track.title);
   const candLower = normalizeText(`${cand.title} ${cand.meta}`);
   for (const kw of NEGATIVE_KEYWORDS) {
     if (candLower.includes(kw) && !origLower.includes(kw)) {
@@ -251,13 +242,8 @@ function pickBest(candidates, track) {
 }
 
 async function resolveTrackYoutubeId(track, { preferLyrics = false } = {}) {
-  const title = (track.title || track.name || '').trim();
-  const artists = Array.isArray(track.artists)
-    ? track.artists.filter(Boolean)
-    : track.artist
-      ? [track.artist]
-      : [];
-  const primaryArtist = artists[0] || '';
+  const title = track.title.trim();
+  const primaryArtist = track.artists.find(Boolean) || '';
   const cleanTitle = title.replace(/\s*[\(\[（【].*?[\)\]）】]\s*/g, ' ').trim();
   const query = `${title} ${primaryArtist}`.trim();
   if (!query) return null;

@@ -4,11 +4,8 @@ export type StepDirection = 1 | -1;
 
 export interface RawTrack {
   title?: unknown;
-  name?: unknown;
   artists?: unknown;
-  artist?: unknown;
   durationMs?: unknown;
-  duration_ms?: unknown;
   youtubeId?: unknown;
 }
 
