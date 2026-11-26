@@ -2,19 +2,19 @@
 import '../styles/global.css';
 import TimelineDial from '../components/TimelineDial.astro';
 import IPod from '../components/IPod.astro';
-import CassetteDeck from '../components/CassetteDeck.astro';
-import { loadCassettes } from '../lib/cassettes';
-import type { ClientCassette } from '../lib/types';
+import DiscDeck from '../components/DiscDeck.astro';
+import { loadDiscs } from '../lib/discs';
+import type { ClientDisc } from '../lib/types';
 
-const cassettes = loadCassettes();
-const initialCassette = cassettes[0];
-const initialPlaylists = initialCassette.playlists;
+const discs = loadDiscs();
+const initialDisc = discs[0];
+const initialPlaylists = initialDisc.playlists;
 
-const clientPayload: ClientCassette[] = cassettes.map((cassette) => ({
-  id: cassette.id,
-  ipodTheme: cassette.ipodTheme,
-  showTimelineDial: cassette.showTimelineDial,
-  playlists: cassette.playlists.map((pl) => ({
+const clientPayload: ClientDisc[] = discs.map((disc) => ({
+  id: disc.id,
+  ipodTheme: disc.ipodTheme,
+  showTimelineDial: disc.showTimelineDial,
+  playlists: disc.playlists.map((pl) => ({
     year: pl.year,
     monthShort: pl.monthShort,
     label: pl.label,
@@ -67,12 +67,12 @@ const safeJson = JSON.stringify(clientPayload).replace(/</g, '\\u003c');
       <IPod
         playlists={initialPlaylists}
         initialIndex={0}
-        initialTheme={initialCassette.ipodTheme}
+        initialTheme={initialDisc.ipodTheme}
       />
-      <CassetteDeck cassettes={cassettes} initialCassetteId={initialCassette.id} />
+      <DiscDeck discs={discs} initialDiscId={initialDisc.id} />
     </main>
 
-    <script id="cassettes-data" type="application/json" set:html={safeJson} />
+    <script id="discs-data" type="application/json" set:html={safeJson} />
     <script>
       import '../scripts/timeMachine';
     </script>

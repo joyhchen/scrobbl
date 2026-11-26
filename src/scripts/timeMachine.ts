@@ -1,7 +1,7 @@
 import { soundEngine } from '../lib/audio';
 import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
 import type {
-  ClientCassette,
+  ClientDisc,
   ClientPlaylist,
   ClientTrack,
   IPodColorTheme,
@@ -42,7 +42,7 @@ function isClientPlaylist(value: unknown): value is ClientPlaylist {
   );
 }
 
-function isClientCassette(value: unknown): value is ClientCassette {
+function isClientDisc(value: unknown): value is ClientDisc {
   return (
     isRecord(value) &&
     typeof value.id === 'string' &&
@@ -53,10 +53,10 @@ function isClientCassette(value: unknown): value is ClientCassette {
   );
 }
 
-function parseClientCassettes(rawJson: string): ClientCassette[] {
+function parseClientDiscs(rawJson: string): ClientDisc[] {
   const parsed: unknown = JSON.parse(rawJson);
-  if (!Array.isArray(parsed) || !parsed.every(isClientCassette)) {
-    throw new Error('Invalid embedded #cassettes-data payload.');
+  if (!Array.isArray(parsed) || !parsed.every(isClientDisc)) {
+    throw new Error('Invalid embedded #discs-data payload.');
   }
   return parsed;
 }
@@ -76,14 +76,14 @@ function requireButton(id: string): HTMLButtonElement {
 }
 
 function initTimeMachine(): void {
-  const payloadEl = requireEl('cassettes-data');
+  const payloadEl = requireEl('discs-data');
   if (!payloadEl.textContent) {
-    throw new Error('Embedded #cassettes-data payload is empty.');
+    throw new Error('Embedded #discs-data payload is empty.');
   }
 
-  const cassettes = parseClientCassettes(payloadEl.textContent);
-  if (cassettes.length === 0) {
-    throw new Error('No cassettes found in #cassettes-data.');
+  const discs = parseClientDiscs(payloadEl.textContent);
+  if (discs.length === 0) {
+    throw new Error('No discs found in #discs-data.');
   }
 
   const dialEl = requireEl('timeline-dial');
@@ -91,7 +91,11 @@ function initTimeMachine(): void {
   const dialUpBtn = requireButton('dial-up-btn');
   const dialDownBtn = requireButton('dial-down-btn');
 
-  const cassetteDeckEl = requireEl('cassette-deck');
+  const discDeckEl = requireEl('disc-deck');
+  const discCarouselEl = requireEl('disc-carousel');
+  const discChangeBtn = requireButton('disc-change-btn');
+  const discReadoutEl = requireEl('disc-slot-readout');
+  const discReadLedEl = requireEl('disc-read-led');
 
   const ipodRig = requireEl('ipod-3d-rig');
   const ipodBody = requireEl('ipod-body');
@@ -124,8 +128,8 @@ function initTimeMachine(): void {
 
   const soundToggle = requireButton('sound-toggle');
 
-  let activeCassetteIdx = 0;
-  let playlists: ClientPlaylist[] = cassettes[0].playlists;
+  let activeDiscIdx = 0;
+  let playlists: ClientPlaylist[] = discs[0].playlists;
   let maxDialStart = Math.max(0, playlists.length - VISIBLE_DIAL_MONTHS);
   let dialStart = 0;
   let activePlaylistIdx = 0;
@@ -548,13 +552,21 @@ function initTimeMachine(): void {
     topbarLeft.textContent = currentView === 'playlists' ? '♪' : '‹';
   }
 
-  function loadCassette(cassetteId: string): void {
-    const nextIdx = cassettes.findIndex((c) => c.id === cassetteId);
-    if (nextIdx === -1 || nextIdx === activeCassetteIdx) return;
+  let carouselAngleDeg = 0;
 
-    activeCassetteIdx = nextIdx;
-    const cassette = cassettes[activeCassetteIdx];
-    playlists = cassette.playlists;
+  function loadDisc(discId: string): void {
+    const nextIdx = discs.findIndex((d) => d.id === discId);
+    if (nextIdx === -1 || nextIdx === activeDiscIdx) return;
+
+    const slotStep = (nextIdx - activeDiscIdx + 6) % 6;
+    // Rotate smoothly along the shortest 6-slot carousel path (clockwise or counter-clockwise).
+    const deltaSlots = slotStep <= 3 ? slotStep : slotStep - 6;
+    carouselAngleDeg -= deltaSlots * 60;
+    discCarouselEl.style.setProperty('--carousel-angle', `${carouselAngleDeg}deg`);
+
+    activeDiscIdx = nextIdx;
+    const disc = discs[activeDiscIdx];
+    playlists = disc.playlists;
     maxDialStart = Math.max(0, playlists.length - VISIBLE_DIAL_MONTHS);
     dialStart = 0;
     activePlaylistIdx = 0;
@@ -562,15 +574,18 @@ function initTimeMachine(): void {
     trackCursor = 0;
     currentView = 'tracks';
 
-    soundEngine.playCassetteLoad();
-    ipodRig.dataset.theme = cassette.ipodTheme;
+    soundEngine.playDiscLoad();
+    ipodRig.dataset.theme = disc.ipodTheme;
 
-    dialEl.dataset.hidden = cassette.showTimelineDial ? 'false' : 'true';
-    dialEl.setAttribute('aria-hidden', cassette.showTimelineDial ? 'false' : 'true');
+    discReadoutEl.textContent = `DISC ${String(activeDiscIdx + 1).padStart(2, '0')}`;
+    discReadLedEl.dataset.tone = disc.id === 'best-100-chinese-songs' ? 'gold' : 'silver';
 
-    const buttons = cassetteDeckEl.querySelectorAll<HTMLButtonElement>('.cassette-card');
+    dialEl.dataset.hidden = disc.showTimelineDial ? 'false' : 'true';
+    dialEl.setAttribute('aria-hidden', disc.showTimelineDial ? 'false' : 'true');
+
+    const buttons = discDeckEl.querySelectorAll<HTMLButtonElement>('.disc-card');
     buttons.forEach((btn) => {
-      const active = btn.dataset.cassetteId === cassette.id;
+      const active = btn.dataset.discId === disc.id;
       btn.dataset.active = active ? 'true' : 'false';
       btn.setAttribute('aria-checked', active ? 'true' : 'false');
     });
@@ -578,17 +593,23 @@ function initTimeMachine(): void {
     renderPlaylistsMenu();
     renderTracksList();
     updateIPodViewState();
-    if (cassette.showTimelineDial) {
+    if (disc.showTimelineDial) {
       renderDial();
     }
   }
 
-  cassetteDeckEl.addEventListener('click', (e) => {
+  discDeckEl.addEventListener('click', (e) => {
     if (!(e.target instanceof Element)) return;
-    const btn = e.target.closest('.cassette-card');
-    if (!(btn instanceof HTMLButtonElement) || !btn.dataset.cassetteId) return;
+    const btn = e.target.closest('.disc-card');
+    if (!(btn instanceof HTMLButtonElement) || !btn.dataset.discId) return;
     soundEngine.unlock();
-    loadCassette(btn.dataset.cassetteId);
+    loadDisc(btn.dataset.discId);
+  });
+
+  discChangeBtn.addEventListener('click', () => {
+    soundEngine.unlock();
+    const nextIdx = (activeDiscIdx + 1) % discs.length;
+    loadDisc(discs[nextIdx].id);
   });
 
   function openPlaylist(idx: number): void {
@@ -599,7 +620,7 @@ function initTimeMachine(): void {
     renderTracksList();
     renderListSelection(playlistsListEl, playlistCursor, playlistsThumbEl);
     updateIPodViewState();
-    if (cassettes[activeCassetteIdx].showTimelineDial) {
+    if (discs[activeDiscIdx].showTimelineDial) {
       ensurePlaylistVisibleOnDial(idx);
     }
   }

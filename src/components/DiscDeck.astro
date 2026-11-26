@@ -1,0 +1,111 @@
+---
+import type { DiscPreset } from '../lib/types';
+
+interface Props {
+  discs: DiscPreset[];
+  initialDiscId?: string;
+}
+
+const { discs, initialDiscId = discs[0]?.id } = Astro.props;
+const TOTAL_SLOTS = 6;
+const slots = Array.from({ length: TOTAL_SLOTS }, (_, slotIdx) => ({
+  slotIdx,
+  slotNumber: String(slotIdx + 1).padStart(2, '0'),
+  angleDeg: 180 + slotIdx * (360 / TOTAL_SLOTS),
+  disc: discs[slotIdx] ?? null,
+}));
+
+const activeSlotIdx = Math.max(
+  0,
+  discs.findIndex((d) => d.id === initialDiscId)
+);
+---
+
+<aside class="disc-changer" id="disc-deck" aria-label="6-disc changer">
+  <div class="disc-changer-housing">
+    <div class="disc-read-notch" aria-hidden="true">
+      <span class="disc-read-led" id="disc-read-led" data-tone={discs[activeSlotIdx]?.discTone ?? 'silver'}></span>
+      <span class="disc-read-arrow"></span>
+    </div>
+
+    <div
+      class="disc-carousel"
+      id="disc-carousel"
+      style={`--carousel-angle:${-activeSlotIdx * 60}deg;`}
+      role="radiogroup"
+      aria-label="Choose a disc"
+    >
+      {slots.map(({ slotIdx, slotNumber, angleDeg, disc }) => {
+        if (!disc) {
+          return (
+            <div
+              class="disc-slot is-empty"
+              style={`--slot-angle:${angleDeg}deg;`}
+              aria-hidden="true"
+            >
+              <div class="disc-empty-tray">
+                <span class="disc-empty-spindle"></span>
+                <span class="disc-empty-num">{slotNumber}</span>
+              </div>
+            </div>
+          );
+        }
+
+        const isActive = disc.id === initialDiscId;
+        return (
+          <div class="disc-slot" style={`--slot-angle:${angleDeg}deg;`}>
+            <button
+              type="button"
+              class="disc-card"
+              data-disc-id={disc.id}
+              data-slot-idx={slotIdx}
+              data-tone={disc.discTone}
+              data-active={isActive ? 'true' : 'false'}
+              role="radio"
+              aria-checked={isActive ? 'true' : 'false'}
+              aria-label={`Load disc ${slotIdx + 1}: ${disc.tapeLabel}`}
+            >
+              <span class="disc-body">
+                <span class="disc-platter" aria-hidden="true"></span>
+                <span class="disc-grooves" aria-hidden="true"></span>
+                <span class="disc-sheen" aria-hidden="true"></span>
+                <span class="disc-hub" aria-hidden="true">
+                  <span class="disc-hub-ring"></span>
+                  <span class="disc-spindle-hole"></span>
+                </span>
+                <span
+                  class="disc-paper-tape"
+                  style={`--tape-tilt:${disc.tapeTiltDeg}deg;`}
+                >
+                  <span class="disc-tape-title">{disc.tapeLabel}</span>
+                  {disc.tapeSubLabel && (
+                    <span class="disc-tape-sub">{disc.tapeSubLabel}</span>
+                  )}
+                </span>
+              </span>
+            </button>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="disc-center-console">
+      <span class="disc-slot-readout" id="disc-slot-readout">
+        DISC {String(activeSlotIdx + 1).padStart(2, '0')}
+      </span>
+      <button
+        type="button"
+        class="disc-change-btn"
+        id="disc-change-btn"
+        aria-label="Change disc"
+        title="Next disc"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+          <polyline points="21 3 21 9 15 9" />
+        </svg>
+        <span>DISC</span>
+      </button>
+    </div>
+  </div>
+</aside>

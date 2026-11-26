@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "scrobbl",
+  "compatibility_date": "2026-11-25",
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [
+    {
+      "pattern": "joyhchen.com/music",
+      "zone_name": "joyhchen.com"
+    },
+    {
+      "pattern": "joyhchen.com/music/*",
+      "zone_name": "joyhchen.com"
+    }
+  ]
+}

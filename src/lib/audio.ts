@@ -208,42 +208,42 @@ class SoundEngine {
     });
   }
 
-  public playCassetteLoad(): void {
+  public playDiscLoad(): void {
     const audio = this.ensureContext();
     if (!audio) return;
 
     const now = audio.ctx.currentTime;
-    const seatAt = now + 0.055;
+    const spinAt = now + 0.048;
 
     this.playTone(audio.ctx, {
       type: 'triangle',
       startTime: now,
-      startFreq: 640,
-      endFreq: 190,
-      freqDuration: 0.028,
-      peakGain: 0.14,
-      attack: 0.003,
-      decayDuration: 0.035,
-      stopAfter: 0.04,
+      startFreq: 760,
+      endFreq: 260,
+      freqDuration: 0.022,
+      peakGain: 0.13,
+      attack: 0.002,
+      decayDuration: 0.028,
+      stopAfter: 0.034,
     });
     this.playTone(audio.ctx, {
       type: 'sine',
-      startTime: seatAt,
-      startFreq: 240,
-      endFreq: 88,
-      freqDuration: 0.055,
-      peakGain: 0.16,
-      attack: 0.006,
-      decayDuration: 0.068,
-      stopAfter: 0.075,
+      startTime: spinAt,
+      startFreq: 310,
+      endFreq: 560,
+      freqDuration: 0.085,
+      peakGain: 0.08,
+      attack: 0.012,
+      decayDuration: 0.095,
+      stopAfter: 0.105,
     });
     this.playNoiseBurst(audio.ctx, audio.noiseBuffer, {
-      startTime: seatAt,
-      freq: 1400,
-      q: 1.8,
-      gain: 0.12,
-      decayDuration: 0.024,
-      stopAfter: 0.028,
+      startTime: now + 0.018,
+      freq: 2200,
+      q: 2.6,
+      gain: 0.1,
+      decayDuration: 0.02,
+      stopAfter: 0.024,
     });
   }
 }

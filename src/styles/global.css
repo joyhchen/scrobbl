@@ -34,11 +34,12 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: center;
+  padding: 0 0 0 clamp(24px, 3.6vw, 56px);
   background:
-    radial-gradient(ellipse 56% 52% at 52% 46%, rgba(44, 52, 68, 0.34) 0%, rgba(18, 21, 28, 0.22) 48%, rgba(8, 9, 12, 0.96) 100%),
+    radial-gradient(ellipse 56% 52% at 50% 46%, rgba(44, 52, 68, 0.34) 0%, rgba(18, 21, 28, 0.22) 48%, rgba(8, 9, 12, 0.96) 100%),
     radial-gradient(circle at 12% 50%, rgba(160, 180, 215, 0.06) 0%, transparent 42%),
     linear-gradient(180deg, #0d0f13 0%, #090a0d 100%);
 }
@@ -136,16 +137,13 @@ body {
 }
 
 .timeline-dial {
-  position: fixed;
-  left: clamp(18px, 3.2vw, 54px);
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
   z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   height: min(86vh, 760px);
-  width: clamp(230px, 27vw, 390px);
+  width: clamp(210px, 19.5vw, 276px);
   pointer-events: auto;
   transition:
     opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
@@ -154,7 +152,7 @@ body {
 
 .timeline-dial[data-hidden='true'] {
   opacity: 0;
-  transform: translate(-34px, -50%);
+  transform: translateX(-34px);
   pointer-events: none;
 }
 
@@ -393,6 +391,7 @@ body {
 .ipod-stage {
   position: relative;
   z-index: 10;
+  justify-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1145,202 +1144,329 @@ body {
     inset 0 -1px 2px rgba(255, 255, 255, 0.55);
 }
 
-.cassette-deck {
-  position: fixed;
-  right: clamp(18px, 3.2vw, 52px);
+/* Giant 6-disc changer anchored on the right edge with ~half peeking into view */
+.disc-changer {
+  position: relative;
+  z-index: 20;
+  width: 360px;
+  height: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+  overflow: visible;
+}
+
+.disc-changer-housing {
+  position: relative;
+  width: 540px;
+  height: 540px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 26% 24%, rgba(255, 255, 255, 0.09) 0%, transparent 48%),
+    radial-gradient(circle at center, #14171e 0%, #1d212b 58%, #12151c 86%, #0c0e13 100%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.15),
+    inset 0 -6px 14px rgba(0, 0, 0, 0.85),
+    -12px 24px 64px rgba(0, 0, 0, 0.78),
+    0 0 0 8px rgba(14, 16, 22, 0.88),
+    0 0 0 9px rgba(255, 255, 255, 0.06);
+}
+
+/* Active 9-o'clock laser-read indicator facing the iPod */
+.disc-read-notch {
+  position: absolute;
+  left: -20px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 20;
+  z-index: 6;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
 }
 
-.cassette-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.disc-read-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #89e1ff;
+  box-shadow: 0 0 12px rgba(137, 225, 255, 0.92);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
 }
 
-.cassette-card {
+.disc-read-led[data-tone='gold'] {
+  background: #ff9f76;
+  box-shadow: 0 0 12px rgba(255, 159, 118, 0.92);
+}
+
+.disc-read-arrow {
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid rgba(235, 242, 252, 0.78);
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
+}
+
+.disc-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: rotate(var(--carousel-angle, 0deg));
+  transition: transform 0.62s cubic-bezier(0.28, 0.96, 0.36, 1.03);
+}
+
+/* Six circular trays evenly arranged at 60° around radius 172px */
+.disc-slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 158px;
+  height: 158px;
+  margin: -79px 0 0 -79px;
+  transform:
+    rotate(var(--slot-angle, 0deg))
+    translateX(172px)
+    rotate(calc(var(--slot-angle, 0deg) * -1 - var(--carousel-angle, 0deg)));
+  transition: transform 0.62s cubic-bezier(0.28, 0.96, 0.36, 1.03);
+  display: grid;
+  place-items: center;
+}
+
+.disc-empty-tray {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background: radial-gradient(circle at 40% 35%, #1a1e28 0%, #101319 72%, #0b0d12 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 4px 12px rgba(0, 0, 0, 0.84),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.06);
+}
+
+.disc-empty-spindle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #3b4250 0%, #1a1e26 70%, #0d0f14 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.78);
+}
+
+.disc-empty-num {
+  position: absolute;
+  bottom: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(200, 210, 226, 0.24);
+}
+
+.disc-card {
   position: relative;
   appearance: none;
   border: none;
   background: transparent;
   padding: 0;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
-  opacity: 0.78;
+  display: grid;
+  place-items: center;
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+  opacity: 0.88;
 }
 
-.cassette-card:focus {
+.disc-card:focus {
   outline: none;
 }
 
-.cassette-card:focus-visible .cassette-shell {
-  outline: 2px solid rgba(110, 185, 255, 0.85);
-  outline-offset: 4px;
+.disc-card:focus-visible .disc-body {
+  outline: 2px solid rgba(110, 185, 255, 0.88);
+  outline-offset: 5px;
 }
 
-.cassette-card:hover {
-  opacity: 0.96;
-  transform: translateX(-6px) rotate(-0.4deg);
-}
-
-.cassette-card[data-active='true'] {
+.disc-card:hover {
   opacity: 1;
-  transform: translateX(-11px);
+  transform: scale(1.04);
 }
 
-.cassette-card:active {
-  transform: translateX(-9px) scale(0.985);
+.disc-card[data-active='true'] {
+  opacity: 1;
+  transform: scale(1.07);
 }
 
-.cassette-shell {
-  position: relative;
-  width: 184px;
-  height: 116px;
-  border-radius: 9px;
-  padding: 10px 12px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, transparent 40%),
-    linear-gradient(180deg, #2d313a 0%, #1e2128 56%, #16181e 100%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.72),
-    3px 4px 0 #101217,
-    0 14px 30px rgba(0, 0, 0, 0.62);
-  transition: border-color 0.22s ease, box-shadow 0.22s ease;
-}
-
-.cassette-card[data-shell='amber'] .cassette-shell {
-  background:
-    linear-gradient(155deg, rgba(255, 215, 185, 0.16) 0%, transparent 42%),
-    linear-gradient(180deg, #3a2b28 0%, #271c1a 56%, #1c1413 100%);
-  border-color: rgba(255, 198, 172, 0.16);
-}
-
-.cassette-card[data-active='true'] .cassette-shell {
-  border-color: rgba(255, 255, 255, 0.34);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.7),
-    3px 4px 0 #0e1015,
-    0 18px 36px rgba(0, 0, 0, 0.72),
-    0 0 24px rgba(155, 200, 255, 0.1);
-}
-
-.cassette-card[data-shell='amber'][data-active='true'] .cassette-shell {
-  border-color: rgba(255, 184, 152, 0.42);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 214, 196, 0.3),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.7),
-    3px 4px 0 #130d0c,
-    0 18px 36px rgba(0, 0, 0, 0.72),
-    0 0 26px rgba(255, 138, 96, 0.14);
-}
-
-.cassette-screw {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #8f96a3 0%, #3d424d 72%, #191c22 100%);
-  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.45);
-}
-.cassette-screw.s-tl { top: 5px; left: 5px; }
-.cassette-screw.s-tr { top: 5px; right: 5px; }
-.cassette-screw.s-bl { bottom: 5px; left: 5px; }
-.cassette-screw.s-br { bottom: 5px; right: 5px; }
-
-.cassette-paper-tape {
+.disc-body {
   position: relative;
   width: 152px;
-  min-height: 40px;
-  padding: 5px 9px 4px;
+  height: 152px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.52),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.52),
+    0 14px 28px rgba(0, 0, 0, 0.68);
+  transition: border-color 0.24s ease, box-shadow 0.24s ease;
+}
+
+.disc-card[data-active='true'] .disc-body {
+  border-color: rgba(178, 232, 255, 0.64);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.64),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.52),
+    0 16px 32px rgba(0, 0, 0, 0.74),
+    0 0 28px rgba(130, 214, 255, 0.24);
+}
+
+.disc-card[data-tone='gold'][data-active='true'] .disc-body {
+  border-color: rgba(255, 198, 168, 0.66);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 235, 220, 0.64),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.52),
+    0 16px 32px rgba(0, 0, 0, 0.74),
+    0 0 30px rgba(255, 148, 106, 0.28);
+}
+
+/* Iridescent CD-R surface; spins gently while loaded */
+.disc-platter {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      from 24deg,
+      #c8d0dc 0deg,
+      #eef4fb 26deg,
+      #a8d8f0 52deg,
+      #d6c4ee 78deg,
+      #f2d8dc 104deg,
+      #cdd7e2 134deg,
+      #95a1b3 168deg,
+      #dde6f2 200deg,
+      #a8e2df 228deg,
+      #c3c7f0 256deg,
+      #f4e5d8 286deg,
+      #b5c0d0 322deg,
+      #c8d0dc 360deg
+    );
+}
+
+.disc-card[data-tone='gold'] .disc-platter {
+  background:
+    conic-gradient(
+      from 38deg,
+      #d7c5b4 0deg,
+      #f8ede0 28deg,
+      #f2bf9b 58deg,
+      #e6b8cc 86deg,
+      #f5dfc4 118deg,
+      #b8a396 156deg,
+      #f4e0cf 194deg,
+      #f0c09c 228deg,
+      #d8c2e2 260deg,
+      #f7e8d6 294deg,
+      #c5b1a0 328deg,
+      #d7c5b4 360deg
+    );
+}
+
+.disc-card[data-active='true'] .disc-platter {
+  animation: discSpin 10s linear infinite;
+}
+
+@keyframes discSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.disc-grooves {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.08) 0px,
+      rgba(255, 255, 255, 0.08) 1px,
+      rgba(0, 0, 0, 0.06) 1px,
+      rgba(0, 0, 0, 0.06) 2.5px
+    );
+  pointer-events: none;
+}
+
+.disc-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.42) 0%, transparent 48%),
+    radial-gradient(circle at center, transparent 58%, rgba(10, 14, 22, 0.32) 100%);
+  pointer-events: none;
+}
+
+.disc-hub {
+  position: relative;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(
+    circle at 38% 34%,
+    rgba(255, 255, 255, 0.54) 0%,
+    rgba(215, 224, 236, 0.34) 55%,
+    rgba(45, 54, 68, 0.48) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.5),
+    0 0 0 3px rgba(255, 255, 255, 0.14);
+}
+
+.disc-hub-ring {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(35, 42, 54, 0.36);
+}
+
+.disc-spindle-hole {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 42%, #13161d 0%, #090a0d 80%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.92);
+}
+
+/* Faded masking-paper tape strip across the upper disc chord */
+.disc-paper-tape {
+  position: absolute;
+  top: 17px;
+  left: 50%;
+  z-index: 3;
+  width: 138px;
+  min-height: 31px;
+  padding: 4px 6px 3px;
   border-radius: 1.5px;
-  transform: rotate(var(--tape-tilt, -1deg));
+  transform: translateX(-50%) rotate(var(--tape-tilt, -1.2deg));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(120, 102, 74, 0.035) 0px,
-      rgba(120, 102, 74, 0.035) 2px,
-      transparent 2px,
-      transparent 5px
-    ),
-    linear-gradient(
-      180deg,
-      rgba(232, 224, 204, 0.72) 0%,
-      rgba(218, 208, 184, 0.66) 54%,
-      rgba(205, 194, 168, 0.62) 100%
-    );
-  border-top: 1px solid rgba(255, 250, 238, 0.34);
-  border-bottom: 1px solid rgba(85, 70, 48, 0.35);
-  box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.38),
-    inset 0 0 10px rgba(155, 134, 98, 0.25);
-  transition: background 0.2s ease, opacity 0.2s ease;
-}
-
-.cassette-paper-tape::before,
-.cassette-paper-tape::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    180deg,
-    transparent 0px,
-    transparent 2px,
-    rgba(24, 26, 32, 0.22) 2px,
-    rgba(24, 26, 32, 0.22) 4px
-  );
-}
-.cassette-paper-tape::before { left: 0; }
-.cassette-paper-tape::after { right: 0; }
-
-.cassette-tape-title {
-  font-family: 'Courier New', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', ui-monospace, monospace;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: rgba(34, 30, 25, 0.66);
-  text-align: center;
-  line-height: 1.2;
-  max-width: 136px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 0.5px 0 rgba(255, 252, 240, 0.45);
-  transition: color 0.2s ease;
-}
-
-.cassette-tape-sub {
-  font-family: var(--font-mono);
-  font-size: 8.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(58, 50, 40, 0.48);
-  line-height: 1;
-}
-
-.cassette-card:hover .cassette-paper-tape,
-.cassette-card[data-active='true'] .cassette-paper-tape {
   background:
     repeating-linear-gradient(
       90deg,
@@ -1351,139 +1477,162 @@ body {
     ),
     linear-gradient(
       180deg,
-      rgba(239, 232, 214, 0.84) 0%,
-      rgba(224, 215, 192, 0.78) 54%,
-      rgba(212, 202, 178, 0.74) 100%
+      rgba(235, 227, 208, 0.8) 0%,
+      rgba(221, 211, 187, 0.74) 56%,
+      rgba(207, 196, 171, 0.7) 100%
     );
+  border-top: 1px solid rgba(255, 250, 238, 0.44);
+  border-bottom: 1px solid rgba(82, 68, 46, 0.34);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.34),
+    inset 0 0 8px rgba(155, 134, 98, 0.24);
+  transition: background 0.2s ease;
 }
 
-.cassette-card[data-active='true'] .cassette-tape-title {
-  color: rgba(24, 20, 16, 0.82);
+.disc-tape-title {
+  font-family: 'Courier New', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(34, 30, 25, 0.72);
+  text-align: center;
+  line-height: 1.18;
+  max-width: 128px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 0.5px 0 rgba(255, 252, 240, 0.45);
+  transition: color 0.2s ease;
 }
 
-.cassette-window {
-  margin-top: 9px;
-  width: 112px;
-  height: 26px;
-  border-radius: 13px;
-  padding: 0 11px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(180deg, #0b0c10 0%, #161920 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85);
+.disc-tape-sub {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(58, 50, 40, 0.5);
+  line-height: 1;
 }
 
-.cassette-reel {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
+.disc-card:hover .disc-paper-tape,
+.disc-card[data-active='true'] .disc-paper-tape {
   background:
-    repeating-conic-gradient(
-      from 0deg,
-      #d8dde6 0deg 26deg,
-      #424854 26deg 60deg
+    repeating-linear-gradient(
+      90deg,
+      rgba(120, 102, 74, 0.04) 0px,
+      rgba(120, 102, 74, 0.04) 2px,
+      transparent 2px,
+      transparent 5px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(244, 237, 220, 0.9) 0%,
+      rgba(229, 220, 198, 0.86) 56%,
+      rgba(216, 206, 183, 0.82) 100%
     );
-  display: grid;
-  place-items: center;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.65);
 }
 
-.cassette-card[data-active='true'] .cassette-reel {
-  animation: reelSpin 7s linear infinite;
+.disc-card[data-active='true'] .disc-tape-title {
+  color: rgba(24, 20, 16, 0.86);
 }
 
-@keyframes reelSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.reel-hub {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #14171e;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18);
-}
-
-.cassette-tape-bridge-strip {
-  width: 34px;
-  height: 10px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, #3c261d 0%, #24150f 55%, #3a2319 100%);
-  border-top: 1px solid rgba(255, 200, 170, 0.12);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
-}
-
-.cassette-bottom-tray {
-  margin-top: auto;
+/* Central motorized hub with slot readout and DISC CHANGE push button */
+.disc-center-console {
+  position: absolute;
+  z-index: 5;
   width: 118px;
-  height: 17px;
-  border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #252830 0%, #17191f 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  height: 118px;
+  border-radius: 50%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
-  padding: 0 12px;
+  justify-content: center;
+  gap: 8px;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.13) 0%, transparent 55%),
+    linear-gradient(160deg, #2b303c 0%, #191c24 58%, #111319 100%);
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.22),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.78),
+    0 10px 24px rgba(0, 0, 0, 0.72);
 }
 
-.cassette-card[data-shell='amber'] .cassette-bottom-tray {
-  background: linear-gradient(180deg, #2e2220 0%, #1d1514 100%);
+.disc-slot-readout {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(214, 228, 245, 0.72);
+  padding: 2.5px 8px;
+  border-radius: 3px;
+  background: rgba(6, 8, 12, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
-.tray-hole {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #090a0d;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9), 0 0.5px 0 rgba(255, 255, 255, 0.14);
+.disc-change-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 6px 13px;
+  background: linear-gradient(180deg, #4f5768 0%, #2e3340 52%, #20242e 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.65),
+    0 4px 12px rgba(0, 0, 0, 0.58);
+  color: rgba(242, 246, 252, 0.9);
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition:
+    color 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease,
+    transform 0.09s ease,
+    box-shadow 0.16s ease;
 }
 
-.tray-pin {
-  width: 5px;
-  height: 5px;
-  border-radius: 1.5px;
-  background: #0c0d11;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.9);
+.disc-change-btn:focus {
+  outline: none;
 }
 
-.cassette-led {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  transition: background 0.25s ease, box-shadow 0.25s ease;
-  flex-shrink: 0;
+.disc-change-btn:focus-visible {
+  outline: 2px solid rgba(110, 185, 255, 0.85);
+  outline-offset: 2px;
 }
 
-.cassette-card[data-active='true'] .cassette-led {
-  background: #89e1ff;
-  box-shadow: 0 0 10px rgba(137, 225, 255, 0.85);
+.disc-change-btn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(180deg, #626b80 0%, #3a4150 54%, #282d3a 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.44),
+    0 0 16px rgba(255, 255, 255, 0.14),
+    0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
-.cassette-card[data-shell='amber'][data-active='true'] .cassette-led {
-  background: #ff9f76;
-  box-shadow: 0 0 10px rgba(255, 159, 118, 0.85);
+.disc-change-btn:active {
+  transform: translateY(1px) scale(0.95);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.72),
+    0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-@media (max-width: 1120px) {
-  .cassette-shell {
-    width: 158px;
-    height: 102px;
+@media (max-width: 1180px) {
+  .disc-changer {
+    width: 300px;
   }
 
-  .cassette-paper-tape {
-    width: 132px;
-    min-height: 36px;
-  }
-
-  .cassette-tape-title {
-    font-size: 10.5px;
-    max-width: 116px;
+  .disc-changer-housing {
+    transform: scale(0.84);
+    transform-origin: left center;
   }
 }
 
@@ -1496,16 +1645,13 @@ body {
   .studio-stage {
     height: auto;
     min-height: 100vh;
+    display: flex;
     flex-direction: column;
     gap: 32px;
     padding: 48px 20px 56px;
   }
 
   .timeline-dial {
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
     width: min(92vw, 340px);
     height: 440px;
   }
@@ -1514,23 +1660,15 @@ body {
     display: none;
   }
 
-  .cassette-deck {
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-    align-items: center;
-  }
-
-  .cassette-stack {
-    flex-direction: row;
-    flex-wrap: wrap;
+  .disc-changer {
+    width: 344px;
+    height: 344px;
+    padding-left: 0;
     justify-content: center;
-    gap: 16px;
   }
 
-  .cassette-card[data-active='true'],
-  .cassette-card:hover {
-    transform: translateY(-4px);
+  .disc-changer-housing {
+    transform: scale(0.64);
+    transform-origin: center;
   }
 }

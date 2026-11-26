@@ -1,15 +1,15 @@
 import { loadPlaylists, normalizeTracks } from './playlists';
-import type { CassettePreset, MonthlyPlaylist, RawTrack } from './types';
-import chineseSongsData from '../data/cassette-playlist.json';
+import type { DiscPreset, MonthlyPlaylist, RawTrack } from './types';
+import chineseSongsData from '../data/chinese-100-playlist.json';
 
-export type { CassettePreset, IPodColorTheme } from './types';
+export type { DiscPreset, IPodColorTheme } from './types';
 
 interface SinglePlaylistJson {
   title?: string;
   tracks?: RawTrack[];
 }
 
-function loadSinglePlaylistCassette(
+function loadSinglePlaylistDisc(
   id: string,
   raw: SinglePlaylistJson,
   fallbackTitle: string
@@ -22,7 +22,7 @@ function loadSinglePlaylistCassette(
     monthKey: id,
     year: tracks.length,
     monthIndex: 0,
-    monthShort: 'SIDE',
+    monthShort: 'DISC',
     monthLong: title,
     label: title,
     tracks,
@@ -31,9 +31,9 @@ function loadSinglePlaylistCassette(
   };
 }
 
-export function loadCassettes(): [CassettePreset, ...CassettePreset[]] {
+export function loadDiscs(): [DiscPreset, ...DiscPreset[]] {
   const timeMachinePlaylists = loadPlaylists();
-  const chinesePlaylist = loadSinglePlaylistCassette(
+  const chinesePlaylist = loadSinglePlaylistDisc(
     'best-100-chinese-songs',
     chineseSongsData,
     '最好听的 100 首中文歌'
@@ -44,8 +44,8 @@ export function loadCassettes(): [CassettePreset, ...CassettePreset[]] {
       id: 'time-machine',
       tapeLabel: 'time machine',
       tapeSubLabel: '2019 — 2025',
-      tapeTiltDeg: -1.3,
-      shellTone: 'charcoal',
+      tapeTiltDeg: -1.6,
+      discTone: 'silver',
       ipodTheme: 'aqua',
       showTimelineDial: true,
       playlists: timeMachinePlaylists,
@@ -54,9 +54,9 @@ export function loadCassettes(): [CassettePreset, ...CassettePreset[]] {
       id: 'best-100-chinese-songs',
       tapeLabel: chinesePlaylist.label,
       tapeSubLabel: `${chinesePlaylist.trackCount} tracks`,
-      tapeTiltDeg: 0.9,
-      shellTone: 'amber',
-      ipodTheme: 'coral',
+      tapeTiltDeg: 1.2,
+      discTone: 'gold',
+      ipodTheme: 'aqua',
       showTimelineDial: false,
       playlists: [chinesePlaylist],
     },

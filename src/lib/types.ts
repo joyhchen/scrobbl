@@ -32,12 +32,12 @@ export interface MonthlyPlaylist {
   totalDurationText: string;
 }
 
-export interface CassettePreset {
+export interface DiscPreset {
   id: string;
   tapeLabel: string;
   tapeSubLabel?: string;
   tapeTiltDeg: number;
-  shellTone: 'charcoal' | 'amber';
+  discTone: 'silver' | 'gold';
   ipodTheme: IPodColorTheme;
   showTimelineDial: boolean;
   playlists: MonthlyPlaylist[];
@@ -52,8 +52,8 @@ export type ClientPlaylist = Pick<
   tracks: ClientTrack[];
 };
 
-export type ClientCassette = Pick<
-  CassettePreset,
+export type ClientDisc = Pick<
+  DiscPreset,
   'id' | 'ipodTheme' | 'showTimelineDial'
 > & {
   playlists: ClientPlaylist[];
