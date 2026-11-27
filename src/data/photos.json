@@ -1093,38 +1093,174 @@
     {
       "src": "/photos/2024-10/17-wukang-mansion.webp",
       "date": "2024.10.17"
+    },
+    {
+      "src": "/photos/2024-10/18-metronome-bag.webp",
+      "date": "2024.10.24"
+    },
+    {
+      "src": "/photos/2024-10/19-seattle-fall.webp",
+      "date": "2024.10.30"
+    }
+  ],
+  "2024-11": [
+    {
+      "src": "/photos/2024-11/01-mahjong.webp",
+      "date": "2024.11.13"
+    },
+    {
+      "src": "/photos/2024-11/02-seattle-sunset.webp",
+      "date": "2024.11.29"
+    }
+  ],
+  "2024-12": [
+    {
+      "src": "/photos/2024-12/01-kajiken.webp",
+      "date": "2024.12.01"
+    }
+  ],
+  "2025-01": [
+    {
+      "src": "/photos/2025-01/01-stripe-bus.webp",
+      "date": "2025.01.27"
+    },
+    {
+      "src": "/photos/2025-01/02-team-pic.webp",
+      "date": "2025.01.30"
     }
   ],
   "2025-02": [
+    {
+      "src": "/photos/2025-02/00-vancouver-lulu.webp",
+      "date": "2025.02.16"
+    },
+    {
+      "src": "/photos/2025-02/00-vancouver-port.webp",
+      "date": "2025.02.16"
+    },
+    {
+      "src": "/photos/2025-02/02-vancouver-skiing.webp",
+      "date": "2025.02.17"
+    },
+    {
+      "src": "/photos/2025-02/03-vancouver-ski-lift.webp",
+      "date": "2025.02.17"
+    },
+    {
+      "src": "/photos/2025-02/04-vancouver-ski-sunset.webp",
+      "date": "2025.02.17"
+    },
     {
       "src": "/photos/2025-02/01-croissants.webp",
       "date": "2025.02.17"
     }
   ],
+  "2025-03": [
+    {
+      "src": "/photos/2025-03/01-cherry-blossoms-uw.webp",
+      "date": "2025.03.18"
+    }
+  ],
   "2025-04": [
+    {
+      "src": "/photos/2025-04/00-pocoyo.webp",
+      "date": "2025.04.02"
+    },
+    {
+      "src": "/photos/2025-04/00-shanghai-kitchen.webp",
+      "date": "2025.04.03"
+    },
+    {
+      "src": "/photos/2025-04/00-suzhou-north.webp",
+      "date": "2025.04.03"
+    },
+    {
+      "src": "/photos/2025-04/00-shanghai-hotpot.webp",
+      "date": "2025.04.03"
+    },
+    {
+      "src": "/photos/2025-04/00-shanghai-sunrise.webp",
+      "date": "2025.04.04"
+    },
+    {
+      "src": "/photos/2025-04/00-fantuan-2.webp",
+      "date": "2025.04.04"
+    },
     {
       "src": "/photos/2025-04/01-fantuan.webp",
       "date": "2025.04.04"
+    },
+    {
+      "src": "/photos/2025-04/00-huangshan-2.webp",
+      "date": "2025.04.06"
+    },
+    {
+      "src": "/photos/2025-04/00-huangshan-sunrise-1.webp",
+      "date": "2025.04.07"
+    },
+    {
+      "src": "/photos/2025-04/00-huangshan-sunrise-2.webp",
+      "date": "2025.04.07"
     },
     {
       "src": "/photos/2025-04/02-huangshan.webp",
       "date": "2025.04.07"
     },
     {
+      "src": "/photos/2025-04/00-huizhou.webp",
+      "date": "2025.04.08"
+    },
+    {
+      "src": "/photos/2025-04/00-guangzhou-chicken-feet.webp",
+      "date": "2025.04.10"
+    },
+    {
+      "src": "/photos/2025-04/00-guangzhou-tower-view.webp",
+      "date": "2025.04.10"
+    },
+    {
       "src": "/photos/2025-04/03-shanghai-exhibition.webp",
+      "date": "2025.04.13"
+    },
+    {
+      "src": "/photos/2025-04/04-shanghai-exhibition-2.webp",
+      "date": "2025.04.13"
+    },
+    {
+      "src": "/photos/2025-04/05-shanghai-exhibition-3.webp",
       "date": "2025.04.13"
     }
   ],
   "2025-05": [
     {
+      "src": "/photos/2025-05/00-madrona-park-bellevue.webp",
+      "date": "2025.05.05"
+    },
+    {
       "src": "/photos/2025-05/01-seattle-seagull.webp",
       "date": "2025.05.10"
+    },
+    {
+      "src": "/photos/2025-05/02-pike-place.webp",
+      "date": "2025.05.11"
+    },
+    {
+      "src": "/photos/2025-05/03-madrona-gnomes.webp",
+      "date": "2025.05.17"
+    },
+    {
+      "src": "/photos/2025-05/04-bird-with-worm.webp",
+      "date": "2025.05.31"
     }
   ],
   "2025-06": [
     {
       "src": "/photos/2025-06/01-rabbit.webp",
       "date": "2025.06.01"
+    },
+    {
+      "src": "/photos/2025-06/01-squirrel.webp",
+      "date": "2025.06.05"
     },
     {
       "src": "/photos/2025-06/02-coldplay-concert.webp",
@@ -1145,19 +1281,91 @@
   ],
   "2025-07": [
     {
+      "src": "/photos/2025-07/00-film-camera.webp",
+      "date": "2025.07.05"
+    },
+    {
+      "src": "/photos/2025-07/00-flowers.webp",
+      "date": "2025.07.06"
+    },
+    {
       "src": "/photos/2025-07/01-haidilao-bags.webp",
       "date": "2025.07.19"
+    },
+    {
+      "src": "/photos/2025-07/02-vancouver.webp",
+      "date": "2025.07.27"
     }
   ],
   "2025-08": [
     {
+      "src": "/photos/2025-08/00-soft-serve.webp",
+      "date": "2025.08.09"
+    },
+    {
+      "src": "/photos/2025-08/00-cafe.webp",
+      "date": "2025.08.16"
+    },
+    {
+      "src": "/photos/2025-08/00-seattle-plush.webp",
+      "date": "2025.08.21"
+    },
+    {
+      "src": "/photos/2025-08/01-rainier-friend.webp",
+      "date": "2025.08.23"
+    },
+    {
+      "src": "/photos/2025-08/02-rainier-drive-home.webp",
+      "date": "2025.08.23"
+    },
+    {
+      "src": "/photos/2025-08/03-rainier-falls.webp",
+      "date": "2025.08.23"
+    },
+    {
       "src": "/photos/2025-08/01-rainier-drive.webp",
       "date": "2025.08.23"
+    },
+    {
+      "src": "/photos/2025-08/04-oracle-park-sf.webp",
+      "date": "2025.08.27"
+    },
+    {
+      "src": "/photos/2025-08/05-sfo.webp",
+      "date": "2025.08.29"
     }
   ],
   "2025-09": [
     {
+      "src": "/photos/2025-09/00-brick-con.webp",
+      "date": "2025.09.07"
+    },
+    {
+      "src": "/photos/2025-09/00-space-needle.webp",
+      "date": "2025.09.20"
+    },
+    {
+      "src": "/photos/2025-09/00-taipei-ticket.webp",
+      "date": "2025.09.26"
+    },
+    {
       "src": "/photos/2025-09/01-ducks.webp",
+      "date": "2025.09.30"
+    },
+    {
+      "src": "/photos/2025-09/02-guangxi-basketball-net.webp",
+      "date": "2025.09.30"
+    },
+    {
+      "src": "/photos/2025-09/03-school-recruitment.webp",
+      "date": "2025.09.30"
+    },
+    {
+      "src": "/photos/2025-09/04-guangxi-basketball-net-2.webp",
+      "date": "2025.09.30"
+    },
+    {
+      "src": "/photos/2025-09/05-large-table.webp",
       "date": "2025.09.30"
     }
   ],
@@ -1167,12 +1375,80 @@
       "date": "2025.10.02"
     },
     {
+      "src": "/photos/2025-10/00-kids-mahjong.webp",
+      "date": "2025.10.02"
+    },
+    {
+      "src": "/photos/2025-10/00-grandpa-and-cousin.webp",
+      "date": "2025.10.02"
+    },
+    {
+      "src": "/photos/2025-10/00-fireworks.webp",
+      "date": "2025.10.02"
+    },
+    {
+      "src": "/photos/2025-10/00-countryside-night.webp",
+      "date": "2025.10.02"
+    },
+    {
+      "src": "/photos/2025-10/00-launching-the-toy.webp",
+      "date": "2025.10.02"
+    },
+    {
+      "src": "/photos/2025-10/00-twins.webp",
+      "date": "2025.10.02"
+    },
+    {
       "src": "/photos/2025-10/02-guigang-station.webp",
       "date": "2025.10.03"
     },
     {
+      "src": "/photos/2025-10/02-rural-city-streets.webp",
+      "date": "2025.10.03"
+    },
+    {
+      "src": "/photos/2025-10/02-family-meal.webp",
+      "date": "2025.10.03"
+    },
+    {
+      "src": "/photos/2025-10/02-grandpa.webp",
+      "date": "2025.10.05"
+    },
+    {
+      "src": "/photos/2025-10/02-lukang-street-taiwan.webp",
+      "date": "2025.10.06"
+    },
+    {
+      "src": "/photos/2025-10/02-mazu-temple.webp",
+      "date": "2025.10.06"
+    },
+    {
+      "src": "/photos/2025-10/02-sun-moon-lake.webp",
+      "date": "2025.10.07"
+    },
+    {
+      "src": "/photos/2025-10/02-sun-moon-lake-2.webp",
+      "date": "2025.10.07"
+    },
+    {
       "src": "/photos/2025-10/03-monkey.webp",
       "date": "2025.10.08"
+    },
+    {
+      "src": "/photos/2025-10/03-alishan.webp",
+      "date": "2025.10.08"
+    },
+    {
+      "src": "/photos/2025-10/03-chiayi.webp",
+      "date": "2025.10.08"
+    },
+    {
+      "src": "/photos/2025-10/03-motorbike.webp",
+      "date": "2025.10.09"
+    },
+    {
+      "src": "/photos/2025-10/03-southern-tip-taiwan.webp",
+      "date": "2025.10.09"
     },
     {
       "src": "/photos/2025-10/03-coastal-cliff.webp",
@@ -1181,15 +1457,223 @@
     {
       "src": "/photos/2025-10/04-taiwan-rail-tickets.webp",
       "date": "2025.10.10"
+    },
+    {
+      "src": "/photos/2025-10/05-taroko-park.webp",
+      "date": "2025.10.11"
+    },
+    {
+      "src": "/photos/2025-10/05-hualien-cliff.webp",
+      "date": "2025.10.11"
+    },
+    {
+      "src": "/photos/2025-10/06-taipei-101.webp",
+      "date": "2025.10.12"
+    },
+    {
+      "src": "/photos/2025-10/07-rainy-south-lake-union.webp",
+      "date": "2025.10.24"
     }
   ],
   "2025-11": [
     {
+      "src": "/photos/2025-11/00-nyc-marathon-michelle.webp",
+      "date": "2025.11.03"
+    },
+    {
+      "src": "/photos/2025-11/00-xin-camera.webp",
+      "date": "2025.11.03"
+    },
+    {
       "src": "/photos/2025-11/01-georgian-food.webp",
       "date": "2025.11.03"
+    },
+    {
+      "src": "/photos/2025-11/02-stripe-nyc-view.webp",
+      "date": "2025.11.05"
+    },
+    {
+      "src": "/photos/2025-11/03-golden-gate-bird.webp",
+      "date": "2025.11.09"
+    },
+    {
+      "src": "/photos/2025-11/04-golden-gate-me.webp",
+      "date": "2025.11.09"
+    },
+    {
+      "src": "/photos/2025-11/05-italian-homemade.webp",
+      "date": "2025.11.12"
+    },
+    {
+      "src": "/photos/2025-11/06-lands-end.webp",
+      "date": "2025.11.15"
+    },
+    {
+      "src": "/photos/2025-11/07-metronome-ad.webp",
+      "date": "2025.11.16"
+    }
+  ],
+  "2025-12": [
+    {
+      "src": "/photos/2025-12/01-chinese-food.webp",
+      "date": "2025.12.07"
+    },
+    {
+      "src": "/photos/2025-12/02-christmas-lights.webp",
+      "date": "2025.12.20"
+    },
+    {
+      "src": "/photos/2025-12/03-dog-staring.webp",
+      "date": "2025.12.23"
+    }
+  ],
+  "2026-01": [
+    {
+      "src": "/photos/2026-01/01-korean-food.webp",
+      "date": "2026.01.03"
+    },
+    {
+      "src": "/photos/2026-01/02-squirrel.webp",
+      "date": "2026.01.14"
+    },
+    {
+      "src": "/photos/2026-01/03-supreme-dumplings.webp",
+      "date": "2026.01.16"
+    },
+    {
+      "src": "/photos/2026-01/04-hag-capisco-chair.webp",
+      "date": "2026.01.20"
+    },
+    {
+      "src": "/photos/2026-01/05-labubu.webp",
+      "date": "2026.01.31"
+    }
+  ],
+  "2026-02": [
+    {
+      "src": "/photos/2026-02/01-oyster-point-south-sf.webp",
+      "date": "2026.02.06"
+    },
+    {
+      "src": "/photos/2026-02/02-seattle-sunset.webp",
+      "date": "2026.02.09"
+    },
+    {
+      "src": "/photos/2026-02/03-seattle-dark-sunset.webp",
+      "date": "2026.02.11"
+    },
+    {
+      "src": "/photos/2026-02/04-palm-springs-car.webp",
+      "date": "2026.02.26"
+    }
+  ],
+  "2026-03": [
+    {
+      "src": "/photos/2026-03/01-gundam.webp",
+      "date": "2026.03.01"
+    },
+    {
+      "src": "/photos/2026-03/02-cake-at-office.webp",
+      "date": "2026.03.06"
+    },
+    {
+      "src": "/photos/2026-03/03-wang-sulong-concert.webp",
+      "date": "2026.03.14"
+    },
+    {
+      "src": "/photos/2026-03/04-space-needle.webp",
+      "date": "2026.03.14"
+    }
+  ],
+  "2026-04": [
+    {
+      "src": "/photos/2026-04/01-kbbq.webp",
+      "date": "2026.04.09"
+    },
+    {
+      "src": "/photos/2026-04/02-office-nyc-view.webp",
+      "date": "2026.04.10"
+    },
+    {
+      "src": "/photos/2026-04/03-concert.webp",
+      "date": "2026.04.10"
+    },
+    {
+      "src": "/photos/2026-04/04-cornell-north-campus-bridge.webp",
+      "date": "2026.04.17"
+    },
+    {
+      "src": "/photos/2026-04/05-offline-matcha.webp",
+      "date": "2026.04.26"
+    }
+  ],
+  "2026-05": [
+    {
+      "src": "/photos/2026-05/01-siff-hat-chocolate-popcorn.webp",
+      "date": "2026.05.08"
+    },
+    {
+      "src": "/photos/2026-05/02-reflection-lake.webp",
+      "date": "2026.05.09"
+    },
+    {
+      "src": "/photos/2026-05/03-rainier-hike.webp",
+      "date": "2026.05.10"
+    },
+    {
+      "src": "/photos/2026-05/04-duck-family.webp",
+      "date": "2026.05.10"
+    },
+    {
+      "src": "/photos/2026-05/05-lone-bird.webp",
+      "date": "2026.05.14"
+    },
+    {
+      "src": "/photos/2026-05/06-moving.webp",
+      "date": "2026.05.26"
+    },
+    {
+      "src": "/photos/2026-05/07-fuji-halfx-event.webp",
+      "date": "2026.05.31"
     }
   ],
   "2026-06": [
+    {
+      "src": "/photos/2026-06/00-taipei-morning.webp",
+      "date": "2026.06.04"
+    },
+    {
+      "src": "/photos/2026-06/00-taipei-colors-1.webp",
+      "date": "2026.06.04"
+    },
+    {
+      "src": "/photos/2026-06/00-taipei-colors-2.webp",
+      "date": "2026.06.04"
+    },
+    {
+      "src": "/photos/2026-06/00-taipei-colors-3.webp",
+      "date": "2026.06.04"
+    },
+    {
+      "src": "/photos/2026-06/00-shanghai-airport.webp",
+      "date": "2026.06.05"
+    },
+    {
+      "src": "/photos/2026-06/00-haibao-statue.webp",
+      "date": "2026.06.07"
+    },
+    {
+      "src": "/photos/2026-06/00-western-china-1.webp",
+      "date": "2026.06.09"
+    },
+    {
+      "src": "/photos/2026-06/00-western-china-2.webp",
+      "date": "2026.06.09"
+    },
+    {
+      "src": "/photos/2026-06/00-western-china-3.webp",
+      "date": "2026.06.09"
+    },
     {
       "src": "/photos/2026-06/01-car-portrait.webp",
       "date": "2026.06.10"
@@ -1199,21 +1683,159 @@
       "date": "2026.06.11"
     },
     {
+      "src": "/photos/2026-06/02-windmill.webp",
+      "date": "2026.06.11"
+    },
+    {
       "src": "/photos/2026-06/03-swans-lake.webp",
       "date": "2026.06.13"
     },
     {
       "src": "/photos/2026-06/04-lake-flowers.webp",
       "date": "2026.06.13"
+    },
+    {
+      "src": "/photos/2026-06/05-group-photo.webp",
+      "date": "2026.06.14"
+    },
+    {
+      "src": "/photos/2026-06/06-lavender-field.webp",
+      "date": "2026.06.14"
+    },
+    {
+      "src": "/photos/2026-06/07-gundam-base.webp",
+      "date": "2026.06.21"
+    },
+    {
+      "src": "/photos/2026-06/08-lalaport-gundam.webp",
+      "date": "2026.06.21"
+    },
+    {
+      "src": "/photos/2026-06/09-incheon-airport-meal.webp",
+      "date": "2026.06.21"
+    },
+    {
+      "src": "/photos/2026-06/10-portland-waterfall.webp",
+      "date": "2026.06.27"
+    },
+    {
+      "src": "/photos/2026-06/11-the-dalles.webp",
+      "date": "2026.06.27"
+    },
+    {
+      "src": "/photos/2026-06/12-portland-rose-garden.webp",
+      "date": "2026.06.28"
+    }
+  ],
+  "2026-07": [
+    {
+      "src": "/photos/2026-07/01-mahjong.webp",
+      "date": "2026.07.02"
+    },
+    {
+      "src": "/photos/2026-07/02-fireworks.webp",
+      "date": "2026.07.04"
+    },
+    {
+      "src": "/photos/2026-07/03-monstera.webp",
+      "date": "2026.07.09"
+    },
+    {
+      "src": "/photos/2026-07/04-arrowhead.webp",
+      "date": "2026.07.10"
+    }
+  ],
+  "2026-08": [
+    {
+      "src": "/photos/2026-08/01-potluck.webp",
+      "date": "2026.08.02"
+    },
+    {
+      "src": "/photos/2026-08/02-pizza.webp",
+      "date": "2026.08.06"
+    },
+    {
+      "src": "/photos/2026-08/03-paddleboards.webp",
+      "date": "2026.08.15"
+    },
+    {
+      "src": "/photos/2026-08/04-korean-food.webp",
+      "date": "2026.08.22"
+    },
+    {
+      "src": "/photos/2026-08/05-jersey-city.webp",
+      "date": "2026.08.29"
+    }
+  ],
+  "2026-09": [
+    {
+      "src": "/photos/2026-09/01-match-point-us-open.webp",
+      "date": "2026.09.05"
+    },
+    {
+      "src": "/photos/2026-09/02-learner-tien.webp",
+      "date": "2026.09.07"
+    },
+    {
+      "src": "/photos/2026-09/03-520-bridge.webp",
+      "date": "2026.09.15"
+    },
+    {
+      "src": "/photos/2026-09/04-office-question-of-the-day.webp",
+      "date": "2026.09.23"
+    },
+    {
+      "src": "/photos/2026-09/05-cid-food-walk.webp",
+      "date": "2026.09.26"
     }
   ],
   "2026-10": [
     {
+      "src": "/photos/2026-10/00-new-print.webp",
+      "date": "2026.10.04"
+    },
+    {
+      "src": "/photos/2026-10/00-bike-on-trail.webp",
+      "date": "2026.10.07"
+    },
+    {
       "src": "/photos/2026-10/01-bike-waterfront.webp",
       "date": "2026.10.10"
+    },
+    {
+      "src": "/photos/2026-10/02-burke-gilman-sunset.webp",
+      "date": "2026.10.15"
+    },
+    {
+      "src": "/photos/2026-10/03-with-a-dog.webp",
+      "date": "2026.10.24"
+    },
+    {
+      "src": "/photos/2026-10/04-wedding-polaroid.webp",
+      "date": "2026.10.30"
+    },
+    {
+      "src": "/photos/2026-10/05-cute-card.webp",
+      "date": "2026.10.30"
+    },
+    {
+      "src": "/photos/2026-10/06-celebrating-wedding.webp",
+      "date": "2026.10.31"
     }
   ],
   "2026-11": [
+    {
+      "src": "/photos/2026-11/00-burke-gilman-afternoon.webp",
+      "date": "2026.11.02"
+    },
+    {
+      "src": "/photos/2026-11/00-burke-gilman-peak-colors.webp",
+      "date": "2026.11.02"
+    },
+    {
+      "src": "/photos/2026-11/00-stripe-ping-pong.webp",
+      "date": "2026.11.10"
+    },
     {
       "src": "/photos/2026-11/02-rainier-view.webp",
       "date": "2026.11.12"
@@ -1221,6 +1843,10 @@
     {
       "src": "/photos/2026-11/03-labubu-gnome.webp",
       "date": "2026.11.13"
+    },
+    {
+      "src": "/photos/2026-11/03-pasta.webp",
+      "date": "2026.11.14"
     },
     {
       "src": "/photos/2026-11/01-thanksgiving.webp",
