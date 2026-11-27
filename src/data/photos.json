@@ -1,4 +1,398 @@
 {
+  "2019-12": [
+    {
+      "src": "/photos/2019-12/01-snowman.webp",
+      "date": "2019.12.01"
+    }
+  ],
+  "2020-12": [
+    {
+      "src": "/photos/2020-12/01-two-dogs-bed.webp",
+      "date": "2020.12.10"
+    },
+    {
+      "src": "/photos/2020-12/02-two-dogs.webp",
+      "date": "2020.12.12"
+    },
+    {
+      "src": "/photos/2020-12/03-dog-head-tilt.webp",
+      "date": "2020.12.13"
+    },
+    {
+      "src": "/photos/2020-12/04-hand-on-dog.webp",
+      "date": "2020.12.20"
+    },
+    {
+      "src": "/photos/2020-12/05-walking-dog-snow.webp",
+      "date": "2020.12.30"
+    }
+  ],
+  "2021-01": [
+    {
+      "src": "/photos/2021-01/01-dogs-cuddling.webp",
+      "date": "2021.01.02"
+    },
+    {
+      "src": "/photos/2021-01/02-dog-with-bag.webp",
+      "date": "2021.01.24"
+    },
+    {
+      "src": "/photos/2021-01/03-cornell-snow.webp",
+      "date": "2021.01.30"
+    }
+  ],
+  "2021-02": [
+    {
+      "src": "/photos/2021-02/01-bean-boots.webp",
+      "date": "2021.02.02"
+    },
+    {
+      "src": "/photos/2021-02/02-hall-desks.webp",
+      "date": "2021.02.04"
+    },
+    {
+      "src": "/photos/2021-02/03-ithaca-falls.webp",
+      "date": "2021.02.06"
+    },
+    {
+      "src": "/photos/2021-02/04-networks-lecture.webp",
+      "date": "2021.02.15"
+    },
+    {
+      "src": "/photos/2021-02/05-film-portrait.webp",
+      "date": "2021.02.18"
+    }
+  ],
+  "2021-03": [
+    {
+      "src": "/photos/2021-03/01-slope-picnic.webp",
+      "date": "2021.03.10"
+    },
+    {
+      "src": "/photos/2021-03/02-slope-sunset.webp",
+      "date": "2021.03.10"
+    },
+    {
+      "src": "/photos/2021-03/03-cascadilla-sunset.webp",
+      "date": "2021.03.11"
+    },
+    {
+      "src": "/photos/2021-03/04-lecture-hall-shoes.webp",
+      "date": "2021.03.15"
+    },
+    {
+      "src": "/photos/2021-03/05-collegetown-night.webp",
+      "date": "2021.03.17"
+    },
+    {
+      "src": "/photos/2021-03/06-gorge-day.webp",
+      "date": "2021.03.19"
+    },
+    {
+      "src": "/photos/2021-03/07-duck-airpods.webp",
+      "date": "2021.03.29"
+    },
+    {
+      "src": "/photos/2021-03/08-campus-night.webp",
+      "date": "2021.03.31"
+    }
+  ],
+  "2021-04": [
+    {
+      "src": "/photos/2021-04/01-we-love-eng.webp",
+      "date": "2021.04.02"
+    },
+    {
+      "src": "/photos/2021-04/02-ithaca-walk.webp",
+      "date": "2021.04.06"
+    },
+    {
+      "src": "/photos/2021-04/03-gorge-spring.webp",
+      "date": "2021.04.13"
+    },
+    {
+      "src": "/photos/2021-04/04-cherry-blossoms-walk.webp",
+      "date": "2021.04.17"
+    },
+    {
+      "src": "/photos/2021-04/05-clocktower-blossoms.webp",
+      "date": "2021.04.18"
+    },
+    {
+      "src": "/photos/2021-04/06-cornell-distance.webp",
+      "date": "2021.04.22"
+    },
+    {
+      "src": "/photos/2021-04/07-baking.webp",
+      "date": "2021.04.23"
+    },
+    {
+      "src": "/photos/2021-04/08-baked-goods.webp",
+      "date": "2021.04.23"
+    },
+    {
+      "src": "/photos/2021-04/09-clocktower-night.webp",
+      "date": "2021.04.26"
+    },
+    {
+      "src": "/photos/2021-04/10-cat-sitting.webp",
+      "date": "2021.04.30"
+    }
+  ],
+  "2021-05": [
+    {
+      "src": "/photos/2021-05/01-glass-reflection.webp",
+      "date": "2021.05.01"
+    },
+    {
+      "src": "/photos/2021-05/02-cherry-blossoms.webp",
+      "date": "2021.05.01"
+    },
+    {
+      "src": "/photos/2021-05/03-rainy-collegetown.webp",
+      "date": "2021.05.07"
+    },
+    {
+      "src": "/photos/2021-05/04-law-school-arch.webp",
+      "date": "2021.05.11"
+    },
+    {
+      "src": "/photos/2021-05/05-pc-build.webp",
+      "date": "2021.05.19"
+    },
+    {
+      "src": "/photos/2021-05/06-bright-eyes-dog.webp",
+      "date": "2021.05.23"
+    }
+  ],
+  "2021-06": [
+    {
+      "src": "/photos/2021-06/01-starbucks.webp",
+      "date": "2021.06"
+    }
+  ],
+  "2021-07": [
+    {
+      "src": "/photos/2021-07/01-fish.webp",
+      "date": "2021.07"
+    },
+    {
+      "src": "/photos/2021-07/02-subway.webp",
+      "date": "2021.07"
+    },
+    {
+      "src": "/photos/2021-07/03-friends-cupcakes.webp",
+      "date": "2021.07"
+    },
+    {
+      "src": "/photos/2021-07/04-vessel.webp",
+      "date": "2021.07"
+    },
+    {
+      "src": "/photos/2021-07/05-kbbq.webp",
+      "date": "2021.07.05"
+    },
+    {
+      "src": "/photos/2021-07/06-friends-hotel.webp",
+      "date": "2021.07.09"
+    },
+    {
+      "src": "/photos/2021-07/07-white-car.webp",
+      "date": "2021.07.17"
+    }
+  ],
+  "2021-08": [
+    {
+      "src": "/photos/2021-08/01-books.webp",
+      "date": "2021.08.09"
+    },
+    {
+      "src": "/photos/2021-08/02-dogs-stairs.webp",
+      "date": "2021.08.12"
+    },
+    {
+      "src": "/photos/2021-08/03-dog-looking-up.webp",
+      "date": "2021.08.15"
+    },
+    {
+      "src": "/photos/2021-08/04-polaroids.webp",
+      "date": "2021.08.16"
+    },
+    {
+      "src": "/photos/2021-08/05-taughannock-falls.webp",
+      "date": "2021.08.23"
+    },
+    {
+      "src": "/photos/2021-08/06-os-lecture.webp",
+      "date": "2021.08.26"
+    }
+  ],
+  "2021-09": [
+    {
+      "src": "/photos/2021-09/01-grand-central-7.webp",
+      "date": "2021.09.03"
+    },
+    {
+      "src": "/photos/2021-09/02-spam-ramen.webp",
+      "date": "2021.09.06"
+    },
+    {
+      "src": "/photos/2021-09/03-us-open.webp",
+      "date": "2021.09.11"
+    },
+    {
+      "src": "/photos/2021-09/04-us-open-friends.webp",
+      "date": "2021.09.11"
+    },
+    {
+      "src": "/photos/2021-09/05-line-friends.webp",
+      "date": "2021.09.12"
+    },
+    {
+      "src": "/photos/2021-09/06-we-r-back.webp",
+      "date": "2021.09.15"
+    }
+  ],
+  "2021-10": [
+    {
+      "src": "/photos/2021-10/01-chicago-boat.webp",
+      "date": "2021.10.09"
+    },
+    {
+      "src": "/photos/2021-10/02-chicago-friends.webp",
+      "date": "2021.10.11"
+    },
+    {
+      "src": "/photos/2021-10/03-chicago-river.webp",
+      "date": "2021.10.11"
+    },
+    {
+      "src": "/photos/2021-10/04-cider-bag.webp",
+      "date": "2021.10.22"
+    },
+    {
+      "src": "/photos/2021-10/05-fall-colors.webp",
+      "date": "2021.10.27"
+    },
+    {
+      "src": "/photos/2021-10/06-rtx-3080.webp",
+      "date": "2021.10.28"
+    }
+  ],
+  "2021-11": [
+    {
+      "src": "/photos/2021-11/01-matcha-tiramisu.webp",
+      "date": "2021.11.07"
+    },
+    {
+      "src": "/photos/2021-11/02-polaroids.webp",
+      "date": "2021.11.07"
+    },
+    {
+      "src": "/photos/2021-11/03-gingerbread-house.webp",
+      "date": "2021.11.13"
+    },
+    {
+      "src": "/photos/2021-11/04-cat-selfie.webp",
+      "date": "2021.11.14"
+    },
+    {
+      "src": "/photos/2021-11/05-campus-dusk.webp",
+      "date": "2021.11.17"
+    },
+    {
+      "src": "/photos/2021-11/06-clocktower-dusk.webp",
+      "date": "2021.11.18"
+    },
+    {
+      "src": "/photos/2021-11/07-chinese-students-monthly.webp",
+      "date": "2021.11.18"
+    },
+    {
+      "src": "/photos/2021-11/08-amex-ad.webp",
+      "date": "2021.11.18"
+    },
+    {
+      "src": "/photos/2021-11/09-chilling-indoors.webp",
+      "date": "2021.11.19"
+    },
+    {
+      "src": "/photos/2021-11/10-mahjong.webp",
+      "date": "2021.11.20"
+    }
+  ],
+  "2021-12": [
+    {
+      "src": "/photos/2021-12/01-statler-lecture.webp",
+      "date": "2021.12.06"
+    },
+    {
+      "src": "/photos/2021-12/02-moving-boxes.webp",
+      "date": "2021.12.11"
+    },
+    {
+      "src": "/photos/2021-12/03-cornell-sign.webp",
+      "date": "2021.12.16"
+    },
+    {
+      "src": "/photos/2021-12/04-beebe-bridge.webp",
+      "date": "2021.12.16"
+    },
+    {
+      "src": "/photos/2021-12/05-packed-car.webp",
+      "date": "2021.12.17"
+    }
+  ],
+  "2022-01": [
+    {
+      "src": "/photos/2022-01/01-sagrada-familia.webp",
+      "date": "2022.01.12"
+    },
+    {
+      "src": "/photos/2022-01/02-park-guell.webp",
+      "date": "2022.01.12"
+    },
+    {
+      "src": "/photos/2022-01/03-barcelona-pasta.webp",
+      "date": "2022.01.12"
+    },
+    {
+      "src": "/photos/2022-01/04-setas-de-sevilla.webp",
+      "date": "2022.01.13"
+    },
+    {
+      "src": "/photos/2022-01/05-niangao.webp",
+      "date": "2022.01.30"
+    }
+  ],
+  "2022-02": [
+    {
+      "src": "/photos/2022-02/01-twice-concert.webp",
+      "date": "2022.02.27"
+    }
+  ],
+  "2022-03": [
+    {
+      "src": "/photos/2022-03/01-nyc-office-view.webp",
+      "date": "2022.03.16"
+    },
+    {
+      "src": "/photos/2022-03/02-nyc-night.webp",
+      "date": "2022.03.18"
+    },
+    {
+      "src": "/photos/2022-03/03-genshin-ad.webp",
+      "date": "2022.03.20"
+    },
+    {
+      "src": "/photos/2022-03/04-angels-share.webp",
+      "date": "2022.03.20"
+    },
+    {
+      "src": "/photos/2022-03/05-cornell-duffield.webp",
+      "date": "2022.03.25"
+    }
+  ],
   "2023-05": [
     {
       "src": "/photos/2023-05/01-8th-ave-subway.webp",
@@ -131,7 +525,19 @@
   ],
   "2026-11": [
     {
+      "src": "/photos/2026-11/02-rainier-view.webp",
+      "date": "2026.11.12"
+    },
+    {
+      "src": "/photos/2026-11/03-labubu-gnome.webp",
+      "date": "2026.11.13"
+    },
+    {
       "src": "/photos/2026-11/01-thanksgiving.webp",
+      "date": "2026.11.26"
+    },
+    {
+      "src": "/photos/2026-11/04-thanksgiving-gathering.webp",
       "date": "2026.11.26"
     }
   ]
