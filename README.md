@@ -2,13 +2,22 @@
 
 In 2019, I was a sophomore in college. Every month, my friend Vivian created a monthly playlist, tracking what she listened to that month. I thought that was a great idea.
 
-It's often the case that you hear a song from years ago, and it reminds you of that place and time. It's like a time machine.
+When you hear a song from years ago, it reminds you of that place and time. It's like a time machine.
 
 For 7 years, I've compiled these monthly playlists.
 
-This year's holiday vibe-coded fun is an interactive iPod timeline player.
+For this year's holiday vibe-coded fun, I organized these playlists into a timeline.
+
+* Left side - quick access to MONTH-YEAR
+* iPod - click song to play (embedded YouTube video)
+* Camera module - photos from that month
 
 <img width="860" alt="scrobbl desk view with iPod, JOYFILM camera, and 6-disc changer" src="./assets/screenshot.png" />
+
+Other cool functionality:
+* Film simulations on the camera - click `Q` to apply film sims
+* Buttons on the iPod are functional
+* Disc changer (I loaded another one, a generic playlist of 100 top Chinese songs)
 
 ## Running locally
 
