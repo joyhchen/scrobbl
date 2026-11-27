@@ -930,22 +930,19 @@ function initTimeMachine(): void {
   }
 
   /**
-   * Load a disc picked from the CD book. Already in the changer → rotate to it.
-   * Otherwise it goes into the first empty tray, or swaps out the disc that's playing.
+   * Load a disc picked from the CD book into an open changer tray without interrupting playback.
+   * If all trays are full, swaps out the next non-active tray instead of the spinning disc.
    */
   function loadDiscFromCollection(discId: string): void {
     soundEngine.unlock();
-    const existingSlot = slotDiscIds.indexOf(discId);
-    if (existingSlot !== -1) {
-      loadSlot(existingSlot);
-      return;
-    }
+    if (slotDiscIds.includes(discId)) return;
     const emptySlot = slotDiscIds.indexOf(null);
-    const targetSlot = emptySlot !== -1 ? emptySlot : activeSlotIdx;
+    const targetSlot = emptySlot !== -1 ? emptySlot : (activeSlotIdx + 1) % slotDiscIds.length;
     slotDiscIds[targetSlot] = discId;
     renderSlot(targetSlot, true);
+    syncDiscCardStates();
     saveLoadout();
-    loadSlot(targetSlot, true);
+    soundEngine.playDiscLoad();
   }
 
   discDeckEl.addEventListener('click', (e) => {
