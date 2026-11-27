@@ -12,7 +12,7 @@ For this year's holiday vibe-coded fun, I organized these playlists into a timel
 * iPod - click song to play (embedded YouTube video)
 * Camera module - photos from that month
 
-<img width="860" alt="scrobbl desk view with iPod, JOYFILM camera, and 6-disc changer" src="./assets/screenshot.png" />
+<img width="860" alt="scrobbl desk view with iPod, JOYFILM camera, CD book, and 6-disc changer" src="./assets/screenshot.png" />
 
 Other cool functionality:
 * Film simulations on the camera - click `Q` to apply film sims
