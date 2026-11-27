@@ -5,6 +5,8 @@ import IPod from '../components/IPod.astro';
 import FujiCamera from '../components/FujiCamera.astro';
 import CameraModal from '../components/CameraModal.astro';
 import DiscDeck from '../components/DiscDeck.astro';
+import CdBook from '../components/CdBook.astro';
+import CdBookModal from '../components/CdBookModal.astro';
 import { BASE_PATH } from '../lib/basePath';
 import { loadDiscs } from '../lib/discs';
 import { loadPhotosByMonth } from '../lib/photos';
@@ -106,11 +108,13 @@ const safeJson = JSON.stringify(clientPayload).replace(/</g, '\\u003c');
           initialPhotoCount={initialPhotos.length}
           initialVisible={initialDisc.showTimelineDial}
         />
+        <CdBook discCount={discs.length} />
       </IPod>
       <DiscDeck discs={discs} initialDiscId={initialDisc.id} />
     </main>
 
     <CameraModal initialMonthLabel={initialPlaylist?.label ?? 'Camera Roll'} />
+    <CdBookModal discs={discs} />
 
     <script id="discs-data" type="application/json" set:html={safeJson} />
     <script>

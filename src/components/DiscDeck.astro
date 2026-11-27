@@ -1,30 +1,33 @@
 ---
 import type { DiscPreset } from '../lib/types';
+import DiscCard from './DiscCard.astro';
 
 interface Props {
+  /** Whole CD collection. The first six not marked `inChangerByDefault: false` start in the changer. */
   discs: DiscPreset[];
   initialDiscId?: string;
 }
 
 const { discs, initialDiscId = discs[0]?.id } = Astro.props;
 const TOTAL_SLOTS = 6;
+const startingLoadout = discs.filter((d) => d.inChangerByDefault !== false);
 const slots = Array.from({ length: TOTAL_SLOTS }, (_, slotIdx) => ({
   slotIdx,
   slotNumber: String(slotIdx + 1).padStart(2, '0'),
   angleDeg: 180 + slotIdx * (360 / TOTAL_SLOTS),
-  disc: discs[slotIdx] ?? null,
+  disc: startingLoadout[slotIdx] ?? null,
 }));
 
 const activeSlotIdx = Math.max(
   0,
-  discs.findIndex((d) => d.id === initialDiscId)
+  slots.findIndex((s) => s.disc?.id === initialDiscId)
 );
 ---
 
 <aside class="disc-changer" id="disc-deck" aria-label="6-disc changer">
   <div class="disc-changer-housing">
     <div class="disc-read-notch" aria-hidden="true">
-      <span class="disc-read-led" id="disc-read-led" data-tone={discs[activeSlotIdx]?.discTone ?? 'silver'}></span>
+      <span class="disc-read-led" id="disc-read-led" data-tone={slots[activeSlotIdx]?.disc?.discTone ?? 'silver'}></span>
       <span class="disc-read-arrow"></span>
     </div>
 
@@ -35,58 +38,23 @@ const activeSlotIdx = Math.max(
       role="radiogroup"
       aria-label="Choose a disc"
     >
-      {slots.map(({ slotIdx, slotNumber, angleDeg, disc }) => {
-        if (!disc) {
-          return (
-            <div
-              class="disc-slot is-empty"
-              style={`--slot-angle:${angleDeg}deg;`}
-              aria-hidden="true"
-            >
-              <div class="disc-empty-tray">
-                <span class="disc-empty-spindle"></span>
-                <span class="disc-empty-num">{slotNumber}</span>
-              </div>
+      {slots.map(({ slotIdx, slotNumber, angleDeg, disc }) => (
+        <div
+          class:list={['disc-slot', { 'is-empty': !disc }]}
+          data-slot-idx={slotIdx}
+          data-slot-number={slotNumber}
+          style={`--slot-angle:${angleDeg}deg;`}
+        >
+          {disc ? (
+            <DiscCard disc={disc} slotIdx={slotIdx} active={slotIdx === activeSlotIdx} />
+          ) : (
+            <div class="disc-empty-tray" aria-hidden="true">
+              <span class="disc-empty-spindle"></span>
+              <span class="disc-empty-num">{slotNumber}</span>
             </div>
-          );
-        }
-
-        const isActive = disc.id === initialDiscId;
-        return (
-          <div class="disc-slot" style={`--slot-angle:${angleDeg}deg;`}>
-            <button
-              type="button"
-              class="disc-card"
-              data-disc-id={disc.id}
-              data-slot-idx={slotIdx}
-              data-tone={disc.discTone}
-              data-active={isActive ? 'true' : 'false'}
-              role="radio"
-              aria-checked={isActive ? 'true' : 'false'}
-              aria-label={`Load disc ${slotIdx + 1}: ${disc.tapeLabel}`}
-            >
-              <span class="disc-body">
-                <span class="disc-platter" aria-hidden="true"></span>
-                <span class="disc-grooves" aria-hidden="true"></span>
-                <span class="disc-sheen" aria-hidden="true"></span>
-                <span class="disc-hub" aria-hidden="true">
-                  <span class="disc-hub-ring"></span>
-                  <span class="disc-spindle-hole"></span>
-                </span>
-                <span
-                  class="disc-paper-tape"
-                  style={`--tape-tilt:${disc.tapeTiltDeg}deg;`}
-                >
-                  <span class="disc-tape-title">{disc.tapeLabel}</span>
-                  {disc.tapeSubLabel && (
-                    <span class="disc-tape-sub">{disc.tapeSubLabel}</span>
-                  )}
-                </span>
-              </span>
-            </button>
-          </div>
-        );
-      })}
+          )}
+        </div>
+      ))}
     </div>
 
     <div class="disc-center-console">
@@ -108,4 +76,17 @@ const activeSlotIdx = Math.max(
       </button>
     </div>
   </div>
+
+  {/* Every disc in the collection, ready for JS to drop into a slot when it's loaded from the CD book. */}
+  {discs.map((disc) => (
+    <template data-disc-template={disc.id}>
+      <DiscCard disc={disc} />
+    </template>
+  ))}
+  <template id="disc-empty-template">
+    <div class="disc-empty-tray" aria-hidden="true">
+      <span class="disc-empty-spindle"></span>
+      <span class="disc-empty-num"></span>
+    </div>
+  </template>
 </aside>

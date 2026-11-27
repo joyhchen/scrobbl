@@ -36,6 +36,10 @@ export interface DiscPreset {
   ipodTheme: IPodColorTheme;
   showTimelineDial: boolean;
   playlists: MonthlyPlaylist[];
+  /** false = lives only in the CD book until you load it into the changer. Defaults to true. */
+  inChangerByDefault?: boolean;
+  /** Handwritten tape note stuck on this disc's sleeve in the CD book. */
+  sleeveNote?: string;
 }
 
 export interface CameraPhoto {

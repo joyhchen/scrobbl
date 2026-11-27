@@ -1,0 +1,29 @@
+---
+import type { DiscPreset } from '../lib/types';
+import DiscFace from './DiscFace.astro';
+
+interface Props {
+  disc: DiscPreset;
+  /** Changer slot this card sits in; omitted for <template> copies that JS slots in later. */
+  slotIdx?: number;
+  active?: boolean;
+}
+
+const { disc, slotIdx, active = false } = Astro.props;
+---
+
+<button
+  type="button"
+  class="disc-card"
+  data-disc-id={disc.id}
+  data-slot-idx={slotIdx}
+  data-tone={disc.discTone}
+  data-active={active ? 'true' : 'false'}
+  role="radio"
+  aria-checked={active ? 'true' : 'false'}
+  aria-label={slotIdx === undefined
+    ? `Load disc: ${disc.tapeLabel}`
+    : `Load disc ${slotIdx + 1}: ${disc.tapeLabel}`}
+>
+  <DiscFace disc={disc} />
+</button>

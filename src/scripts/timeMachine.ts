@@ -2,6 +2,7 @@ import { soundEngine } from '../lib/audio';
 import { BASE_PATH } from '../lib/basePath';
 import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
 import { formatShotCount } from '../lib/format';
+import { initCdBook } from './cdBook';
 import { isRecord } from '../lib/isRecord';
 import { IPodYouTubePlayer, type PlaybackState } from '../lib/youtube';
 import type {
@@ -250,8 +251,16 @@ function initTimeMachine(): void {
   const cameraDpadRight = requireButton('camera-dpad-right');
   const cameraDpadOk = requireButton('camera-dpad-ok');
 
-  let activeDiscIdx = 0;
-  let playlists: ClientPlaylist[] = discs[0].playlists;
+  const discById = new Map(discs.map((d) => [d.id, d]));
+
+  // Changer loadout: which collection disc sits in each of the six trays.
+  const slotEls = Array.from(discCarouselEl.querySelectorAll<HTMLElement>('.disc-slot'));
+  const slotDiscIds: (string | null)[] = slotEls.map(
+    (el) => el.querySelector<HTMLElement>('.disc-card')?.dataset.discId ?? null
+  );
+  let activeSlotIdx = Math.max(0, slotDiscIds.indexOf(discs[0].id));
+  let activeDisc: ClientDisc = discs[0];
+  let playlists: ClientPlaylist[] = activeDisc.playlists;
   let maxDialStart = Math.max(0, playlists.length - VISIBLE_DIAL_MONTHS);
   let dialStart = 0;
   let activePlaylistIdx = 0;
@@ -809,23 +818,93 @@ function initTimeMachine(): void {
     }
   }
 
-  let carouselAngleDeg = 0;
+  let carouselAngleDeg = -activeSlotIdx * 60;
 
-  function loadDisc(discId: string): void {
-    const nextIdx = discs.findIndex((d) => d.id === discId);
-    if (nextIdx === -1 || nextIdx === activeDiscIdx) return;
+  function syncDiscCardStates(): void {
+    discDeckEl.querySelectorAll<HTMLButtonElement>('.disc-card').forEach((btn) => {
+      const active = Number(btn.dataset.slotIdx) === activeSlotIdx;
+      btn.dataset.active = active ? 'true' : 'false';
+      btn.setAttribute('aria-checked', active ? 'true' : 'false');
+    });
+  }
+
+  /** Swap a tray's contents for a disc card (from its <template>) or the empty-tray markup. */
+  function renderSlot(slotIdx: number, animateIn = false): void {
+    const slotEl = slotEls[slotIdx];
+    if (!slotEl) return;
+    const discId = slotDiscIds[slotIdx];
+    const tpl = discId
+      ? discDeckEl.querySelector<HTMLTemplateElement>(`template[data-disc-template="${CSS.escape(discId)}"]`)
+      : discDeckEl.querySelector<HTMLTemplateElement>('#disc-empty-template');
+    if (!tpl) return;
+
+    const content = tpl.content.cloneNode(true);
+    if (!(content instanceof DocumentFragment)) return;
+    const slotNumber = String(slotIdx + 1).padStart(2, '0');
+    const card = content.querySelector<HTMLButtonElement>('.disc-card');
+    if (card) {
+      card.dataset.slotIdx = String(slotIdx);
+      const label = card.querySelector('.disc-tape-title')?.textContent ?? 'disc';
+      card.setAttribute('aria-label', `Load disc ${slotIdx + 1}: ${label}`);
+      if (animateIn) card.classList.add('is-inserting');
+    }
+    const emptyNum = content.querySelector('.disc-empty-num');
+    if (emptyNum) emptyNum.textContent = slotNumber;
+
+    slotEl.replaceChildren(content);
+    slotEl.classList.toggle('is-empty', !discId);
+  }
+
+  const LOADOUT_STORAGE_KEY = 'scrobbl:changer-loadout';
+
+  function saveLoadout(): void {
+    try {
+      localStorage.setItem(LOADOUT_STORAGE_KEY, JSON.stringify(slotDiscIds));
+    } catch {
+      // Storage can be unavailable (private mode, sandboxed previews); the loadout just won't persist.
+    }
+  }
+
+  function restoreLoadout(): void {
+    let saved: unknown;
+    try {
+      saved = JSON.parse(localStorage.getItem(LOADOUT_STORAGE_KEY) ?? 'null');
+    } catch {
+      return;
+    }
+    if (!Array.isArray(saved) || saved.length !== slotEls.length) return;
+    const ids = saved.map((v) => (typeof v === 'string' && discById.has(v) ? v : null));
+    const loaded = ids.filter((v): v is string => v !== null);
+    // The page is server-rendered with the first disc playing, so only restore loadouts that still hold it.
+    if (new Set(loaded).size !== loaded.length || !loaded.includes(discs[0].id)) return;
+
+    ids.forEach((id, i) => {
+      if (slotDiscIds[i] === id) return;
+      slotDiscIds[i] = id;
+      renderSlot(i);
+    });
+    activeSlotIdx = ids.indexOf(discs[0].id);
+    carouselAngleDeg = -activeSlotIdx * 60;
+    discCarouselEl.style.setProperty('--carousel-angle', `${carouselAngleDeg}deg`);
+    discReadoutEl.textContent = `DISC ${String(activeSlotIdx + 1).padStart(2, '0')}`;
+    syncDiscCardStates();
+  }
+
+  function loadSlot(slotIdx: number, force = false): void {
+    const disc = discById.get(slotDiscIds[slotIdx] ?? '');
+    if (!disc || (slotIdx === activeSlotIdx && !force)) return;
 
     releaseIframeFocus();
     stopPlayback();
 
-    const slotStep = (nextIdx - activeDiscIdx + 6) % 6;
+    const slotStep = (slotIdx - activeSlotIdx + 6) % 6;
     // Rotate smoothly along the shortest 6-slot carousel path (clockwise or counter-clockwise).
     const deltaSlots = slotStep <= 3 ? slotStep : slotStep - 6;
     carouselAngleDeg -= deltaSlots * 60;
     discCarouselEl.style.setProperty('--carousel-angle', `${carouselAngleDeg}deg`);
 
-    activeDiscIdx = nextIdx;
-    const disc = discs[activeDiscIdx];
+    activeSlotIdx = slotIdx;
+    activeDisc = disc;
     playlists = disc.playlists;
     maxDialStart = Math.max(0, playlists.length - VISIBLE_DIAL_MONTHS);
     dialStart = 0;
@@ -837,7 +916,7 @@ function initTimeMachine(): void {
     soundEngine.playDiscLoad();
     ipodRig.dataset.theme = disc.ipodTheme;
 
-    discReadoutEl.textContent = `DISC ${String(activeDiscIdx + 1).padStart(2, '0')}`;
+    discReadoutEl.textContent = `DISC ${String(activeSlotIdx + 1).padStart(2, '0')}`;
     discReadLedEl.dataset.tone = disc.discTone;
 
     dialEl.dataset.hidden = disc.showTimelineDial ? 'false' : 'true';
@@ -849,12 +928,7 @@ function initTimeMachine(): void {
       closeCameraModal(false);
     }
 
-    const buttons = discDeckEl.querySelectorAll<HTMLButtonElement>('.disc-card');
-    buttons.forEach((btn) => {
-      const active = btn.dataset.discId === disc.id;
-      btn.dataset.active = active ? 'true' : 'false';
-      btn.setAttribute('aria-checked', active ? 'true' : 'false');
-    });
+    syncDiscCardStates();
 
     renderPlaylistsMenu();
     renderTracksList();
@@ -865,18 +939,52 @@ function initTimeMachine(): void {
     }
   }
 
+  /**
+   * Load a disc picked from the CD book. Already in the changer → rotate to it.
+   * Otherwise it goes into the first empty tray, or swaps out the disc that's playing.
+   */
+  function loadDiscFromCollection(discId: string): void {
+    soundEngine.unlock();
+    const existingSlot = slotDiscIds.indexOf(discId);
+    if (existingSlot !== -1) {
+      loadSlot(existingSlot);
+      return;
+    }
+    const emptySlot = slotDiscIds.indexOf(null);
+    const targetSlot = emptySlot !== -1 ? emptySlot : activeSlotIdx;
+    slotDiscIds[targetSlot] = discId;
+    renderSlot(targetSlot, true);
+    saveLoadout();
+    loadSlot(targetSlot, true);
+  }
+
   discDeckEl.addEventListener('click', (e) => {
     if (!(e.target instanceof Element)) return;
     const btn = e.target.closest('.disc-card');
-    if (!(btn instanceof HTMLButtonElement) || !btn.dataset.discId) return;
+    if (!(btn instanceof HTMLButtonElement)) return;
+    const slotIdx = Number(btn.dataset.slotIdx);
+    if (!Number.isInteger(slotIdx)) return;
     soundEngine.unlock();
-    loadDisc(btn.dataset.discId);
+    loadSlot(slotIdx);
   });
 
   discChangeBtn.addEventListener('click', () => {
     soundEngine.unlock();
-    const nextIdx = (activeDiscIdx + 1) % discs.length;
-    loadDisc(discs[nextIdx].id);
+    for (let step = 1; step < slotDiscIds.length; step++) {
+      const nextSlot = (activeSlotIdx + step) % slotDiscIds.length;
+      if (slotDiscIds[nextSlot]) {
+        loadSlot(nextSlot);
+        return;
+      }
+    }
+  });
+
+  restoreLoadout();
+
+  initCdBook({
+    getChangerState: () => ({ slotDiscIds, activeSlotIdx }),
+    onPickDisc: loadDiscFromCollection,
+    onOpen: releaseIframeFocus,
   });
 
   function openPlaylist(idx: number): void {
@@ -890,7 +998,7 @@ function initTimeMachine(): void {
     renderListSelection(playlistsListEl, playlistCursor, playlistsThumbEl);
     updateIPodViewState();
     syncCameraDeskBadge();
-    if (discs[activeDiscIdx].showTimelineDial) {
+    if (activeDisc.showTimelineDial) {
       ensurePlaylistVisibleOnDial(idx);
     }
     if (cameraOpen) {
@@ -1127,7 +1235,7 @@ function initTimeMachine(): void {
   }
 
   function openCameraModal(): void {
-    if (!discs[activeDiscIdx].showTimelineDial) return;
+    if (!activeDisc.showTimelineDial) return;
     releaseIframeFocus();
     soundEngine.unlock();
     soundEngine.playCameraShutter();

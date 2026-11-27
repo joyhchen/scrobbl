@@ -1,0 +1,42 @@
+---
+interface Props {
+  discCount: number;
+}
+
+const { discCount } = Astro.props;
+const countLabel = `${discCount} ${discCount === 1 ? 'DISC' : 'DISCS'}`;
+---
+
+<div class="cd-book-desk-spot" id="cd-book-desk-spot">
+  <button
+    type="button"
+    class="cd-book-btn"
+    id="cd-book-btn"
+    aria-haspopup="dialog"
+    aria-controls="cd-book-modal"
+    aria-label={`Open CD book (${countLabel.toLowerCase()})`}
+    title="Open CD book"
+  >
+    <span class="cd-book-desk-shadow" aria-hidden="true"></span>
+
+    <span class="cd-book-rig" aria-hidden="true">
+      <span class="cd-book-peek-disc"></span>
+      <span class="cd-book-cover">
+        <span class="cd-book-zip-track"></span>
+        <span class="cd-book-zip-pull"></span>
+        <span class="cd-book-tag">
+          <span class="cd-book-tag-title">CD</span>
+          <span class="cd-book-tag-sub">24</span>
+        </span>
+        <span class="cd-book-stitch"></span>
+      </span>
+    </span>
+
+    <span class="fuji-desk-badge cd-book-badge">
+      <span class="fuji-desk-badge-dot" aria-hidden="true"></span>
+      <span>CD BOOK</span>
+      <span class="fuji-desk-badge-sep" aria-hidden="true">·</span>
+      <span>{countLabel}</span>
+    </span>
+  </button>
+</div>

@@ -1,0 +1,127 @@
+---
+import type { DiscPreset } from '../lib/types';
+import DiscFace from './DiscFace.astro';
+
+interface Props {
+  discs: DiscPreset[];
+}
+
+const { discs } = Astro.props;
+
+// Like a real CD binder: a 2×2 grid of sleeves on each page, two pages per spread.
+const SLEEVES_PER_PAGE = 4;
+const PAGES_PER_SPREAD = 2;
+const SLEEVES_PER_SPREAD = SLEEVES_PER_PAGE * PAGES_PER_SPREAD;
+const spreadCount = Math.max(1, Math.ceil(discs.length / SLEEVES_PER_SPREAD));
+const spreads = Array.from({ length: spreadCount }, (_, spreadIdx) =>
+  Array.from({ length: PAGES_PER_SPREAD }, (_, pageIdx) =>
+    Array.from({ length: SLEEVES_PER_PAGE }, (_, i) => {
+      const sleeveIdx = spreadIdx * SLEEVES_PER_SPREAD + pageIdx * SLEEVES_PER_PAGE + i;
+      return { sleeveIdx, disc: discs[sleeveIdx] ?? null };
+    })
+  )
+);
+---
+
+<div
+  class="cd-book-modal"
+  id="cd-book-modal"
+  data-open="false"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cd-book-title"
+  aria-hidden="true"
+>
+  <div class="cd-book-backdrop" id="cd-book-backdrop"></div>
+
+  <div class="cd-book-frame">
+    <div class="camera-modal-topbar cd-book-topbar">
+      <div class="fuji-rear-month-strip">
+        <button
+          type="button"
+          class="fuji-month-step-btn"
+          id="cd-book-prev-btn"
+          aria-label="Previous page"
+          title="Previous page (←)"
+        >
+          ‹
+        </button>
+        <span class="fuji-rear-month-title" id="cd-book-title">
+          CD BOOK · 1 / {spreadCount}
+        </span>
+        <button
+          type="button"
+          class="fuji-month-step-btn"
+          id="cd-book-next-btn"
+          aria-label="Next page"
+          title="Next page (→)"
+        >
+          ›
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="camera-modal-close"
+        id="cd-book-close-btn"
+        aria-label="Close CD book"
+        title="Close CD book (Esc)"
+      >
+        <span>ESC</span>
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <path d="M2 2L10 10M10 2L2 10" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="cd-book-open">
+      <div class="cd-book-spreads" id="cd-book-spreads">
+        {spreads.map((pages, spreadIdx) => (
+          <div
+            class="cd-book-spread"
+            data-spread-idx={spreadIdx}
+            data-state={spreadIdx === 0 ? 'active' : 'hidden'}
+          >
+            {pages.map((sleeves, pageIdx) => (
+              <div class:list={['cd-book-page', pageIdx === 0 ? 'is-left' : 'is-right']}>
+                {sleeves.map(({ sleeveIdx, disc }) =>
+                  disc ? (
+                    <button
+                      type="button"
+                      class="cd-sleeve"
+                      data-disc-id={disc.id}
+                      data-tone={disc.discTone}
+                      data-status="shelf"
+                      aria-label={`Load ${disc.tapeLabel} into the changer`}
+                    >
+                      <span class="cd-sleeve-pocket" aria-hidden="true">
+                        <span class="cd-sleeve-disc">
+                          <DiscFace disc={disc} />
+                        </span>
+                        <span class="cd-sleeve-film"></span>
+                        {disc.sleeveNote && (
+                          <span class="cd-sleeve-note">{disc.sleeveNote}</span>
+                        )}
+                      </span>
+                      <span class="cd-sleeve-status" data-sleeve-status></span>
+                    </button>
+                  ) : (
+                    <div class="cd-sleeve is-empty" aria-hidden="true">
+                      <span class="cd-sleeve-pocket">
+                        <span class="cd-sleeve-film"></span>
+                      </span>
+                      <span class="cd-sleeve-status">SLEEVE {String(sleeveIdx + 1).padStart(2, '0')}</span>
+                    </div>
+                  )
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <span class="cd-book-spine" aria-hidden="true"></span>
+    </div>
+
+    <p class="cd-book-hint">Pick a disc to load it into the changer</p>
+  </div>
+</div>

@@ -247,6 +247,54 @@ class SoundEngine {
     });
   }
 
+  /** Rapid train of tiny tooth clicks; pitch rises when unzipping, falls when zipping shut. */
+  public playZipper(closing = false): void {
+    const audio = this.ensureContext();
+    if (!audio) return;
+
+    const now = audio.ctx.currentTime;
+    const teeth = 16;
+    const duration = 0.3;
+    for (let i = 0; i < teeth; i++) {
+      const t = i / (teeth - 1);
+      // Teeth bunch up toward the end of the pull, like a hand accelerating.
+      const at = now + duration * Math.pow(t, 0.75);
+      const sweep = closing ? 1 - t : t;
+      this.playNoiseBurst(audio.ctx, audio.noiseBuffer, {
+        startTime: at,
+        freq: 2600 + sweep * 2400,
+        q: 3.2,
+        gain: 0.05 + 0.03 * Math.sin(Math.PI * t),
+        decayDuration: 0.009,
+        stopAfter: 0.012,
+      });
+    }
+  }
+
+  /** Soft papery swish of a plastic sleeve page turning. */
+  public playPageFlip(): void {
+    const audio = this.ensureContext();
+    if (!audio) return;
+
+    const now = audio.ctx.currentTime;
+    this.playNoiseBurst(audio.ctx, audio.noiseBuffer, {
+      startTime: now,
+      freq: 1400,
+      q: 0.7,
+      gain: 0.12,
+      decayDuration: 0.028,
+      stopAfter: 0.03,
+    });
+    this.playNoiseBurst(audio.ctx, audio.noiseBuffer, {
+      startTime: now + 0.05,
+      freq: 3600,
+      q: 1.1,
+      gain: 0.07,
+      decayDuration: 0.022,
+      stopAfter: 0.026,
+    });
+  }
+
   public playCameraShutter(): void {
     const audio = this.ensureContext();
     if (!audio) return;

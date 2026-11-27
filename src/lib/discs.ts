@@ -1,6 +1,7 @@
 import { loadPlaylists, normalizeTracks } from './playlists';
 import type { DiscPreset, MonthlyPlaylist, RawTrack } from './types';
 import chineseSongsData from '../data/chinese-100-playlist.json';
+import andyGrammerData from '../data/andy-grammer-2011.json';
 
 interface SinglePlaylistJson {
   title?: string;
@@ -33,6 +34,7 @@ export function loadDiscs(): [DiscPreset, ...DiscPreset[]] {
     chineseSongsData,
     '最好听的 100 首中文歌'
   );
+  const andyGrammerAlbum = loadSinglePlaylistDisc('andy-grammer-2011', andyGrammerData, 'Andy Grammer');
 
   return [
     {
@@ -54,6 +56,18 @@ export function loadDiscs(): [DiscPreset, ...DiscPreset[]] {
       ipodTheme: 'aqua',
       showTimelineDial: false,
       playlists: [chinesePlaylist],
+    },
+    {
+      id: 'andy-grammer-2011',
+      tapeLabel: 'andy grammer',
+      tapeSubLabel: `2011 · ${andyGrammerAlbum.trackCount} tracks`,
+      tapeTiltDeg: -2.4,
+      discTone: 'silver',
+      ipodTheme: 'aqua',
+      showTimelineDial: false,
+      playlists: [andyGrammerAlbum],
+      inChangerByDefault: false,
+      sleeveNote: 'first cd i ever bought, borders liquidation sale, sep 2011',
     },
   ];
 }

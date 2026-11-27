@@ -1,0 +1,23 @@
+---
+import type { DiscPreset } from '../lib/types';
+
+interface Props {
+  disc: Pick<DiscPreset, 'tapeLabel' | 'tapeSubLabel' | 'tapeTiltDeg'>;
+}
+
+const { disc } = Astro.props;
+---
+
+<span class="disc-body">
+  <span class="disc-platter" aria-hidden="true"></span>
+  <span class="disc-grooves" aria-hidden="true"></span>
+  <span class="disc-sheen" aria-hidden="true"></span>
+  <span class="disc-hub" aria-hidden="true">
+    <span class="disc-hub-ring"></span>
+    <span class="disc-spindle-hole"></span>
+  </span>
+  <span class="disc-paper-tape" style={`--tape-tilt:${disc.tapeTiltDeg}deg;`}>
+    <span class="disc-tape-title">{disc.tapeLabel}</span>
+    {disc.tapeSubLabel && <span class="disc-tape-sub">{disc.tapeSubLabel}</span>}
+  </span>
+</span>

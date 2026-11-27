@@ -2703,3 +2703,655 @@ body {
     width: 100%;
   }
 }
+/* ============================================================
+   CD Book — zippered disc wallet on the desk + open-book modal
+   ============================================================ */
+.cd-book-desk-spot {
+  position: absolute;
+  right: calc(50% + 196px);
+  bottom: -98px;
+  z-index: 12;
+}
+
+.cd-book-btn {
+  position: relative;
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 34px 8px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
+}
+
+.cd-book-desk-shadow {
+  position: absolute;
+  inset: 44px 14px 10px 12px;
+  border-radius: 18px;
+  transform: rotate(-11deg) translate(8px, 8px);
+  background: rgba(42, 20, 5, 0.58);
+  mix-blend-mode: multiply;
+  filter: blur(6px);
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), filter 0.28s ease, opacity 0.28s ease;
+}
+
+.cd-book-rig {
+  position: relative;
+  display: block;
+  width: 236px;
+  height: 226px;
+  transform: rotate(-11deg);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
+  filter:
+    drop-shadow(1px 2px 1.5px rgba(32, 15, 4, 0.7))
+    drop-shadow(4px 6px 5px rgba(44, 22, 6, 0.4));
+}
+
+/* A disc that didn't quite make it back into its sleeve */
+.cd-book-peek-disc {
+  position: absolute;
+  top: -30px;
+  left: 74px;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #0c0d10 0 7px, rgba(220, 228, 240, 0.9) 8px 19px, transparent 20px),
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.5) 0%, transparent 46%),
+    conic-gradient(from 24deg, #c8d0dc, #eef4fb, #a8d8f0, #d6c4ee, #f2d8dc, #cdd7e2, #95a1b3, #dde6f2, #a8e2df, #c3c7f0, #f4e5d8, #c8d0dc);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transform: rotate(8deg);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cd-book-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px 26px 26px 12px;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse 80% 70% at 32% 22%, #3a3d46 0%, #24262d 55%, #17181d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.14),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.5),
+    inset 18px 0 14px -10px rgba(0, 0, 0, 0.45);
+}
+
+/* Zipper tape + teeth running around the three open edges */
+.cd-book-zip-track {
+  position: absolute;
+  inset: 7px 7px 7px 26px;
+  border: 6px solid #111215;
+  border-left: none;
+  border-radius: 0 20px 20px 0;
+}
+
+.cd-book-zip-track::after {
+  content: '';
+  position: absolute;
+  inset: -4px -4px -4px 0;
+  border: 2px dotted rgba(206, 212, 222, 0.62);
+  border-left: none;
+  border-radius: 0 22px 22px 0;
+}
+
+.cd-book-zip-pull {
+  position: absolute;
+  top: 1px;
+  right: 46px;
+  width: 11px;
+  height: 30px;
+  border-radius: 3px 3px 6px 6px;
+  background: linear-gradient(90deg, #8d939e 0%, #eef1f6 42%, #a7adb8 70%, #6c717b 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+  transform: rotate(14deg);
+  transform-origin: top center;
+}
+
+.cd-book-zip-pull::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 4px;
+  height: 9px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  background: #1a1b20;
+}
+
+.cd-book-tag {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  padding: 5px 9px 4px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  background: linear-gradient(180deg, #34363d 0%, #26282e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.cd-book-tag-title,
+.cd-book-tag-sub {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: rgba(214, 220, 230, 0.62);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.cd-book-tag-title {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.cd-book-tag-sub {
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+/* Spine stitching */
+.cd-book-stitch {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 14px;
+  border-left: 1.5px dashed rgba(170, 176, 188, 0.28);
+}
+
+.cd-book-btn:hover .cd-book-rig,
+.cd-book-btn:focus-visible .cd-book-rig {
+  transform: translateY(-5px) rotate(-9deg) scale(1.03);
+  filter:
+    drop-shadow(2px 4px 3px rgba(32, 15, 4, 0.56))
+    drop-shadow(8px 12px 10px rgba(44, 22, 6, 0.34));
+}
+
+.cd-book-btn:hover .cd-book-peek-disc,
+.cd-book-btn:focus-visible .cd-book-peek-disc {
+  transform: translateY(-10px) rotate(28deg);
+}
+
+.cd-book-btn:hover .cd-book-desk-shadow,
+.cd-book-btn:focus-visible .cd-book-desk-shadow {
+  transform: rotate(-9deg) translate(12px, 14px) scale(1.03);
+  filter: blur(9px);
+  opacity: 0.72;
+}
+
+.cd-book-btn:active .cd-book-rig {
+  transform: translateY(-1px) rotate(-10deg) scale(0.99);
+  transition-duration: 0.08s;
+}
+
+.cd-book-btn:focus-visible .cd-book-cover {
+  outline: 2px solid rgba(110, 185, 255, 0.85);
+  outline-offset: 6px;
+}
+
+.cd-book-badge {
+  top: 6px;
+  left: auto;
+  right: 4px;
+}
+
+.cd-book-btn:hover .cd-book-badge,
+.cd-book-btn:focus-visible .cd-book-badge {
+  opacity: 1;
+  transform: translateY(0);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.cd-book-btn:hover .fuji-desk-badge-dot,
+.cd-book-btn:focus-visible .fuji-desk-badge-dot {
+  background: #89e1ff;
+  box-shadow: 0 0 8px rgba(137, 225, 255, 0.9);
+}
+
+/* ---------- Open book modal ---------- */
+.cd-book-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cd-book-modal[data-open='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cd-book-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 6, 9, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cd-book-frame {
+  position: relative;
+  z-index: 2;
+  width: min(94vw, 860px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(18px) scale(0.94) rotateX(8deg);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cd-book-modal[data-open='true'] .cd-book-frame {
+  transform: none;
+}
+
+.cd-book-topbar {
+  padding: 0 1%;
+}
+
+.cd-book-open {
+  --pocket: 164px;
+  --disc-scale: 0.95;
+  position: relative;
+  padding: 26px;
+  border-radius: 30px;
+  perspective: 1600px;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.2) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse 90% 80% at 30% 20%, #34373f 0%, #1f2127 60%, #15161a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 -6px 16px rgba(0, 0, 0, 0.5),
+    0 30px 70px rgba(0, 0, 0, 0.6);
+}
+
+/* Zipper around the outer edge of the open wallet */
+.cd-book-open::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 6px solid #0f1013;
+  border-radius: 23px;
+  pointer-events: none;
+}
+
+.cd-book-open::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 2px dotted rgba(206, 212, 222, 0.5);
+  border-radius: 26px;
+  pointer-events: none;
+}
+
+.cd-book-spreads {
+  display: grid;
+}
+
+.cd-book-spread {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 34px;
+  transform-origin: center;
+  transition: opacity 0.2s ease, visibility 0.2s;
+}
+
+.cd-book-spread[data-state='hidden'] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cd-book-spread.is-turning-next {
+  animation: cdBookTurnNext 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cd-book-spread.is-turning-prev {
+  animation: cdBookTurnPrev 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes cdBookTurnNext {
+  from { opacity: 0.2; transform: translateX(26px) rotateY(-10deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes cdBookTurnPrev {
+  from { opacity: 0.2; transform: translateX(-26px) rotateY(10deg); }
+  to { opacity: 1; transform: none; }
+}
+
+.cd-book-page {
+  padding: 16px 16px 12px;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 14px 16px;
+  place-items: center;
+  place-content: center;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 2px),
+    linear-gradient(180deg, #2a2c33 0%, #22242a 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.cd-book-page.is-left {
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.5),
+    inset -14px 0 18px -12px rgba(0, 0, 0, 0.7);
+}
+
+.cd-book-page.is-right {
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 14px 0 18px -12px rgba(0, 0, 0, 0.7);
+}
+
+.cd-book-spine {
+  position: absolute;
+  top: 26px;
+  bottom: 26px;
+  left: 50%;
+  width: 22px;
+  transform: translateX(-50%);
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(255, 255, 255, 0.06) 45%, rgba(255, 255, 255, 0.06) 55%, rgba(0, 0, 0, 0.55) 100%),
+    #1a1b20;
+  pointer-events: none;
+}
+
+.cd-sleeve {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.cd-sleeve.is-empty {
+  cursor: default;
+}
+
+.cd-sleeve-pocket {
+  position: relative;
+  width: var(--pocket);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.cd-sleeve.is-empty .cd-sleeve-pocket::before {
+  content: '';
+  width: 86%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(200, 208, 222, 0.14);
+}
+
+.cd-sleeve-disc {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.26s ease;
+}
+
+.cd-sleeve-disc .disc-body {
+  transform: scale(var(--disc-scale));
+}
+
+/* Clear vinyl film over the disc, with the thumb notch at the opening */
+.cd-sleeve-film {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 8px;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 26%, transparent 42%, rgba(255, 255, 255, 0.06) 70%, transparent 86%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(20, 24, 32, 0.12) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.cd-sleeve-film::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 36px;
+  height: 14px;
+  transform: translateX(-50%);
+  border-radius: 0 0 18px 18px;
+  background: #24262c;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: none;
+}
+
+.cd-sleeve:not(.is-empty):hover .cd-sleeve-disc,
+.cd-sleeve:not(.is-empty):focus-visible .cd-sleeve-disc {
+  transform: translateY(-10px) rotate(-6deg);
+}
+
+.cd-sleeve.is-pulling .cd-sleeve-disc {
+  transform: translateY(-46%) rotate(-14deg);
+  opacity: 0;
+}
+
+.cd-sleeve:focus-visible .cd-sleeve-pocket {
+  outline: 2px solid rgba(110, 185, 255, 0.88);
+  outline-offset: 5px;
+}
+
+.cd-sleeve[data-tone='gold'] .disc-platter {
+  background:
+    conic-gradient(
+      from 38deg,
+      #d7c5b4 0deg, #f8ede0 28deg, #f2bf9b 58deg, #e6b8cc 86deg, #f5dfc4 118deg, #b8a396 156deg,
+      #f4e0cf 194deg, #f0c09c 228deg, #d8c2e2 260deg, #f7e8d6 294deg, #c5b1a0 328deg, #d7c5b4 360deg
+    );
+}
+
+/* Masking-tape note stuck on the outside of a sleeve, written in pen */
+.cd-sleeve-note {
+  position: absolute;
+  z-index: 3;
+  left: -8%;
+  bottom: 6%;
+  width: 104%;
+  padding: 5px 9px 4px;
+  transform: rotate(-7deg);
+  font-family: 'Bradley Hand', 'Segoe Print', 'Marker Felt', 'Comic Sans MS', cursive;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.22;
+  text-align: left;
+  color: rgba(28, 34, 70, 0.86);
+  background:
+    repeating-linear-gradient(90deg, rgba(120, 102, 74, 0.05) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg, rgba(240, 232, 212, 0.95) 0%, rgba(226, 215, 190, 0.93) 100%);
+  border-top: 1px solid rgba(255, 250, 238, 0.5);
+  border-bottom: 1px solid rgba(82, 68, 46, 0.3);
+  /* Torn tape ends */
+  clip-path: polygon(1% 6%, 4% 0, 97% 3%, 100% 0, 99% 48%, 100% 100%, 96% 95%, 3% 100%, 0 96%, 2% 50%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cd-sleeve:hover .cd-sleeve-note {
+  transform: rotate(-6deg) translateY(-2px);
+}
+
+.cd-sleeve-status {
+  min-height: 19px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(226, 232, 242, 0.62);
+  background: rgba(10, 11, 14, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+  transition: color 0.16s ease, border-color 0.16s ease;
+}
+
+.cd-sleeve.is-empty .cd-sleeve-status {
+  color: rgba(226, 232, 242, 0.24);
+}
+
+.cd-sleeve[data-status='loaded'] .cd-sleeve-status {
+  color: rgba(226, 232, 242, 0.82);
+}
+
+.cd-sleeve[data-status='playing'] .cd-sleeve-status {
+  color: #9fe6ff;
+  border-color: rgba(137, 225, 255, 0.36);
+  box-shadow: 0 0 12px rgba(137, 225, 255, 0.18);
+}
+
+.cd-sleeve[data-tone='gold'][data-status='playing'] .cd-sleeve-status {
+  color: #ffbf9f;
+  border-color: rgba(255, 159, 118, 0.4);
+  box-shadow: 0 0 12px rgba(255, 159, 118, 0.2);
+}
+
+.cd-sleeve:not(.is-empty):hover .cd-sleeve-status {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.cd-book-hint {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(240, 232, 216, 0.5);
+}
+
+/* Disc dropping into a changer tray after being pulled from the book */
+.disc-card.is-inserting {
+  animation: discInsert 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes discInsert {
+  from { opacity: 0; transform: scale(1.35) translateY(-18px); }
+  to { opacity: 1; transform: scale(1.07); }
+}
+
+@media (max-width: 1320px) {
+  .cd-book-desk-spot {
+    right: calc(50% + 184px);
+    bottom: -84px;
+    transform: scale(0.88);
+    transform-origin: right bottom;
+  }
+}
+
+@media (max-width: 1180px) {
+  .cd-book-desk-spot {
+    right: calc(50% + 172px);
+    bottom: -74px;
+    transform: scale(0.76);
+  }
+}
+
+@media (max-width: 960px) {
+  .cd-book-desk-spot {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .cd-book-open {
+    --pocket: 124px;
+    --disc-scale: 0.72;
+    padding: 20px;
+  }
+
+  .cd-book-spread {
+    gap: 26px;
+  }
+
+  .cd-sleeve-note {
+    font-size: 9px;
+  }
+
+  .cd-sleeve-status {
+    font-size: 7.5px;
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 540px) {
+  .cd-book-modal {
+    padding: 10px;
+  }
+
+  .cd-book-open {
+    --pocket: 118px;
+    --disc-scale: 0.68;
+    padding: 14px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+
+  /* Phone: pages stack top-to-bottom instead of side by side */
+  .cd-book-spread {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .cd-book-spine {
+    display: none;
+  }
+
+  .cd-book-page {
+    padding: 12px 10px 10px;
+    gap: 12px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cd-book-spread.is-turning-next,
+  .cd-book-spread.is-turning-prev,
+  .disc-card.is-inserting {
+    animation: none;
+  }
+}
