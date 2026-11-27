@@ -5,6 +5,8 @@ import path from 'node:path';
 
 const BUCKET = 'scrobbl-photos';
 const MONTH_KEY_RE = /^\d{4}-\d{2}$/;
+// Must match VALID_KEY_RE in src/worker.ts, which refuses to serve any other name.
+const FILE_NAME_RE = /^[A-Za-z0-9._-]+$/;
 const IMAGE_EXTENSIONS = new Map([
   ['.webp', 'image/webp'],
   ['.jpg', 'image/jpeg'],
@@ -46,6 +48,14 @@ for (const entry of fs.readdirSync(rootDir, { withFileTypes: true })) {
 }
 
 files.sort((a, b) => a.key.localeCompare(b.key, undefined, { numeric: true }));
+
+const badNames = files.filter(({ key }) => !FILE_NAME_RE.test(key.split('/')[1]));
+if (badNames.length > 0) {
+  console.error('These filenames can only use letters, numbers, ".", "_" and "-", or the site won\'t serve them:');
+  for (const { key } of badNames) console.error(`  ${key}`);
+  console.error('Rename them and run again. Nothing was uploaded.');
+  process.exit(1);
+}
 
 if (files.length === 0) {
   console.log(`No images found under ${rootDir}/YYYY-MM/.`);
