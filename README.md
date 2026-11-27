@@ -48,7 +48,15 @@ Sadly, YouTube bans embedding most tracks.
 
 ## Adding camera roll photos
 
-Photos are stored in the private `scrobbl-photos` Cloudflare R2 bucket.
+Photos are stored in the private `scrobbl-photos` Cloudflare R2 bucket and served via short-lived (5-minute) HMAC-signed URLs minted by `src/worker.ts`.
+
+Before deploying, set the Worker signing secret once:
+
+```sh
+npx wrangler secret put PHOTO_SIGNING_SECRET
+```
+
+For local `wrangler dev`, add `PHOTO_SIGNING_SECRET=<random-secret>` to `.dev.vars` (gitignored).
 
 1. Add your compressed images to a temp folder organized by `YYYY-MM/` (e.g., `./incoming/2026-11/01-thanksgiving.webp`). Run the script to upload them to R2:
 

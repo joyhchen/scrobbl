@@ -1,4 +1,5 @@
 import { soundEngine } from '../lib/audio';
+import { BASE_PATH } from '../lib/basePath';
 import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
 import { formatShotCount } from '../lib/format';
 import { isRecord } from '../lib/isRecord';
@@ -935,6 +936,89 @@ function initTimeMachine(): void {
     return bestIdx;
   }
 
+  const PHOTOS_PREFIX = `${BASE_PATH}/photos/`;
+  const SIGN_PHOTOS_ENDPOINT = `${BASE_PATH}/api/sign-photos`;
+  const PHOTO_SIGN_BUFFER_MS = 30_000;
+  const signedPhotoUrls = new Map<string, { url: string; expiresAt: number }>();
+  const inflightSignKeys = new Set<string>();
+  let photoSigningUnsupported = false;
+
+  function extractPhotoKey(src: string): string | null {
+    if (!src.startsWith(PHOTOS_PREFIX)) return null;
+    const withoutQuery = src.split('?', 1)[0];
+    try {
+      return decodeURIComponent(withoutQuery.slice(PHOTOS_PREFIX.length));
+    } catch {
+      return null;
+    }
+  }
+
+  function getResolvedPhotoSrc(photo: CameraPhoto): string | null {
+    const key = extractPhotoKey(photo.src);
+    if (!key || photoSigningUnsupported) {
+      return photo.src;
+    }
+    const cached = signedPhotoUrls.get(key);
+    if (cached && cached.expiresAt - PHOTO_SIGN_BUFFER_MS > Date.now()) {
+      return cached.url;
+    }
+    return null;
+  }
+
+  function ensureSignedPhotoUrls(photos: CameraPhoto[]): void {
+    if (photoSigningUnsupported || photos.length === 0) return;
+
+    const missingKeys: string[] = [];
+    for (const photo of photos) {
+      if (getResolvedPhotoSrc(photo) !== null) continue;
+      const key = extractPhotoKey(photo.src);
+      if (!key || inflightSignKeys.has(key)) continue;
+      inflightSignKeys.add(key);
+      missingKeys.push(key);
+    }
+
+    if (missingKeys.length === 0) return;
+
+    void fetch(SIGN_PHOTOS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ keys: missingKeys }),
+    })
+      .then(async (res) => {
+        if (res.status === 404) {
+          // Local `astro dev` runs without the Cloudflare Worker signing endpoint.
+          photoSigningUnsupported = true;
+          if (cameraOpen) renderCameraModal();
+          return;
+        }
+        if (!res.ok) return;
+
+        const data: unknown = await res.json();
+        if (
+          !isRecord(data) ||
+          !isRecord(data.urls) ||
+          typeof data.expiresAt !== 'number'
+        ) {
+          return;
+        }
+
+        for (const [key, signedUrl] of Object.entries(data.urls)) {
+          if (typeof signedUrl === 'string') {
+            signedPhotoUrls.set(key, { url: signedUrl, expiresAt: data.expiresAt });
+          }
+        }
+        if (cameraOpen) renderCameraModal();
+      })
+      .catch(() => {
+        // Ignore transient network errors; next interaction will retry.
+      })
+      .finally(() => {
+        for (const key of missingKeys) {
+          inflightSignKeys.delete(key);
+        }
+      });
+  }
+
   function renderCameraGrid(photos: CameraPhoto[]): void {
     const fragment = document.createDocumentFragment();
     photos.forEach((photo, idx) => {
@@ -948,7 +1032,10 @@ function initTimeMachine(): void {
       btn.setAttribute('aria-label', photo.caption || `Photo ${idx + 1} of ${photos.length}`);
 
       const img = document.createElement('img');
-      img.src = photo.src;
+      const resolvedSrc = getResolvedPhotoSrc(photo);
+      if (resolvedSrc) {
+        img.src = resolvedSrc;
+      }
       img.alt = photo.caption || `Photo ${idx + 1}`;
       img.loading = 'lazy';
       img.decoding = 'async';
@@ -1006,11 +1093,20 @@ function initTimeMachine(): void {
       return;
     }
 
+    if (cameraOpen) {
+      ensureSignedPhotoUrls(photos);
+    }
+
     cameraPhotoIdx = Math.max(0, Math.min(photos.length - 1, cameraPhotoIdx));
     const activePhoto = photos[cameraPhotoIdx];
+    const resolvedSrc = getResolvedPhotoSrc(activePhoto);
 
-    if (cameraPhotoImgEl.getAttribute('src') !== activePhoto.src) {
-      cameraPhotoImgEl.src = activePhoto.src;
+    if (resolvedSrc) {
+      if (cameraPhotoImgEl.getAttribute('src') !== resolvedSrc) {
+        cameraPhotoImgEl.src = resolvedSrc;
+      }
+    } else if (cameraPhotoImgEl.hasAttribute('src')) {
+      cameraPhotoImgEl.removeAttribute('src');
     }
     cameraPhotoImgEl.alt = activePhoto.caption || `${label} photo ${cameraPhotoIdx + 1}`;
 

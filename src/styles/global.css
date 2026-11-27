@@ -443,31 +443,32 @@ body {
 
 .ipod-stage {
   position: relative;
-  z-index: 10;
+  z-index: 22;
   justify-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Realistic top-down multiply shadow on the maple desk (thin ~10mm iPod resting flat) */
+/* Elevated foreground cast shadow — detached & soft so the iPod clearly floats above the desk */
 .ipod-ground-shadow {
   position: absolute;
-  inset: -3.5px;
+  inset: 14px;
   z-index: 0;
-  border-radius: 41.5px;
+  border-radius: 38px;
   background: transparent;
   mix-blend-mode: multiply;
   box-shadow:
-    1px 2px 3px rgba(42, 22, 6, 0.52),
-    6px 9px 12px rgba(54, 29, 9, 0.38),
-    15px 21px 28px rgba(64, 36, 12, 0.22);
+    28px 44px 36px -4px rgba(46, 22, 5, 0.36),
+    54px 82px 68px -6px rgba(54, 28, 8, 0.28),
+    82px 118px 104px -10px rgba(62, 34, 10, 0.18);
   pointer-events: none;
 }
 
-/* Default aqua theme tokens (flat top-down view, resting flush on desk) */
+/* Default aqua theme tokens (elevated foreground Z-plane above the desk props) */
 .ipod-3d-rig {
   position: relative;
+  z-index: 15;
   --ipod-face-1: #93dff8;
   --ipod-face-2: #5cc2ec;
   --ipod-face-3: #3ba3da;
@@ -531,8 +532,7 @@ body {
     #2f343e 100%
   );
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.8),
-    0 1px 2px rgba(42, 22, 6, 0.56);
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
   pointer-events: none;
 }
 
@@ -588,8 +588,7 @@ body {
     inset 0 2px 2px rgba(255, 255, 255, 0.72),
     inset 2px 0 3px rgba(255, 255, 255, 0.4),
     inset -3px -5px 10px rgba(15, 24, 38, 0.36),
-    inset 0 -1px 1px rgba(15, 20, 30, 0.45),
-    0 2px 8px rgba(0, 0, 0, 0.42);
+    inset 0 -1px 1px rgba(15, 20, 30, 0.45);
 }
 
 .ipod-screen-bezel {
@@ -1789,8 +1788,8 @@ body {
    ============================================================ */
 .fuji-desk-spot {
   position: absolute;
-  left: calc(50% + 214px);
-  bottom: 22px;
+  left: calc(50% + 216px);
+  bottom: -62px;
   z-index: 12;
   transition:
     opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1808,7 +1807,7 @@ body {
   appearance: none;
   border: none;
   background: transparent;
-  padding: 10px 6px 6px;
+  padding: 16px 8px 8px;
   cursor: pointer;
   display: inline-flex;
   flex-direction: column;
@@ -1818,28 +1817,28 @@ body {
 
 .fuji-desk-shadow {
   position: absolute;
-  inset: 22px 4px 34px 10px;
-  border-radius: 12px;
-  transform: rotate(21deg) translate(13px, 18px);
-  background: rgba(52, 28, 8, 0.42);
+  inset: 28px 12px 14px 14px;
+  border-radius: 14px;
+  transform: rotate(17deg) translate(4px, 6px);
+  background: rgba(42, 20, 5, 0.56);
   mix-blend-mode: multiply;
-  filter: blur(11px);
+  filter: blur(5px);
   pointer-events: none;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), filter 0.28s ease, opacity 0.28s ease;
 }
 
 .fuji-body-rig {
   position: relative;
   display: block;
-  width: 192px;
-  transform: rotate(21deg);
+  width: 296px;
+  transform: rotate(17deg);
   transform-origin: center center;
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
-  /* Tight contact occlusion + directional top-left -> bottom-right cast shadow proportional to camera depth */
+  /* Tight flush contact shadow so the camera sits firmly on the maple desk below the floating iPod */
   filter:
-    drop-shadow(1px 2px 2px rgba(38, 19, 6, 0.62))
-    drop-shadow(8px 12px 9px rgba(48, 26, 9, 0.36))
-    drop-shadow(16px 22px 20px rgba(56, 30, 10, 0.2));
+    drop-shadow(1px 2px 1.5px rgba(32, 15, 4, 0.74))
+    drop-shadow(4px 6px 5px rgba(44, 22, 6, 0.44))
+    drop-shadow(8px 11px 10px rgba(52, 27, 8, 0.22));
 }
 
 .fuji-front-img {
@@ -1856,12 +1855,12 @@ body {
   position: absolute;
   left: 44.15%;
   top: 25.1%;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   background: radial-gradient(circle at 38% 36%, #b6ffca 0%, #32db6f 70%, #15803b 100%);
-  box-shadow: 0 0 9px rgba(72, 236, 128, 0.95);
+  box-shadow: 0 0 11px rgba(72, 236, 128, 0.95);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.22s ease;
@@ -1869,16 +1868,17 @@ body {
 
 .fuji-camera-btn:hover .fuji-body-rig,
 .fuji-camera-btn:focus-visible .fuji-body-rig {
-  transform: translateY(-4px) rotate(19deg) scale(1.035);
+  transform: translateY(-4px) rotate(15deg) scale(1.03);
   filter:
-    drop-shadow(2px 4px 4px rgba(38, 19, 6, 0.52))
-    drop-shadow(12px 18px 14px rgba(48, 26, 9, 0.34))
-    drop-shadow(22px 30px 28px rgba(56, 30, 10, 0.18));
+    drop-shadow(2px 4px 3px rgba(32, 15, 4, 0.56))
+    drop-shadow(8px 12px 10px rgba(44, 22, 6, 0.36))
+    drop-shadow(14px 20px 18px rgba(52, 27, 8, 0.2));
 }
 
 .fuji-camera-btn:hover .fuji-desk-shadow,
 .fuji-camera-btn:focus-visible .fuji-desk-shadow {
-  transform: rotate(19deg) translate(18px, 24px) scale(1.04);
+  transform: rotate(15deg) translate(10px, 14px) scale(1.03);
+  filter: blur(9px);
   opacity: 0.72;
 }
 
@@ -1888,7 +1888,7 @@ body {
 }
 
 .fuji-camera-btn:active .fuji-body-rig {
-  transform: translateY(-1px) rotate(20deg) scale(0.99);
+  transform: translateY(-1px) rotate(16deg) scale(0.99);
   transition-duration: 0.08s;
 }
 
@@ -1898,9 +1898,11 @@ body {
   border-radius: 12px;
 }
 
-/* Hover-only film counter pill so the camera rests purely like a physical object on the maple desk */
+/* Hover-only film counter pill floated above the left side of the camera so it stays clear of the disc changer */
 .fuji-desk-badge {
-  margin-top: 20px;
+  position: absolute;
+  top: -18px;
+  left: 6px;
   padding: 4px 10px;
   border-radius: 999px;
   display: inline-flex;
@@ -1916,8 +1918,9 @@ body {
   box-shadow: 0 4px 12px rgba(42, 22, 6, 0.34);
   white-space: nowrap;
   opacity: 0;
-  transform: translateY(-2px);
+  transform: translateY(4px);
   pointer-events: none;
+  z-index: 4;
   transition:
     opacity 0.2s ease,
     transform 0.2s ease;
@@ -2612,9 +2615,9 @@ body {
 
 @media (max-width: 1320px) {
   .fuji-desk-spot {
-    left: calc(50% + 196px);
-    bottom: 14px;
-    transform: scale(0.92);
+    left: calc(50% + 200px);
+    bottom: -48px;
+    transform: scale(0.88);
     transform-origin: left bottom;
   }
 }
@@ -2631,8 +2634,8 @@ body {
 
   .fuji-desk-spot {
     left: calc(50% + 188px);
-    bottom: 10px;
-    transform: scale(0.84);
+    bottom: -42px;
+    transform: scale(0.76);
     transform-origin: left bottom;
   }
 }
