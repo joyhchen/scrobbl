@@ -1,3 +1,4 @@
+import rawPhotosManifest from './data/photos.json';
 import { isRecord } from './lib/isRecord';
 
 const PHOTOS_PREFIX = '/music/photos/';
@@ -6,11 +7,35 @@ const VALID_KEY_RE = /^\d{4}-\d{2}\/[A-Za-z0-9._-]+\.(?:webp|jpe?g|png|avif|gif)
 const EXP_RE = /^\d+$/;
 const PHOTO_URL_TTL_SECONDS = 300;
 const MAX_SIGN_BATCH = 50;
+const MAX_SIGN_BODY_BYTES = 16 * 1024;
+const RATE_LIMIT_RETRY_SECONDS = '60';
 
 const TEXT_ENCODER = new TextEncoder();
 
+function buildAllowedPhotoKeys(manifest: unknown): ReadonlySet<string> {
+  const allowed = new Set<string>();
+  if (!isRecord(manifest)) return allowed;
+
+  for (const entries of Object.values(manifest)) {
+    if (!Array.isArray(entries)) continue;
+    for (const entry of entries) {
+      if (!isRecord(entry) || typeof entry.src !== 'string') continue;
+      const trimmed = entry.src.trim();
+      const key = trimmed.replace(/^\/?photos\//, '');
+      if (VALID_KEY_RE.test(key)) {
+        allowed.add(key);
+      }
+    }
+  }
+  return allowed;
+}
+
+const ALLOWED_PHOTO_KEYS = buildAllowedPhotoKeys(rawPhotosManifest);
+
 interface WorkerEnv extends Env {
   PHOTO_SIGNING_SECRET?: string;
+  SIGN_RATE_LIMITER?: RateLimit;
+  PHOTO_RATE_LIMITER?: RateLimit;
 }
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -22,13 +47,38 @@ const CONTENT_TYPES: Record<string, string> = {
   '.gif': 'image/gif',
 };
 
-function noStoreResponse(body: string, status: number): Response {
-  return new Response(body, { status, headers: { 'cache-control': 'no-store' } });
+function noStoreResponse(
+  body: string,
+  status: number,
+  extraHeaders?: Record<string, string>
+): Response {
+  return new Response(body, {
+    status,
+    headers: {
+      'cache-control': 'no-store',
+      'x-content-type-options': 'nosniff',
+      'x-robots-tag': 'noindex, nofollow',
+      ...extraHeaders,
+    },
+  });
 }
 
 const badRequest = () => noStoreResponse('Bad Request', 400);
 const forbidden = () => noStoreResponse('Forbidden', 403);
-const missingSecret = () => noStoreResponse('Photo signing secret is not configured', 500);
+const notFound = () => noStoreResponse('Not Found', 404);
+const payloadTooLarge = () => noStoreResponse('Payload Too Large', 413);
+const unsupportedMediaType = () => noStoreResponse('Unsupported Media Type', 415);
+const tooManyRequests = () =>
+  noStoreResponse('Too Many Requests', 429, { 'retry-after': RATE_LIMIT_RETRY_SECONDS });
+const missingSecret = () => {
+  console.error('PHOTO_SIGNING_SECRET is not configured');
+  return noStoreResponse('Internal Server Error', 500);
+};
+
+function clientIpKey(request: Request, scope: 'sign' | 'photo'): string {
+  const ip = request.headers.get('CF-Connecting-IP')?.trim() || 'unknown';
+  return `${scope}:${ip}`;
+}
 
 function contentTypeForKey(key: string): string {
   const dot = key.lastIndexOf('.');
@@ -62,9 +112,7 @@ function base64UrlDecode(input: string): Uint8Array<ArrayBuffer> | null {
 function photoHeaders(object: R2Object, key: string, remainingSeconds: number): Headers {
   const headers = new Headers();
   object.writeHttpMetadata(headers);
-  if (!headers.has('content-type')) {
-    headers.set('content-type', contentTypeForKey(key));
-  }
+  headers.set('content-type', contentTypeForKey(key));
   headers.set('etag', object.httpEtag);
   headers.set('cache-control', `private, max-age=${remainingSeconds}`);
   headers.set('x-robots-tag', 'noindex, nofollow');
@@ -119,16 +167,36 @@ async function verifyPhotoSignature(
   return valid ? exp : null;
 }
 
-async function handleSignPhotos(request: Request, env: WorkerEnv): Promise<Response> {
+async function handleSignPhotos(request: Request, url: URL, env: WorkerEnv): Promise<Response> {
   if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', {
-      status: 405,
-      headers: { Allow: 'POST', 'cache-control': 'no-store' },
-    });
+    return noStoreResponse('Method Not Allowed', 405, { allow: 'POST' });
   }
 
-  if (request.headers.get('Sec-Fetch-Site') === 'cross-site') {
+  if (
+    request.headers.get('Sec-Fetch-Site') !== 'same-origin' ||
+    request.headers.get('Origin') !== url.origin
+  ) {
     return forbidden();
+  }
+
+  if (env.SIGN_RATE_LIMITER) {
+    const { success } = await env.SIGN_RATE_LIMITER.limit({ key: clientIpKey(request, 'sign') });
+    if (!success) {
+      return tooManyRequests();
+    }
+  }
+
+  const contentType = request.headers.get('Content-Type') ?? '';
+  if (contentType.split(';', 1)[0].trim().toLowerCase() !== 'application/json') {
+    return unsupportedMediaType();
+  }
+
+  const contentLengthHeader = request.headers.get('Content-Length');
+  if (contentLengthHeader !== null) {
+    const contentLength = Number(contentLengthHeader);
+    if (!Number.isFinite(contentLength) || contentLength < 0 || contentLength > MAX_SIGN_BODY_BYTES) {
+      return payloadTooLarge();
+    }
   }
 
   if (!env.PHOTO_SIGNING_SECRET) {
@@ -137,7 +205,11 @@ async function handleSignPhotos(request: Request, env: WorkerEnv): Promise<Respo
 
   let body: unknown;
   try {
-    body = await request.json();
+    const rawBody = await request.text();
+    if (TEXT_ENCODER.encode(rawBody).byteLength > MAX_SIGN_BODY_BYTES) {
+      return payloadTooLarge();
+    }
+    body = JSON.parse(rawBody);
   } catch {
     return badRequest();
   }
@@ -153,7 +225,7 @@ async function handleSignPhotos(request: Request, env: WorkerEnv): Promise<Respo
 
   const uniqueKeys = new Set<string>();
   for (const item of rawKeys) {
-    if (typeof item !== 'string' || !VALID_KEY_RE.test(item)) {
+    if (typeof item !== 'string' || !VALID_KEY_RE.test(item) || !ALLOWED_PHOTO_KEYS.has(item)) {
       return badRequest();
     }
     uniqueKeys.add(item);
@@ -173,6 +245,7 @@ async function handleSignPhotos(request: Request, env: WorkerEnv): Promise<Respo
       status: 200,
       headers: {
         'cache-control': 'no-store',
+        'x-content-type-options': 'nosniff',
         'x-robots-tag': 'noindex, nofollow',
       },
     }
@@ -184,7 +257,7 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === SIGN_PHOTOS_PATH) {
-      return handleSignPhotos(request, env);
+      return handleSignPhotos(request, url, env);
     }
 
     if (!url.pathname.startsWith(PHOTOS_PREFIX)) {
@@ -192,10 +265,7 @@ export default {
     }
 
     if (request.method !== 'GET' && request.method !== 'HEAD') {
-      return new Response('Method Not Allowed', {
-        status: 405,
-        headers: { Allow: 'GET, HEAD' },
-      });
+      return noStoreResponse('Method Not Allowed', 405, { allow: 'GET, HEAD' });
     }
 
     // Only serve photos to same-origin image requests, blocking cross-site hotlinks,
@@ -207,6 +277,13 @@ export default {
       return forbidden();
     }
 
+    if (env.PHOTO_RATE_LIMITER) {
+      const { success } = await env.PHOTO_RATE_LIMITER.limit({ key: clientIpKey(request, 'photo') });
+      if (!success) {
+        return tooManyRequests();
+      }
+    }
+
     if (!env.PHOTO_SIGNING_SECRET) {
       return missingSecret();
     }
@@ -215,11 +292,11 @@ export default {
     try {
       key = decodeURIComponent(url.pathname.slice(PHOTOS_PREFIX.length));
     } catch {
-      return new Response('Bad Request', { status: 400 });
+      return badRequest();
     }
 
-    if (!VALID_KEY_RE.test(key)) {
-      return new Response('Not Found', { status: 404 });
+    if (!VALID_KEY_RE.test(key) || !ALLOWED_PHOTO_KEYS.has(key)) {
+      return notFound();
     }
 
     const cryptoKey = await importSigningKey(env.PHOTO_SIGNING_SECRET);
@@ -237,14 +314,14 @@ export default {
 
     if (request.method === 'HEAD') {
       const head = await env.PHOTOS.head(key);
-      if (!head) return new Response('Not Found', { status: 404 });
+      if (!head) return notFound();
 
       return new Response(null, { status: 200, headers: photoHeaders(head, key, remainingSeconds) });
     }
 
     const object = await env.PHOTOS.get(key, { onlyIf: request.headers });
     if (!object) {
-      return new Response('Not Found', { status: 404 });
+      return notFound();
     }
 
     const headers = photoHeaders(object, key, remainingSeconds);
