@@ -56,6 +56,7 @@ export function loadDiscs(): [DiscPreset, ...DiscPreset[]] {
       ipodTheme: 'aqua',
       showTimelineDial: false,
       playlists: [chinesePlaylist],
+      inChangerByDefault: false,
     },
     {
       id: 'andy-grammer-2011',
