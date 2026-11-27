@@ -20,6 +20,14 @@ const CONTENT_TYPES: Record<string, string> = {
   '.gif': 'image/gif',
 };
 
+function noStoreResponse(body: string, status: number): Response {
+  return new Response(body, { status, headers: { 'cache-control': 'no-store' } });
+}
+
+const badRequest = () => noStoreResponse('Bad Request', 400);
+const forbidden = () => noStoreResponse('Forbidden', 403);
+const missingSecret = () => noStoreResponse('Photo signing secret is not configured', 500);
+
 function contentTypeForKey(key: string): string {
   const dot = key.lastIndexOf('.');
   if (dot === -1) return 'application/octet-stream';
@@ -47,6 +55,20 @@ function base64UrlDecode(input: string): Uint8Array<ArrayBuffer> | null {
   } catch {
     return null;
   }
+}
+
+function photoHeaders(object: R2Object, key: string, remainingSeconds: number): Headers {
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  if (!headers.has('content-type')) {
+    headers.set('content-type', contentTypeForKey(key));
+  }
+  headers.set('etag', object.httpEtag);
+  headers.set('cache-control', `private, max-age=${remainingSeconds}`);
+  headers.set('x-robots-tag', 'noindex, nofollow');
+  headers.set('x-content-type-options', 'nosniff');
+  headers.set('vary', 'Sec-Fetch-Site, Sec-Fetch-Dest');
+  return headers;
 }
 
 async function importSigningKey(secret: string): Promise<CryptoKey> {
@@ -104,21 +126,18 @@ async function handleSignPhotos(request: Request, env: WorkerEnv): Promise<Respo
   }
 
   if (request.headers.get('Sec-Fetch-Site') === 'cross-site') {
-    return new Response('Forbidden', { status: 403, headers: { 'cache-control': 'no-store' } });
+    return forbidden();
   }
 
   if (!env.PHOTO_SIGNING_SECRET) {
-    return new Response('Photo signing secret is not configured', {
-      status: 500,
-      headers: { 'cache-control': 'no-store' },
-    });
+    return missingSecret();
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return new Response('Bad Request', { status: 400, headers: { 'cache-control': 'no-store' } });
+    return badRequest();
   }
 
   if (
@@ -127,18 +146,18 @@ async function handleSignPhotos(request: Request, env: WorkerEnv): Promise<Respo
     !('keys' in body) ||
     !Array.isArray((body as { keys: unknown }).keys)
   ) {
-    return new Response('Bad Request', { status: 400, headers: { 'cache-control': 'no-store' } });
+    return badRequest();
   }
 
   const rawKeys = (body as { keys: unknown[] }).keys;
   if (rawKeys.length === 0 || rawKeys.length > MAX_SIGN_BATCH) {
-    return new Response('Bad Request', { status: 400, headers: { 'cache-control': 'no-store' } });
+    return badRequest();
   }
 
   const uniqueKeys = new Set<string>();
   for (const item of rawKeys) {
     if (typeof item !== 'string' || !VALID_KEY_RE.test(item)) {
-      return new Response('Bad Request', { status: 400, headers: { 'cache-control': 'no-store' } });
+      return badRequest();
     }
     uniqueKeys.add(item);
   }
@@ -188,14 +207,11 @@ export default {
       request.headers.get('Sec-Fetch-Site') !== 'same-origin' ||
       request.headers.get('Sec-Fetch-Dest') !== 'image'
     ) {
-      return new Response('Forbidden', { status: 403, headers: { 'cache-control': 'no-store' } });
+      return forbidden();
     }
 
     if (!env.PHOTO_SIGNING_SECRET) {
-      return new Response('Photo signing secret is not configured', {
-        status: 500,
-        headers: { 'cache-control': 'no-store' },
-      });
+      return missingSecret();
     }
 
     let key: string;
@@ -217,7 +233,7 @@ export default {
       url.searchParams.get('sig')
     );
     if (verifiedExp === null) {
-      return new Response('Forbidden', { status: 403, headers: { 'cache-control': 'no-store' } });
+      return forbidden();
     }
 
     const remainingSeconds = Math.max(0, verifiedExp - Math.floor(Date.now() / 1000));
@@ -226,17 +242,7 @@ export default {
       const head = await env.PHOTOS.head(key);
       if (!head) return new Response('Not Found', { status: 404 });
 
-      const headers = new Headers();
-      head.writeHttpMetadata(headers);
-      if (!headers.has('content-type')) {
-        headers.set('content-type', contentTypeForKey(key));
-      }
-      headers.set('etag', head.httpEtag);
-      headers.set('cache-control', `private, max-age=${remainingSeconds}`);
-      headers.set('x-robots-tag', 'noindex, nofollow');
-      headers.set('x-content-type-options', 'nosniff');
-      headers.set('vary', 'Sec-Fetch-Site, Sec-Fetch-Dest');
-      return new Response(null, { status: 200, headers });
+      return new Response(null, { status: 200, headers: photoHeaders(head, key, remainingSeconds) });
     }
 
     const object = await env.PHOTOS.get(key, { onlyIf: request.headers });
@@ -244,16 +250,7 @@ export default {
       return new Response('Not Found', { status: 404 });
     }
 
-    const headers = new Headers();
-    object.writeHttpMetadata(headers);
-    if (!headers.has('content-type')) {
-      headers.set('content-type', contentTypeForKey(key));
-    }
-    headers.set('etag', object.httpEtag);
-    headers.set('cache-control', `private, max-age=${remainingSeconds}`);
-    headers.set('x-robots-tag', 'noindex, nofollow');
-    headers.set('x-content-type-options', 'nosniff');
-    headers.set('vary', 'Sec-Fetch-Site, Sec-Fetch-Dest');
+    const headers = photoHeaders(object, key, remainingSeconds);
 
     if (!('body' in object) || object.body === null) {
       return new Response(null, { status: 304, headers });

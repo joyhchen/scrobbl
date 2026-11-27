@@ -1,8 +1,7 @@
 import { soundEngine } from '../lib/audio';
+import { requireButton, requireEl } from '../lib/dom';
+import { formatDiscSlot } from '../lib/format';
 import type { StepDirection } from '../lib/types';
-
-/** Must match CdBookModal.astro. */
-const SLEEVES_PER_SPREAD = 8;
 
 export interface ChangerState {
   /** Disc id in each of the six changer slots (null = empty tray). */
@@ -16,18 +15,6 @@ interface CdBookOptions {
   onPickDisc: (discId: string) => void;
   /** Lets the host pause anything (e.g. a focused YouTube iframe) before the book opens. */
   onOpen?: () => void;
-}
-
-function requireEl(id: string): HTMLElement {
-  const el = document.getElementById(id);
-  if (!el) throw new Error(`Missing #${id}`);
-  return el;
-}
-
-function requireButton(id: string): HTMLButtonElement {
-  const el = requireEl(id);
-  if (!(el instanceof HTMLButtonElement)) throw new Error(`Expected #${id} to be a <button>`);
-  return el;
 }
 
 export function initCdBook({ getChangerState, onPickDisc, onOpen }: CdBookOptions): void {
@@ -50,7 +37,7 @@ export function initCdBook({ getChangerState, onPickDisc, onOpen }: CdBookOption
     for (const btn of sleeveBtns) {
       const statusEl = btn.querySelector<HTMLElement>('[data-sleeve-status]');
       const slotIdx = slotDiscIds.indexOf(btn.dataset.discId ?? '');
-      const slotLabel = `DISC ${String(slotIdx + 1).padStart(2, '0')}`;
+      const slotLabel = formatDiscSlot(slotIdx);
       let status: 'playing' | 'loaded' | 'shelf' = 'shelf';
       let text = 'LOAD INTO CHANGER';
       if (slotIdx === activeSlotIdx) {
@@ -97,11 +84,8 @@ export function initCdBook({ getChangerState, onPickDisc, onOpen }: CdBookOption
     // Open to the spread holding whatever is spinning right now.
     const { slotDiscIds, activeSlotIdx } = getChangerState();
     const activeId = slotDiscIds[activeSlotIdx];
-    const activeSleeveIdx = sleeveBtns.findIndex((b) => b.dataset.discId === activeId);
-    spreadIdx =
-      activeSleeveIdx === -1
-        ? 0
-        : Math.min(Math.floor(activeSleeveIdx / SLEEVES_PER_SPREAD), spreadEls.length - 1);
+    const activeSleeve = sleeveBtns.find((b) => b.dataset.discId === activeId);
+    spreadIdx = Math.max(0, spreadEls.findIndex((el) => activeSleeve && el.contains(activeSleeve)));
 
     renderSleeveStatuses();
     renderSpread();

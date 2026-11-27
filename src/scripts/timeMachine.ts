@@ -1,8 +1,8 @@
 import { soundEngine } from '../lib/audio';
 import { BASE_PATH } from '../lib/basePath';
 import { getSlotStyle, VISIBLE_DIAL_MONTHS } from '../lib/dial';
-import { formatShotCount } from '../lib/format';
-import { initCdBook } from './cdBook';
+import { requireButton, requireEl } from '../lib/dom';
+import { formatDiscSlot, formatShotCount } from '../lib/format';
 import { isRecord } from '../lib/isRecord';
 import { IPodYouTubePlayer, type PlaybackState } from '../lib/youtube';
 import type {
@@ -13,6 +13,7 @@ import type {
   IPodColorTheme,
   StepDirection,
 } from '../lib/types';
+import { initCdBook } from './cdBook';
 
 type IPodView = 'playlists' | 'tracks' | 'detail';
 
@@ -121,20 +122,6 @@ function parseClientDiscs(rawJson: string): ClientDisc[] {
     throw new Error('Invalid embedded #discs-data payload.');
   }
   return parsed;
-}
-
-function requireEl(id: string): HTMLElement {
-  const el = document.getElementById(id);
-  if (!el) throw new Error(`Missing required element #${id}`);
-  return el;
-}
-
-function requireButton(id: string): HTMLButtonElement {
-  const el = requireEl(id);
-  if (!(el instanceof HTMLButtonElement)) {
-    throw new Error(`Expected #${id} to be a <button>`);
-  }
-  return el;
 }
 
 function initTimeMachine(): void {
@@ -820,6 +807,11 @@ function initTimeMachine(): void {
 
   let carouselAngleDeg = -activeSlotIdx * 60;
 
+  function setCarouselAngle(deg: number): void {
+    carouselAngleDeg = deg;
+    discCarouselEl.style.setProperty('--carousel-angle', `${deg}deg`);
+  }
+
   function syncDiscCardStates(): void {
     discDeckEl.querySelectorAll<HTMLButtonElement>('.disc-card').forEach((btn) => {
       const active = Number(btn.dataset.slotIdx) === activeSlotIdx;
@@ -884,9 +876,8 @@ function initTimeMachine(): void {
       renderSlot(i);
     });
     activeSlotIdx = ids.indexOf(discs[0].id);
-    carouselAngleDeg = -activeSlotIdx * 60;
-    discCarouselEl.style.setProperty('--carousel-angle', `${carouselAngleDeg}deg`);
-    discReadoutEl.textContent = `DISC ${String(activeSlotIdx + 1).padStart(2, '0')}`;
+    setCarouselAngle(-activeSlotIdx * 60);
+    discReadoutEl.textContent = formatDiscSlot(activeSlotIdx);
     syncDiscCardStates();
   }
 
@@ -900,8 +891,7 @@ function initTimeMachine(): void {
     const slotStep = (slotIdx - activeSlotIdx + 6) % 6;
     // Rotate smoothly along the shortest 6-slot carousel path (clockwise or counter-clockwise).
     const deltaSlots = slotStep <= 3 ? slotStep : slotStep - 6;
-    carouselAngleDeg -= deltaSlots * 60;
-    discCarouselEl.style.setProperty('--carousel-angle', `${carouselAngleDeg}deg`);
+    setCarouselAngle(carouselAngleDeg - deltaSlots * 60);
 
     activeSlotIdx = slotIdx;
     activeDisc = disc;
@@ -916,7 +906,7 @@ function initTimeMachine(): void {
     soundEngine.playDiscLoad();
     ipodRig.dataset.theme = disc.ipodTheme;
 
-    discReadoutEl.textContent = `DISC ${String(activeSlotIdx + 1).padStart(2, '0')}`;
+    discReadoutEl.textContent = formatDiscSlot(activeSlotIdx);
     discReadLedEl.dataset.tone = disc.discTone;
 
     dialEl.dataset.hidden = disc.showTimelineDial ? 'false' : 'true';
