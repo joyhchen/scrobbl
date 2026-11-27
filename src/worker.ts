@@ -1,3 +1,5 @@
+import { isRecord } from './lib/isRecord';
+
 const PHOTOS_PREFIX = '/music/photos/';
 const SIGN_PHOTOS_PATH = '/music/api/sign-photos';
 const VALID_KEY_RE = /^\d{4}-\d{2}\/[A-Za-z0-9._-]+\.(?:webp|jpe?g|png|avif|gif)$/i;
@@ -140,16 +142,11 @@ async function handleSignPhotos(request: Request, env: WorkerEnv): Promise<Respo
     return badRequest();
   }
 
-  if (
-    typeof body !== 'object' ||
-    body === null ||
-    !('keys' in body) ||
-    !Array.isArray((body as { keys: unknown }).keys)
-  ) {
+  if (!isRecord(body) || !Array.isArray(body.keys)) {
     return badRequest();
   }
 
-  const rawKeys = (body as { keys: unknown[] }).keys;
+  const rawKeys: unknown[] = body.keys;
   if (rawKeys.length === 0 || rawKeys.length > MAX_SIGN_BATCH) {
     return badRequest();
   }
