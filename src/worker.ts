@@ -167,15 +167,35 @@ async function verifyPhotoSignature(
   return valid ? exp : null;
 }
 
+function isAllowedSameOriginPost(request: Request, expectedOrigin: string): boolean {
+  const secFetchSite = request.headers.get('Sec-Fetch-Site')?.trim();
+  if (secFetchSite && secFetchSite !== 'same-origin') {
+    return false;
+  }
+
+  const origin = request.headers.get('Origin')?.trim();
+  if (origin) {
+    return origin === expectedOrigin;
+  }
+
+  const referer = request.headers.get('Referer')?.trim();
+  if (!referer) {
+    return false;
+  }
+
+  try {
+    return new URL(referer).origin === expectedOrigin;
+  } catch {
+    return false;
+  }
+}
+
 async function handleSignPhotos(request: Request, url: URL, env: WorkerEnv): Promise<Response> {
   if (request.method !== 'POST') {
     return noStoreResponse('Method Not Allowed', 405, { allow: 'POST' });
   }
 
-  if (
-    request.headers.get('Sec-Fetch-Site') !== 'same-origin' ||
-    request.headers.get('Origin') !== url.origin
-  ) {
+  if (!isAllowedSameOriginPost(request, url.origin)) {
     return forbidden();
   }
 
@@ -268,11 +288,14 @@ export default {
       return noStoreResponse('Method Not Allowed', 405, { allow: 'GET, HEAD' });
     }
 
-    // Only serve photos to same-origin image requests, blocking cross-site hotlinks,
-    // direct tab navigation, and link unfurlers.
+    // Block cross-site hotlinks and direct tab navigation when Fetch Metadata
+    // headers are sent, while still allowing in-app WebViews that omit them
+    // (requests still require a valid short-lived HMAC signature below).
+    const secFetchSite = request.headers.get('Sec-Fetch-Site')?.trim();
+    const secFetchDest = request.headers.get('Sec-Fetch-Dest')?.trim();
     if (
-      request.headers.get('Sec-Fetch-Site') !== 'same-origin' ||
-      request.headers.get('Sec-Fetch-Dest') !== 'image'
+      (secFetchSite && secFetchSite !== 'same-origin') ||
+      (secFetchDest && secFetchDest !== 'image')
     ) {
       return forbidden();
     }
