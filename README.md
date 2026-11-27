@@ -18,6 +18,7 @@ Other cool functionality:
 * Film simulations on the camera - click `Q` to apply film sims
 * Buttons on the iPod are functional
 * Disc changer (I loaded another one, a generic playlist of 100 top Chinese songs)
+* CD book - the zippered binder next to the iPod holds the whole collection, 4 sleeves per page. Pick a disc to load it into the changer. Some discs live only in the book, like the first CD I ever bought
 
 ## Running locally
 
@@ -45,6 +46,28 @@ npm run populate-youtube
 ```
 
 Sadly, YouTube bans embedding most tracks.
+
+## Adding a disc to the CD book
+
+1. Add the tracklist to `src/data/` (same shape as `andy-grammer-2011.json`), and add the file to `DATA_FILES` in `scripts/populate-youtube-ids.mjs`
+2. Add an entry to `loadDiscs()` in `src/lib/discs.ts`
+
+```ts
+{
+  id: 'andy-grammer-2011',
+  tapeLabel: 'andy grammer',          // written on the masking tape on the disc
+  tapeSubLabel: '2011 · 11 tracks',
+  tapeTiltDeg: -2.4,
+  discTone: 'silver',                 // or 'gold'
+  ipodTheme: 'aqua',
+  showTimelineDial: false,            // true only for month-by-month timelines
+  playlists: [andyGrammerAlbum],
+  inChangerByDefault: false,          // optional: starts in the book, not the changer
+  sleeveNote: 'first cd i ever bought, borders liquidation sale, sep 2011', // optional: tape note on the sleeve
+},
+```
+
+Every disc shows up in the book. The first 6 that aren't `inChangerByDefault: false` start loaded in the changer. Loading a disc from the book puts it in the first empty tray, or swaps out the disc that's playing if all 6 are full. Your changer loadout is remembered in the browser.
 
 ## Adding camera roll photos
 
