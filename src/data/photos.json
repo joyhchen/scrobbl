@@ -393,16 +393,706 @@
       "date": "2022.03.25"
     }
   ],
+  "2022-04": [
+    {
+      "src": "/photos/2022-04/01-meat-and-rice.webp",
+      "date": "2022.04.23"
+    },
+    {
+      "src": "/photos/2022-04/02-wegmans-dumbo.webp",
+      "date": "2022.04.24"
+    }
+  ],
+  "2022-05": [
+    {
+      "src": "/photos/2022-05/01-brooklyn-museum.webp",
+      "date": "2022.05.01"
+    },
+    {
+      "src": "/photos/2022-05/02-nyc-rooftop.webp",
+      "date": "2022.05.15"
+    },
+    {
+      "src": "/photos/2022-05/03-pig-and-khao.webp",
+      "date": "2022.05.15"
+    },
+    {
+      "src": "/photos/2022-05/04-cd-collection.webp",
+      "date": "2022.05.20"
+    },
+    {
+      "src": "/photos/2022-05/05-graduation-1.webp",
+      "date": "2022.05.27"
+    },
+    {
+      "src": "/photos/2022-05/06-graduation-2.webp",
+      "date": "2022.05.27"
+    },
+    {
+      "src": "/photos/2022-05/07-graduation-3.webp",
+      "date": "2022.05.28"
+    },
+    {
+      "src": "/photos/2022-05/08-graduation-family.webp",
+      "date": "2022.05.28"
+    },
+    {
+      "src": "/photos/2022-05/09-graduation-sign.webp",
+      "date": "2022.05.28"
+    }
+  ],
+  "2022-06": [
+    {
+      "src": "/photos/2022-06/01-oyster-point.webp",
+      "date": "2022.06.01"
+    },
+    {
+      "src": "/photos/2022-06/02-philz.webp",
+      "date": "2022.06.02"
+    },
+    {
+      "src": "/photos/2022-06/03-sunglasses.webp",
+      "date": "2022.06.04"
+    },
+    {
+      "src": "/photos/2022-06/04-sf-beach.webp",
+      "date": "2022.06.04"
+    },
+    {
+      "src": "/photos/2022-06/05-devocion.webp",
+      "date": "2022.06.19"
+    },
+    {
+      "src": "/photos/2022-06/06-bar-friends.webp",
+      "date": "2022.06.26"
+    }
+  ],
+  "2022-07": [
+    {
+      "src": "/photos/2022-07/01-cote.webp",
+      "date": "2022.07.07"
+    },
+    {
+      "src": "/photos/2022-07/02-fried-rice.webp",
+      "date": "2022.07.09"
+    },
+    {
+      "src": "/photos/2022-07/03-chopsticks.webp",
+      "date": "2022.07.22"
+    },
+    {
+      "src": "/photos/2022-07/04-mitski-concert.webp",
+      "date": "2022.07.22"
+    },
+    {
+      "src": "/photos/2022-07/05-illinois-ad.webp",
+      "date": "2022.07.27"
+    }
+  ],
+  "2022-08": [
+    {
+      "src": "/photos/2022-08/01-gidle-tour.webp",
+      "date": "2022.08.05"
+    },
+    {
+      "src": "/photos/2022-08/02-peaches.webp",
+      "date": "2022.08.14"
+    },
+    {
+      "src": "/photos/2022-08/03-peach-pie.webp",
+      "date": "2022.08.14"
+    },
+    {
+      "src": "/photos/2022-08/04-santa-monica-night.webp",
+      "date": "2022.08.19"
+    },
+    {
+      "src": "/photos/2022-08/05-santa-monica-pier.webp",
+      "date": "2022.08.19"
+    },
+    {
+      "src": "/photos/2022-08/06-festival-friends.webp",
+      "date": "2022.08.20"
+    },
+    {
+      "src": "/photos/2022-08/07-malibu-seafood.webp",
+      "date": "2022.08.23"
+    },
+    {
+      "src": "/photos/2022-08/08-writers-residence.webp",
+      "date": "2022.08.26"
+    }
+  ],
+  "2022-09": [
+    {
+      "src": "/photos/2022-09/01-us-open.webp",
+      "date": "2022.09.01"
+    },
+    {
+      "src": "/photos/2022-09/02-honey-deuce.webp",
+      "date": "2022.09.01"
+    },
+    {
+      "src": "/photos/2022-09/03-serena-venus.webp",
+      "date": "2022.09.01"
+    },
+    {
+      "src": "/photos/2022-09/04-sunmi-concert.webp",
+      "date": "2022.09.04"
+    },
+    {
+      "src": "/photos/2022-09/05-purple-sky-brooklyn.webp",
+      "date": "2022.09.29"
+    }
+  ],
+  "2022-10": [
+    {
+      "src": "/photos/2022-10/01-shaved-ice.webp",
+      "date": "2022.10.08"
+    },
+    {
+      "src": "/photos/2022-10/02-hotpot.webp",
+      "date": "2022.10.08"
+    },
+    {
+      "src": "/photos/2022-10/03-sour-patch-liberty.webp",
+      "date": "2022.10.10"
+    },
+    {
+      "src": "/photos/2022-10/04-stripe-pin.webp",
+      "date": "2022.10.18"
+    },
+    {
+      "src": "/photos/2022-10/05-clocktower-view.webp",
+      "date": "2022.10.30"
+    }
+  ],
+  "2022-11": [
+    {
+      "src": "/photos/2022-11/01-nyc-view.webp",
+      "date": "2022.11.04"
+    },
+    {
+      "src": "/photos/2022-11/02-friendsgiving.webp",
+      "date": "2022.11.18"
+    },
+    {
+      "src": "/photos/2022-11/03-cozy-dog.webp",
+      "date": "2022.11.24"
+    },
+    {
+      "src": "/photos/2022-11/04-meteor-garden.webp",
+      "date": "2022.11.25"
+    }
+  ],
+  "2022-12": [
+    {
+      "src": "/photos/2022-12/01-stripe-terminal.webp",
+      "date": "2022.12.11"
+    },
+    {
+      "src": "/photos/2022-12/02-boston-fish-market.webp",
+      "date": "2022.12.18"
+    },
+    {
+      "src": "/photos/2022-12/03-union-station-tree.webp",
+      "date": "2022.12.20"
+    },
+    {
+      "src": "/photos/2022-12/04-dad.webp",
+      "date": "2022.12.28"
+    }
+  ],
+  "2023-01": [
+    {
+      "src": "/photos/2023-01/01-natif-madrid.webp",
+      "date": "2023.01.15"
+    }
+  ],
+  "2023-02": [
+    {
+      "src": "/photos/2023-02/01-pier-a-park.webp",
+      "date": "2023.02.04"
+    },
+    {
+      "src": "/photos/2023-02/02-bing-dwen-dwen.webp",
+      "date": "2023.02.18"
+    },
+    {
+      "src": "/photos/2023-02/03-friends.webp",
+      "date": "2023.02.25"
+    }
+  ],
+  "2023-03": [
+    {
+      "src": "/photos/2023-03/01-karaoke.webp",
+      "date": "2023.03.03"
+    },
+    {
+      "src": "/photos/2023-03/02-seafood-pasta.webp",
+      "date": "2023.03.22"
+    },
+    {
+      "src": "/photos/2023-03/03-bay-bridge.webp",
+      "date": "2023.03.25"
+    }
+  ],
+  "2023-04": [
+    {
+      "src": "/photos/2023-04/01-japan-payments.webp",
+      "date": "2023.04.13"
+    },
+    {
+      "src": "/photos/2023-04/02-japan-cherry-blossoms.webp",
+      "date": "2023.04.13"
+    },
+    {
+      "src": "/photos/2023-04/03-shinjuku-view.webp",
+      "date": "2023.04.13"
+    },
+    {
+      "src": "/photos/2023-04/04-don-quijote.webp",
+      "date": "2023.04.14"
+    },
+    {
+      "src": "/photos/2023-04/05-shibuya-sky-sitting.webp",
+      "date": "2023.04.14"
+    },
+    {
+      "src": "/photos/2023-04/06-shibuya-sky-view.webp",
+      "date": "2023.04.14"
+    },
+    {
+      "src": "/photos/2023-04/07-gundam.webp",
+      "date": "2023.04.15"
+    },
+    {
+      "src": "/photos/2023-04/08-doraemon.webp",
+      "date": "2023.04.15"
+    },
+    {
+      "src": "/photos/2023-04/09-red-bridge.webp",
+      "date": "2023.04.17"
+    },
+    {
+      "src": "/photos/2023-04/10-rowlet-kyoto.webp",
+      "date": "2023.04.20"
+    },
+    {
+      "src": "/photos/2023-04/11-daifuku-store.webp",
+      "date": "2023.04.22"
+    },
+    {
+      "src": "/photos/2023-04/12-fukuoka-coins.webp",
+      "date": "2023.04.22"
+    },
+    {
+      "src": "/photos/2023-04/13-busan-view.webp",
+      "date": "2023.04.23"
+    },
+    {
+      "src": "/photos/2023-04/14-busan-is-good.webp",
+      "date": "2023.04.23"
+    },
+    {
+      "src": "/photos/2023-04/15-seoul-busking.webp",
+      "date": "2023.04.26"
+    },
+    {
+      "src": "/photos/2023-04/16-ddp.webp",
+      "date": "2023.04.26"
+    },
+    {
+      "src": "/photos/2023-04/17-myeongdong.webp",
+      "date": "2023.04.26"
+    }
+  ],
   "2023-05": [
+    {
+      "src": "/photos/2023-05/02-the-social-ice-cream.webp",
+      "date": "2023.05.14"
+    },
     {
       "src": "/photos/2023-05/01-8th-ave-subway.webp",
       "date": "2023.05.21"
+    },
+    {
+      "src": "/photos/2023-05/03-dad-with-dog.webp",
+      "date": "2023.05.28"
+    }
+  ],
+  "2023-06": [
+    {
+      "src": "/photos/2023-06/01-brooklyn-waterfront.webp",
+      "date": "2023.06.18"
+    }
+  ],
+  "2023-07": [
+    {
+      "src": "/photos/2023-07/01-garlic-shrimp.webp",
+      "date": "2023.07.04"
+    },
+    {
+      "src": "/photos/2023-07/02-space-needle.webp",
+      "date": "2023.07.07"
+    },
+    {
+      "src": "/photos/2023-07/03-rilakkuma-popup.webp",
+      "date": "2023.07.07"
+    },
+    {
+      "src": "/photos/2023-07/04-hood-famous-toast.webp",
+      "date": "2023.07.08"
+    },
+    {
+      "src": "/photos/2023-07/05-seattle-waterfront.webp",
+      "date": "2023.07.08"
+    },
+    {
+      "src": "/photos/2023-07/06-gas-works-park.webp",
+      "date": "2023.07.08"
+    },
+    {
+      "src": "/photos/2023-07/07-ballard-brunch.webp",
+      "date": "2023.07.09"
+    },
+    {
+      "src": "/photos/2023-07/08-coworkers-ice-cream.webp",
+      "date": "2023.07.19"
+    },
+    {
+      "src": "/photos/2023-07/09-sf-sea-lions.webp",
+      "date": "2023.07.27"
+    },
+    {
+      "src": "/photos/2023-07/10-eras-tour-levis.webp",
+      "date": "2023.07.29"
+    }
+  ],
+  "2023-08": [
+    {
+      "src": "/photos/2023-08/01-xin-blackberry.webp",
+      "date": "2023.08.03"
+    },
+    {
+      "src": "/photos/2023-08/02-yawning-dog.webp",
+      "date": "2023.08.24"
+    }
+  ],
+  "2023-09": [
+    {
+      "src": "/photos/2023-09/01-beacon-hike.webp",
+      "date": "2023.09.03"
+    },
+    {
+      "src": "/photos/2023-09/02-drinks.webp",
+      "date": "2023.09.22"
+    },
+    {
+      "src": "/photos/2023-09/03-dinner-together.webp",
+      "date": "2023.09.29"
+    },
+    {
+      "src": "/photos/2023-09/04-poconos.webp",
+      "date": "2023.09.30"
+    }
+  ],
+  "2023-10": [
+    {
+      "src": "/photos/2023-10/01-lake-union-boats.webp",
+      "date": "2023.10.07"
+    },
+    {
+      "src": "/photos/2023-10/02-polaroid.webp",
+      "date": "2023.10.21"
+    }
+  ],
+  "2023-11": [
+    {
+      "src": "/photos/2023-11/01-bufo-sticker.webp",
+      "date": "2023.11.22"
+    },
+    {
+      "src": "/photos/2023-11/02-pig-seatbelt.webp",
+      "date": "2023.11.23"
+    },
+    {
+      "src": "/photos/2023-11/03-family-selfie.webp",
+      "date": "2023.11.23"
+    },
+    {
+      "src": "/photos/2023-11/04-chicago-night.webp",
+      "date": "2023.11.27"
+    }
+  ],
+  "2023-12": [
+    {
+      "src": "/photos/2023-12/01-friendsgiving.webp",
+      "date": "2023.12.02"
+    },
+    {
+      "src": "/photos/2023-12/02-friendsgiving-2.webp",
+      "date": "2023.12.02"
+    },
+    {
+      "src": "/photos/2023-12/03-convergence-llama.webp",
+      "date": "2023.12.05"
+    },
+    {
+      "src": "/photos/2023-12/04-lego-dog.webp",
+      "date": "2023.12.18"
+    }
+  ],
+  "2024-01": [
+    {
+      "src": "/photos/2024-01/01-friends-hangout.webp",
+      "date": "2024.01.11"
+    },
+    {
+      "src": "/photos/2024-01/02-book-stack.webp",
+      "date": "2024.01.20"
+    }
+  ],
+  "2024-02": [
+    {
+      "src": "/photos/2024-02/01-dumplings.webp",
+      "date": "2024.02.10"
+    },
+    {
+      "src": "/photos/2024-02/02-moving-out-nyc.webp",
+      "date": "2024.02.14"
+    },
+    {
+      "src": "/photos/2024-02/03-fried-egg-portland.webp",
+      "date": "2024.02.15"
+    },
+    {
+      "src": "/photos/2024-02/04-pike-place.webp",
+      "date": "2024.02.19"
+    },
+    {
+      "src": "/photos/2024-02/05-stripe-seattle-view.webp",
+      "date": "2024.02.23"
     }
   ],
   "2024-03": [
     {
+      "src": "/photos/2024-03/02-dumbo.webp",
+      "date": "2024.03"
+    },
+    {
+      "src": "/photos/2024-03/03-stripe-nyc-office.webp",
+      "date": "2024.03.11"
+    },
+    {
+      "src": "/photos/2024-03/04-nyc-hotpot.webp",
+      "date": "2024.03.16"
+    },
+    {
+      "src": "/photos/2024-03/05-deflated-llama.webp",
+      "date": "2024.03.27"
+    },
+    {
       "src": "/photos/2024-03/01-rome-dad.webp",
       "date": "2024.03.31"
+    }
+  ],
+  "2024-04": [
+    {
+      "src": "/photos/2024-04/01-david.webp",
+      "date": "2024.04.02"
+    },
+    {
+      "src": "/photos/2024-04/02-venice.webp",
+      "date": "2024.04.05"
+    },
+    {
+      "src": "/photos/2024-04/03-space-needle.webp",
+      "date": "2024.04.17"
+    }
+  ],
+  "2024-05": [
+    {
+      "src": "/photos/2024-05/01-ice-rink.webp",
+      "date": "2024.05.04"
+    },
+    {
+      "src": "/photos/2024-05/02-new-place-empty.webp",
+      "date": "2024.05.11"
+    },
+    {
+      "src": "/photos/2024-05/03-seattle-fish-guys-poke.webp",
+      "date": "2024.05.26"
+    },
+    {
+      "src": "/photos/2024-05/04-sf-marin.webp",
+      "date": "2024.05.29"
+    }
+  ],
+  "2024-06": [
+    {
+      "src": "/photos/2024-06/01-stripe-ad-ord.webp",
+      "date": "2024.06.18"
+    },
+    {
+      "src": "/photos/2024-06/02-bellevue-view.webp",
+      "date": "2024.06.18"
+    },
+    {
+      "src": "/photos/2024-06/03-seattle-sign.webp",
+      "date": "2024.06.23"
+    },
+    {
+      "src": "/photos/2024-06/04-housewarming-wine.webp",
+      "date": "2024.06.29"
+    },
+    {
+      "src": "/photos/2024-06/05-housewarming-friends.webp",
+      "date": "2024.06.29"
+    }
+  ],
+  "2024-07": [
+    {
+      "src": "/photos/2024-07/01-cd-collection.webp",
+      "date": "2024.07.03"
+    },
+    {
+      "src": "/photos/2024-07/02-yellowstone-canyon.webp",
+      "date": "2024.07.04"
+    },
+    {
+      "src": "/photos/2024-07/03-yellowstone-2.webp",
+      "date": "2024.07.04"
+    },
+    {
+      "src": "/photos/2024-07/04-yellowstone-3.webp",
+      "date": "2024.07.05"
+    },
+    {
+      "src": "/photos/2024-07/05-jenny-lake-boat.webp",
+      "date": "2024.07.05"
+    },
+    {
+      "src": "/photos/2024-07/06-tetons-thumbs-up.webp",
+      "date": "2024.07.06"
+    },
+    {
+      "src": "/photos/2024-07/07-grand-teton-river.webp",
+      "date": "2024.07.06"
+    },
+    {
+      "src": "/photos/2024-07/08-morning-glory-pool.webp",
+      "date": "2024.07.06"
+    },
+    {
+      "src": "/photos/2024-07/09-sonoma-1.webp",
+      "date": "2024.07.17"
+    },
+    {
+      "src": "/photos/2024-07/10-sonoma-2.webp",
+      "date": "2024.07.17"
+    }
+  ],
+  "2024-08": [
+    {
+      "src": "/photos/2024-08/01-cat-desk.webp",
+      "date": "2024.08.23"
+    },
+    {
+      "src": "/photos/2024-08/02-cat-suitcase.webp",
+      "date": "2024.08.23"
+    },
+    {
+      "src": "/photos/2024-08/03-us-open-stadium.webp",
+      "date": "2024.08.24"
+    },
+    {
+      "src": "/photos/2024-08/04-us-open-court.webp",
+      "date": "2024.08.24"
+    },
+    {
+      "src": "/photos/2024-08/05-cat-backpack.webp",
+      "date": "2024.08.30"
+    }
+  ],
+  "2024-09": [
+    {
+      "src": "/photos/2024-09/01-honey-deuces.webp",
+      "date": "2024.09.02"
+    },
+    {
+      "src": "/photos/2024-09/02-m-cozy.webp",
+      "date": "2024.09.29"
+    }
+  ],
+  "2024-10": [
+    {
+      "src": "/photos/2024-10/01-taipei-buses.webp",
+      "date": "2024.10.05"
+    },
+    {
+      "src": "/photos/2024-10/02-fuhang-soy-milk.webp",
+      "date": "2024.10.05"
+    },
+    {
+      "src": "/photos/2024-10/03-beef-noodles.webp",
+      "date": "2024.10.05"
+    },
+    {
+      "src": "/photos/2024-10/04-sanlitun-beijing.webp",
+      "date": "2024.10.06"
+    },
+    {
+      "src": "/photos/2024-10/05-bing-dwen-dwen.webp",
+      "date": "2024.10.07"
+    },
+    {
+      "src": "/photos/2024-10/06-luckin-butterbear.webp",
+      "date": "2024.10.07"
+    },
+    {
+      "src": "/photos/2024-10/07-family-selfie.webp",
+      "date": "2024.10.07"
+    },
+    {
+      "src": "/photos/2024-10/08-walking-to-school.webp",
+      "date": "2024.10.08"
+    },
+    {
+      "src": "/photos/2024-10/09-beida-bikeshare.webp",
+      "date": "2024.10.08"
+    },
+    {
+      "src": "/photos/2024-10/10-xiangshan-hike.webp",
+      "date": "2024.10.09"
+    },
+    {
+      "src": "/photos/2024-10/11-xiangshan-sign.webp",
+      "date": "2024.10.09"
+    },
+    {
+      "src": "/photos/2024-10/12-spicy-comedy.webp",
+      "date": "2024.10.12"
+    },
+    {
+      "src": "/photos/2024-10/13-xintiandi-night.webp",
+      "date": "2024.10.12"
+    },
+    {
+      "src": "/photos/2024-10/14-zootopia-car-hangzhou.webp",
+      "date": "2024.10.14"
+    },
+    {
+      "src": "/photos/2024-10/15-west-lake-hangzhou.webp",
+      "date": "2024.10.15"
+    },
+    {
+      "src": "/photos/2024-10/16-hangzhou-rain.webp",
+      "date": "2024.10.15"
+    },
+    {
+      "src": "/photos/2024-10/17-wukang-mansion.webp",
+      "date": "2024.10.17"
     }
   ],
   "2025-02": [

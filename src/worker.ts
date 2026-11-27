@@ -182,8 +182,12 @@ export default {
       });
     }
 
-    // Block cross-site hotlinking while allowing same-origin requests and direct navigation.
-    if (request.headers.get('Sec-Fetch-Site') === 'cross-site') {
+    // Only serve photos to same-origin image requests, blocking cross-site hotlinks,
+    // direct tab navigation, and link unfurlers.
+    if (
+      request.headers.get('Sec-Fetch-Site') !== 'same-origin' ||
+      request.headers.get('Sec-Fetch-Dest') !== 'image'
+    ) {
       return new Response('Forbidden', { status: 403, headers: { 'cache-control': 'no-store' } });
     }
 
@@ -231,7 +235,7 @@ export default {
       headers.set('cache-control', `private, max-age=${remainingSeconds}`);
       headers.set('x-robots-tag', 'noindex, nofollow');
       headers.set('x-content-type-options', 'nosniff');
-      headers.set('vary', 'Sec-Fetch-Site');
+      headers.set('vary', 'Sec-Fetch-Site, Sec-Fetch-Dest');
       return new Response(null, { status: 200, headers });
     }
 
@@ -249,7 +253,7 @@ export default {
     headers.set('cache-control', `private, max-age=${remainingSeconds}`);
     headers.set('x-robots-tag', 'noindex, nofollow');
     headers.set('x-content-type-options', 'nosniff');
-    headers.set('vary', 'Sec-Fetch-Site');
+    headers.set('vary', 'Sec-Fetch-Site, Sec-Fetch-Dest');
 
     if (!('body' in object) || object.body === null) {
       return new Response(null, { status: 304, headers });
