@@ -39,18 +39,23 @@ Sadly, YouTube bans embedding most tracks.
 
 ## Adding camera roll photos
 
-The JOYFILM camera next to the iPod displays photos for the active playlist's month (`YYYY-MM`). You can add photos in either (or both) ways:
+The JOYFILM camera next to the iPod displays photos for the active playlist's month (`YYYY-MM`). Photos are stored in the private `scrobbl-photos` R2 bucket and served via `src/worker.ts` at `/music/photos/YYYY-MM/<file>`.
 
-* **Local folder**: Drop images into `public/photos/YYYY-MM/` (e.g., `public/photos/2024-03/01.jpg`) — they are auto-discovered at build time.
-* **Manifest (`src/data/photos.json`)**: Add entries keyed by `YYYY-MM` with optional captions, dates, film simulation labels, or external URLs (e.g., Cloudflare R2):
+1. Put your compressed images into a temporary folder organized by `YYYY-MM/` (e.g., `./incoming/2026-11/01-thanksgiving.webp`) and upload them to R2:
+
+```sh
+npm run upload-photos -- ./incoming
+```
+
+2. Add the entries to `src/data/photos.json` (keyed by `YYYY-MM`, with optional `date`, `caption`, `filmSim`, and `meta`):
 
 ```json
 {
-  "2024-03": [
+  "2026-11": [
     {
-      "src": "/photos/2024-03/01.jpg",
-      "date": "2024.03.18",
-      "caption": "golden hour walk",
+      "src": "/photos/2026-11/01-thanksgiving.webp",
+      "date": "2026.11.26",
+      "caption": "thanksgiving spread",
       "meta": "23mm F2.0"
     }
   ]

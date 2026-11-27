@@ -1,11 +1,8 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import rawManifest from '../data/photos.json';
 import { BASE_PATH } from './basePath';
 import { isRecord } from './isRecord';
 import type { CameraPhoto, PhotosByMonth } from './types';
 
-const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif']);
 const MONTH_KEY_RE = /^\d{4}-\d{2}$/;
 
 function withBaseUrl(src: string): string {
@@ -40,64 +37,28 @@ function normalizePhotoEntry(entry: unknown): CameraPhoto | null {
   };
 }
 
-function scanPublicPhotosDirectory(): PhotosByMonth {
-  const result: PhotosByMonth = {};
-  const photosRoot = path.resolve(process.cwd(), 'public', 'photos');
-  if (!fs.existsSync(photosRoot)) return result;
-
-  const entries = fs.readdirSync(photosRoot, { withFileTypes: true });
-  for (const dir of entries) {
-    if (!dir.isDirectory() || !MONTH_KEY_RE.test(dir.name)) continue;
-
-    const monthDir = path.join(photosRoot, dir.name);
-    const files = fs
-      .readdirSync(monthDir, { withFileTypes: true })
-      .filter((f) => f.isFile() && IMAGE_EXTENSIONS.has(path.extname(f.name).toLowerCase()))
-      .map((f) => f.name)
-      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-
-    if (files.length === 0) continue;
-
-    result[dir.name] = files.map((file) => ({
-      src: withBaseUrl(`/photos/${dir.name}/${encodeURIComponent(file)}`),
-    }));
-  }
-
-  return result;
-}
-
 export function loadPhotosByMonth(): PhotosByMonth {
   const byMonth: PhotosByMonth = {};
   const seenSrcs = new Map<string, Set<string>>();
 
-  const addPhoto = (monthKey: string, photo: CameraPhoto) => {
-    let seen = seenSrcs.get(monthKey);
-    if (!seen) {
-      seen = new Set();
-      seenSrcs.set(monthKey, seen);
-      byMonth[monthKey] = [];
-    }
-    if (seen.has(photo.src)) return;
-    seen.add(photo.src);
-    byMonth[monthKey].push(photo);
-  };
+  if (!isRecord(rawManifest)) return byMonth;
 
-  // 1. Manifest entries take priority so captions, dates, and ordering are preserved.
-  if (isRecord(rawManifest)) {
-    for (const [monthKey, value] of Object.entries(rawManifest)) {
-      if (!MONTH_KEY_RE.test(monthKey) || !Array.isArray(value)) continue;
-      for (const entry of value) {
-        const photo = normalizePhotoEntry(entry);
-        if (photo) addPhoto(monthKey, photo);
+  for (const [monthKey, value] of Object.entries(rawManifest)) {
+    if (!MONTH_KEY_RE.test(monthKey) || !Array.isArray(value)) continue;
+
+    for (const entry of value) {
+      const photo = normalizePhotoEntry(entry);
+      if (!photo) continue;
+
+      let seen = seenSrcs.get(monthKey);
+      if (!seen) {
+        seen = new Set();
+        seenSrcs.set(monthKey, seen);
+        byMonth[monthKey] = [];
       }
-    }
-  }
-
-  // 2. Auto-discover any local images dropped into public/photos/YYYY-MM/.
-  const scanned = scanPublicPhotosDirectory();
-  for (const [monthKey, photos] of Object.entries(scanned)) {
-    for (const photo of photos) {
-      addPhoto(monthKey, photo);
+      if (seen.has(photo.src)) continue;
+      seen.add(photo.src);
+      byMonth[monthKey].push(photo);
     }
   }
 

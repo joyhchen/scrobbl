@@ -1,1 +1,138 @@
-{}
+{
+  "2023-05": [
+    {
+      "src": "/photos/2023-05/01-8th-ave-subway.webp",
+      "date": "2023.05.21"
+    }
+  ],
+  "2024-03": [
+    {
+      "src": "/photos/2024-03/01-rome-dad.webp",
+      "date": "2024.03.31"
+    }
+  ],
+  "2025-02": [
+    {
+      "src": "/photos/2025-02/01-croissants.webp",
+      "date": "2025.02.17"
+    }
+  ],
+  "2025-04": [
+    {
+      "src": "/photos/2025-04/01-fantuan.webp",
+      "date": "2025.04.04"
+    },
+    {
+      "src": "/photos/2025-04/02-huangshan.webp",
+      "date": "2025.04.07"
+    },
+    {
+      "src": "/photos/2025-04/03-shanghai-exhibition.webp",
+      "date": "2025.04.13"
+    }
+  ],
+  "2025-05": [
+    {
+      "src": "/photos/2025-05/01-seattle-seagull.webp",
+      "date": "2025.05.10"
+    }
+  ],
+  "2025-06": [
+    {
+      "src": "/photos/2025-06/01-rabbit.webp",
+      "date": "2025.06.01"
+    },
+    {
+      "src": "/photos/2025-06/02-coldplay-concert.webp",
+      "date": "2025.06.07"
+    },
+    {
+      "src": "/photos/2025-06/02-erewhon.webp",
+      "date": "2025.06.09"
+    },
+    {
+      "src": "/photos/2025-06/03-beach-sunset.webp",
+      "date": "2025.06.09"
+    },
+    {
+      "src": "/photos/2025-06/04-seattle-ferry.webp",
+      "date": "2025.06.15"
+    }
+  ],
+  "2025-07": [
+    {
+      "src": "/photos/2025-07/01-haidilao-bags.webp",
+      "date": "2025.07.19"
+    }
+  ],
+  "2025-08": [
+    {
+      "src": "/photos/2025-08/01-rainier-drive.webp",
+      "date": "2025.08.23"
+    }
+  ],
+  "2025-09": [
+    {
+      "src": "/photos/2025-09/01-ducks.webp",
+      "date": "2025.09.30"
+    }
+  ],
+  "2025-10": [
+    {
+      "src": "/photos/2025-10/01-pku-envelope.webp",
+      "date": "2025.10.02"
+    },
+    {
+      "src": "/photos/2025-10/02-guigang-station.webp",
+      "date": "2025.10.03"
+    },
+    {
+      "src": "/photos/2025-10/03-monkey.webp",
+      "date": "2025.10.08"
+    },
+    {
+      "src": "/photos/2025-10/03-coastal-cliff.webp",
+      "date": "2025.10.09"
+    },
+    {
+      "src": "/photos/2025-10/04-taiwan-rail-tickets.webp",
+      "date": "2025.10.10"
+    }
+  ],
+  "2025-11": [
+    {
+      "src": "/photos/2025-11/01-georgian-food.webp",
+      "date": "2025.11.03"
+    }
+  ],
+  "2026-06": [
+    {
+      "src": "/photos/2026-06/01-car-portrait.webp",
+      "date": "2026.06.10"
+    },
+    {
+      "src": "/photos/2026-06/02-desert-badlands.webp",
+      "date": "2026.06.11"
+    },
+    {
+      "src": "/photos/2026-06/03-swans-lake.webp",
+      "date": "2026.06.13"
+    },
+    {
+      "src": "/photos/2026-06/04-lake-flowers.webp",
+      "date": "2026.06.13"
+    }
+  ],
+  "2026-10": [
+    {
+      "src": "/photos/2026-10/01-bike-waterfront.webp",
+      "date": "2026.10.10"
+    }
+  ],
+  "2026-11": [
+    {
+      "src": "/photos/2026-11/01-thanksgiving.webp",
+      "date": "2026.11.26"
+    }
+  ]
+}

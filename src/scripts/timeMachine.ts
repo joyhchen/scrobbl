@@ -20,8 +20,8 @@ interface FilmSimPreset {
 }
 
 const FILM_SIM_PRESETS: readonly FilmSimPreset[] = [
-  { id: 'classic-chrome', label: 'CLASSIC CHROME' },
   { id: 'std', label: 'PROVIA / STD' },
+  { id: 'classic-chrome', label: 'CLASSIC CHROME' },
   { id: 'acros', label: 'ACROS' },
   { id: 'velvia', label: 'VELVIA / VIVID' },
 ];

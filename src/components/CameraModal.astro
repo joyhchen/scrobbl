@@ -73,7 +73,7 @@ const { initialMonthLabel } = Astro.props;
       <span class="fuji-rear-led" id="camera-status-led" aria-hidden="true"></span>
 
       <!-- Live 3:2 LCD composited directly into the photorealistic camera screen bezel -->
-      <div class="fuji-lcd" id="camera-lcd" data-film-sim="classic-chrome">
+      <div class="fuji-lcd" id="camera-lcd" data-film-sim="std">
         <div class="fuji-lcd-glare" aria-hidden="true"></div>
 
         <div class="fuji-lcd-single" id="camera-view-single" data-visible="true">
@@ -99,7 +99,7 @@ const { initialMonthLabel } = Astro.props;
                   </span>
                   <span class="fuji-hud-battery-tip"></span>
                 </span>
-                <span class="fuji-hud-sim" id="camera-hud-sim">CLASSIC CHROME</span>
+                <span class="fuji-hud-sim" id="camera-hud-sim">PROVIA / STD</span>
               </div>
             </div>
 
@@ -124,7 +124,7 @@ const { initialMonthLabel } = Astro.props;
         <div class="fuji-lcd-empty" id="camera-view-empty" data-visible="false" aria-hidden="true">
           <div class="fuji-empty-top">
             <span class="fuji-empty-month" id="camera-empty-month">{initialMonthLabel}</span>
-            <span class="fuji-hud-sim" id="camera-empty-sim">CLASSIC CHROME</span>
+            <span class="fuji-hud-sim" id="camera-empty-sim">PROVIA / STD</span>
           </div>
           <div class="fuji-empty-center">
             <div class="fuji-empty-badge">NO IMAGE</div>

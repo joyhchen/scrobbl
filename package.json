@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "deploy": "astro build && wrangler deploy",
+    "upload-photos": "node scripts/upload-photos-r2.mjs",
     "populate-youtube": "node scripts/populate-youtube-ids.mjs",
     "populate-youtube:chinese-lyrics": "node scripts/populate-youtube-ids.mjs --chinese-lyrics",
     "astro": "astro"
