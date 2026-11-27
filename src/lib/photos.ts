@@ -6,20 +6,10 @@ import type { CameraPhoto, PhotosByMonth } from './types';
 const MONTH_KEY_RE = /^\d{4}-\d{2}$/;
 
 function withBaseUrl(src: string): string {
-  if (/^(?:https?:)?\/\//i.test(src) || src.startsWith('data:')) {
-    return src;
-  }
-  const normalized = src.startsWith('/') ? src : `/${src}`;
-  if (BASE_PATH && (normalized === BASE_PATH || normalized.startsWith(`${BASE_PATH}/`))) {
-    return normalized;
-  }
-  return `${BASE_PATH}${normalized}`;
+  return `${BASE_PATH}${src.startsWith('/') ? src : `/${src}`}`;
 }
 
 function normalizePhotoEntry(entry: unknown): CameraPhoto | null {
-  if (typeof entry === 'string' && entry.trim()) {
-    return { src: withBaseUrl(entry.trim()) };
-  }
   if (!isRecord(entry) || typeof entry.src !== 'string' || !entry.src.trim()) {
     return null;
   }

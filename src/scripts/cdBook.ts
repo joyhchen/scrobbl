@@ -18,11 +18,6 @@ interface CdBookOptions {
   onOpen?: () => void;
 }
 
-export interface CdBookController {
-  isOpen: () => boolean;
-  close: (playSound?: boolean) => void;
-}
-
 function requireEl(id: string): HTMLElement {
   const el = document.getElementById(id);
   if (!el) throw new Error(`Missing #${id}`);
@@ -35,7 +30,7 @@ function requireButton(id: string): HTMLButtonElement {
   return el;
 }
 
-export function initCdBook({ getChangerState, onPickDisc, onOpen }: CdBookOptions): CdBookController {
+export function initCdBook({ getChangerState, onPickDisc, onOpen }: CdBookOptions): void {
   const deskBtn = requireButton('cd-book-btn');
   const modalEl = requireEl('cd-book-modal');
   const backdropEl = requireEl('cd-book-backdrop');
@@ -172,6 +167,4 @@ export function initCdBook({ getChangerState, onPickDisc, onOpen }: CdBookOption
   );
 
   renderSpread();
-
-  return { isOpen: () => open, close };
 }
