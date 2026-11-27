@@ -47,31 +47,9 @@ npm run populate-youtube
 
 Sadly, YouTube bans embedding most tracks.
 
-## Adding a disc to the CD book
-
-1. Add the tracklist to `src/data/` (same shape as `andy-grammer-2011.json`), and add the file to `DATA_FILES` in `scripts/populate-youtube-ids.mjs`
-2. Add an entry to `loadDiscs()` in `src/lib/discs.ts`
-
-```ts
-{
-  id: 'andy-grammer-2011',
-  tapeLabel: 'andy grammer',          // written on the masking tape on the disc
-  tapeSubLabel: '2011 · 11 tracks',
-  tapeTiltDeg: -2.4,
-  discTone: 'silver',                 // or 'gold'
-  ipodTheme: 'aqua',
-  showTimelineDial: false,            // true only for month-by-month timelines
-  playlists: [andyGrammerAlbum],
-  inChangerByDefault: false,          // optional: starts in the book, not the changer
-  sleeveNote: 'first cd i ever bought, borders liquidation sale, sep 2011', // optional: tape note on the sleeve
-},
-```
-
-Every disc shows up in the book. The first 6 that aren't `inChangerByDefault: false` start loaded in the changer. Loading a disc from the book puts it in the first empty tray, or swaps out the disc that's playing if all 6 are full. Your changer loadout is remembered in the browser.
-
 ## Adding camera roll photos
 
-Photos are stored in the private `scrobbl-photos` Cloudflare R2 bucket and served via short-lived (5-minute) HMAC-signed URLs minted by `src/worker.ts`.
+Photos are stored in the private `scrobbl-photos` Cloudflare R2 bucket and served via short-lived URLs.
 
 Before deploying, set the Worker signing secret once:
 
@@ -81,13 +59,14 @@ npx wrangler secret put PHOTO_SIGNING_SECRET
 
 For local `wrangler dev`, add `PHOTO_SIGNING_SECRET=<random-secret>` to `.dev.vars` (gitignored).
 
-1. Add your compressed images to a temp folder organized by `YYYY-MM/` (e.g., `./incoming/2026-11/01-thanksgiving.webp`). Run the script to upload them to R2:
+1. Add your compressed images to a temp folder organized by `YYYY-MM/` (e.g., `./incoming/2026-11/01-thanksgiving.webp`).
+2. Run the script to upload them to R2:
 
 ```sh
 npm run upload-photos -- ./incoming
 ```
 
-2. Add the entries to `src/data/photos.json`:
+3. Add the entries to `src/data/photos.json`:
 
 ```json
 {
