@@ -5,6 +5,7 @@ const DATA_FILES = [
   resolve(process.cwd(), 'src/data/joy-chen-monthly-playlists.json'),
   resolve(process.cwd(), 'src/data/chinese-100-playlist.json'),
   resolve(process.cwd(), 'src/data/andy-grammer-2011.json'),
+  resolve(process.cwd(), 'src/data/top-songs-2023.json'),
 ];
 
 const YTM_SEARCH_URL = 'https://music.youtube.com/youtubei/v1/search?prettyPrint=false';

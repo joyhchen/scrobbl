@@ -2,6 +2,7 @@ import { loadPlaylists, normalizeTracks } from './playlists';
 import type { DiscPreset, MonthlyPlaylist, RawTrack } from './types';
 import chineseSongsData from '../data/chinese-100-playlist.json';
 import andyGrammerData from '../data/andy-grammer-2011.json';
+import topSongs2023Data from '../data/top-songs-2023.json';
 
 interface SinglePlaylistJson {
   title?: string;
@@ -35,6 +36,7 @@ export function loadDiscs(): [DiscPreset, ...DiscPreset[]] {
     '最好听的 100 首中文歌'
   );
   const andyGrammerAlbum = loadSinglePlaylistDisc('andy-grammer-2011', andyGrammerData, 'Andy Grammer');
+  const topSongs2023Playlist = loadSinglePlaylistDisc('top-songs-2023', topSongs2023Data, 'Top Songs 2023');
 
   return [
     {
@@ -69,6 +71,17 @@ export function loadDiscs(): [DiscPreset, ...DiscPreset[]] {
       playlists: [andyGrammerAlbum],
       inChangerByDefault: false,
       sleeveNote: 'first cd i ever bought, borders liquidation sale, sep 2011',
+    },
+    {
+      id: 'top-songs-2023',
+      tapeLabel: 'top songs 2023',
+      tapeSubLabel: `${topSongs2023Playlist.trackCount} tracks`,
+      tapeTiltDeg: 1.8,
+      discTone: 'gold',
+      ipodTheme: 'aqua',
+      showTimelineDial: false,
+      playlists: [topSongs2023Playlist],
+      inChangerByDefault: false,
     },
   ];
 }
